@@ -5,6 +5,7 @@ import { UserComponent } from './user.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SettingsComponent } from './settings/settings.component';
+import { SearchComponent } from './search/search.component';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import { SettingsComponent } from './settings/settings.component';
     UserComponent,
     DashboardComponent,
     ProfileComponent,
+    SearchComponent,
     SettingsComponent
   ],
   exports: [
