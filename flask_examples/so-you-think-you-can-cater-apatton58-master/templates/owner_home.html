@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Owner Home - {{ super() }}{% endblock %}
+
+{% block body %}
+    <h1>Owner Home</h1>
+    <div>To create a new staff account, click <a href="{{ url_for('registerStaff') }}">here.</a></div>
+    <h2>Scheduled Events</h2>
+    <ul>
+        {% for event in events %}
+            <li>
+                <b>{{ event.title }}</b> {{ event.date }}
+                <br><br>
+                Staff Working:
+                <ul>
+                    {% for signup in event.signups %}
+                        <li>{{ signup.staff.userName }}</li>
+                    {% else %}
+                        <li>No staff working.</li>
+                    {% endfor %}
+                </ul>
+                <hr>
+            </li>
+        {% else %}
+            <li><b>No events scheduled.</b></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

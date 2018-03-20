@@ -1,0 +1,8 @@
+.vscode
+bin/
+include/
+lib/
+*.db
+.Python
+pip-selfcheck.json
+*.pyc

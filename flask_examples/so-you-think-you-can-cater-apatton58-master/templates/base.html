@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <head>
+        <title>{%block title%}Patton Catering{% endblock %}</title>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <script>
+                    var messages = {{ messages | safe }};
+                    for (var i=0; i<messages.length; i++) {
+                        alert(messages[i]);
+                    }
+                </script>
+            {% endif %}
+        {% endwith %}
+    </head>
+    <body>
+        {% if userName %}
+            <div class="logout">Logged in as {{ userName }}, <a href="{{ url_for('logout') }}">Logout</a></div>
+            <br>
+            <br>
+        {% endif %}
+        {% block body %}
+        {% endblock %}
+    </body>
+</html>

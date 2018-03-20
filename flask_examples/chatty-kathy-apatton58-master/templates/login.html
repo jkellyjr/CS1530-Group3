@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Please log in! - {{ super() }}{% endblock %}
+
+{% block content %}
+	<h2>Please log in!</h2>
+	{% if error %}<div class="error"><strong>Error:</strong> {{ error }}</div><br>{% endif %}
+	<form action="" method="post">
+		Username:  <input type="text" name="user" />
+		<br />
+		Password:  <input type="password" name="pass" />
+		<br />
+		<input type="submit" value="submit" />
+	</form>
+	<br>
+	<div>To register as a new user, click <a href="{{ url_for('register') }}">here.</a></div>
+{% endblock %}

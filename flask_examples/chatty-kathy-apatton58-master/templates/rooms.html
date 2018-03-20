@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Chat Rooms - {{ super() }}{% endblock %}
+
+{% block content %}
+    <h2>Open Chat Rooms</h2>
+    <ul>
+        {% for room in rooms %}
+            <li>
+                <b><a href="{{ url_for('room', room_id = room.room_id) }}" class="roomLink"> {{ room.name }} </a></b>
+                {% if room.creator_id == user_id %}
+                    <a class="roomDeleteLink" href="{{ url_for('delete_room', room_id = room.room_id) }}">delete</a>
+                {% endif %}
+            </li>
+        {% else %}
+            <li>No chat rooms available.</li>
+        {% endfor %}
+    </ul>
+    <br>
+    <div>
+        Click <a href="{{ url_for('new_room') }}">here</a> to create a new chat room.
+    </div>
+	
+{% endblock %}
