@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { UserComponent } from './user.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   imports: [
@@ -10,7 +11,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
   ],
   declarations: [
     UserComponent,
-    DashboardComponent
+    DashboardComponent,
+    ProfileComponent
   ],
   exports: [
     UserComponent
