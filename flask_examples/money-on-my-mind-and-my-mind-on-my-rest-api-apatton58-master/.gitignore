@@ -1,0 +1,10 @@
+*
+*.*
+!.gitignore
+!static/
+!static/*
+!templates/
+!templates/*
+!budget.py
+!requirements.txt
+!readme.md

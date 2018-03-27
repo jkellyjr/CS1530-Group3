@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+        <script src="{{ url_for('static', filename='budget.js') }}" type="text/Javascript"></script>
+    </head>
+    <body>
+        <h1>Monthly Budget</h1>
+        <div class="formWrapper">
+            <form id="newCat" onsubmit="return postCat()">
+                <div class="formTitle">
+                    New Category
+                </div>
+                <div class="formField">
+                    Name: <input type="text" name="name">
+                </div>
+                <div class="formField">
+                    Limit: <input type="number" name="limit">
+                </div>
+                <input type="submit" class="submitButton">
+            </form>
+
+            <form id="deleteCat" onsubmit="return deleteCat()">
+                <div class="formTitle">
+                    Delete Category
+                </div>
+                <div class="formField">
+                    Category: 
+                    <select name="catToDelete" id="deleteCatSel">
+        
+                    </select>
+                </div>
+                <input type="submit" value="Delete">
+            </form>
+        
+            <form id="newPurch" onsubmit="return postPurch()">
+                <div class="formTitle">
+                    New Purchase
+                </div>
+                <div class="formField">
+                    Description: <input type="text" name="desc">
+                </div>
+                <div class="formField">
+                    Price: <input type="number" name="price">
+                </div>
+                <div class="formField">
+                    Date: <input type="date" name="purchDate" id="purchDate">
+                </div>
+                <div class="formField">
+                    Category: 
+                    <select name="purchCat" id="purchCatSel">
+        
+                    </select>
+                </div>
+                <input type="submit">
+            </form>
+        </div>
+        
+        
+        <div id="outerWrapper">
+
+        </div>
+    </body>
+</html>
