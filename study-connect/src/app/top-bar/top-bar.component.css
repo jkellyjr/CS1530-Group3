@@ -1,0 +1,25 @@
+#topBarTitle {
+    margin-left: 5px;
+}
+mat-toolbar {
+    color: white;
+    background: blue;
+    display: flex;
+}
+mat-toolbar mat-icon {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+#leftStuff {
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+}
+#rightStuff {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 50%;
+}
+
+
