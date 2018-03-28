@@ -1,4 +1,7 @@
-
+mat-card {
+    margin-top:10px;
+    margin-bottom: 10px;
+}
 #loginWrapper {
     display: flex;
     justify-content: center;
@@ -11,4 +14,7 @@ mat-tab-group {
 }
 #login-form {
     padding: 10px;
+}
+mat-form-field {
+    margin-left: 20px;
 }

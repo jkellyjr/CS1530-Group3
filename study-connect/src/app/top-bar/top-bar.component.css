@@ -4,16 +4,12 @@
 mat-toolbar {
     color: #ffffff;
     background: #25313f;
-    display: flex;
-}
-mat-toolbar mat-icon {
-    padding-left: 5px;
-    padding-right: 5px;
 }
 #leftStuff {
     display: flex;
     flex-direction: row;
     width: 50%;
+    align-items: baseline;
 }
 #rightStuff {
     display: flex;
