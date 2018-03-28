@@ -2,8 +2,8 @@
     margin-left: 5px;
 }
 mat-toolbar {
-    color: white;
-    background: blue;
+    color: #ffffff;
+    background: #25313f;
     display: flex;
 }
 mat-toolbar mat-icon {

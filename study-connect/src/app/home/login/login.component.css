@@ -1,0 +1,14 @@
+
+#loginWrapper {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+}
+mat-tab-group {
+    border: 4px solid #25313f;
+    padding: 10px;
+    border-radius: 8px;
+}
+#login-form {
+    padding: 10px;
+}
