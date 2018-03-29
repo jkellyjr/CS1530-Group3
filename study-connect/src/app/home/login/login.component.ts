@@ -18,7 +18,8 @@ export class LoginComponent implements OnInit {
   user: User;
   userSubscription: ISubscription;
 
-  constructor(private _formBuilder: FormBuilder, private _homeService: HomeService) { }
+  constructor(private _formBuilder: FormBuilder, private _homeService: HomeService) {
+   }
 
   ngOnInit() {
     this.userSubscription = this._homeService.user.subscribe(
@@ -39,7 +40,7 @@ export class LoginComponent implements OnInit {
       lastName: ['', Validators.required]
     });
     this.regForm3 = this._formBuilder.group({
-      password: ['', Validators.required]    
+      password: ['', Validators.required]
     });
   }
 

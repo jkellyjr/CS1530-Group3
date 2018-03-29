@@ -5,11 +5,11 @@
         <mat-tab label="Login">
           <form id="login-form" [formGroup]="loginForm">
               <mat-form-field>
-                <input matInput placeholder="Email" type="email" formControlName="email" required>
+                <input matInput placeholder="Email" type="email" formControlName="email" [ngModel]="user.email" required>
               </mat-form-field>
               <br>
               <mat-form-field>
-                <input matInput placeholder="Password" type="password" formControlName="password" required>
+                <input matInput placeholder="Password" type="password" formControlName="password" [ngModel]="user.password" required>
               </mat-form-field>
               <br>
               <button mat-icon-button>
@@ -23,11 +23,11 @@
               <form [formGroup]="regForm1">
                   <ng-template matStepLabel>Email and Phone Number</ng-template>
                   <mat-form-field>
-                    <input matInput placeholder="Email" type="email" formControlName="email" required>
+                    <input matInput placeholder="Email" type="email" formControlName="email" [ngModel]="user.email" required>
                   </mat-form-field>
                   <br>
                   <mat-form-field>
-                    <input matInput placeholder="Phone number" formControlName="phoneNumber" required>
+                    <input matInput placeholder="Phone number" formControlName="phoneNumber" [ngModel]="user.phone" required>
                   </mat-form-field>
                   <br>
                   <button mat-icon-button matStepperNext>
@@ -39,10 +39,10 @@
               <form [formGroup]="regForm2">
                 <ng-template matStepLabel>Name</ng-template>
               <mat-form-field>
-                <input matInput placeholder="First name" formControlName="firstName" required>
+                <input matInput placeholder="First name" formControlName="firstName" [ngModel]="user.first_name" required>
               </mat-form-field>
               <mat-form-field>
-                <input matInput placeholder="Last name" formControlName="lastName" required>
+                <input matInput placeholder="Last name" formControlName="lastName" [ngModel]="user.last_name" required>
               </mat-form-field>
               <div>
                 <button mat-icon-button matStepperPrevious>
@@ -58,7 +58,7 @@
               <form [formGroup]="regForm3">
                 <ng-template matStepLabel>Choose a password</ng-template>
               <mat-form-field>
-                <input matInput placeholder="Password" type="password" formControlName="password" required>
+                <input matInput placeholder="Password" type="password" formControlName="password" [ngModel]="user.password" required>
               </mat-form-field>
               <div>
                 <button mat-icon-button matStepperPrevious>
