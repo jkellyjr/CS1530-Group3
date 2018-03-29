@@ -6,7 +6,7 @@ export class Group {
   name:string;
   description:string;
   creator:number;
-  group_courses:Group[];
+  group_courses:Course[];
   meeting:Meeting;
 }
 
