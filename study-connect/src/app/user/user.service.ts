@@ -31,7 +31,7 @@ export class UserService {
     this.userObservable = this.userSubject.asObservable();
 
     this.tutorsSubject = new BehaviorSubject([]);
-    this.tutorsObservable = this.studentsSubject.asObservable();
+    this.tutorsObservable = this.tutorsSubject.asObservable();
 
     this.studentsSubject = new BehaviorSubject([]);
     this.studentsObservable = this.studentsSubject.asObservable();

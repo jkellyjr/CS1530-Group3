@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { UserComponent } from './user.component';
 import { UserRoutingModule } from './user-routing.module';
+import { UserService } from './user.service';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -38,7 +39,7 @@ import {MatIconModule} from '@angular/material/icon';
   exports: [
   ],
   providers: [
-
+    UserService
   ]
 })
 export class UserModule { }
