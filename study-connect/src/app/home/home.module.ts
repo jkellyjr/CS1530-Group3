@@ -1,8 +1,9 @@
-import { BrowserModule } from '@angular/platform-browser';
+// import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 
 import { HomeComponent } from './home.component';
+import { HomeRoutingModule } from './home-routing.module';
 import { LoginComponent } from './login/login.component';
 import {MatInputModule} from '@angular/material/input';
 import {MatTabsModule} from '@angular/material/tabs';
@@ -22,7 +23,7 @@ import { AboutUsComponent } from './about-us/about-us.component';
     AboutUsComponent
   ],
   imports: [
-    BrowserModule,
+    HomeRoutingModule,
     MatInputModule,
     MatTabsModule,
     MatStepperModule,

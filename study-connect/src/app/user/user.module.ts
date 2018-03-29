@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { UserComponent } from './user.component';
+import { UserRoutingModule } from './user-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -9,7 +10,8 @@ import { SearchComponent } from './search/search.component';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    UserRoutingModule
   ],
   declarations: [
     UserComponent,
@@ -19,7 +21,6 @@ import { SearchComponent } from './search/search.component';
     SettingsComponent
   ],
   exports: [
-    UserComponent
   ],
   providers: [
 
