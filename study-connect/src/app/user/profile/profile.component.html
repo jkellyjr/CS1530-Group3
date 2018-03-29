@@ -1,3 +1,22 @@
-<p>
-  profile works!
-</p>
+<mat-card>
+  <mat-card-title>Add Courses</mat-card-title>
+  <form id=editProfileForm>
+    <mat-form-field>
+      <mat-select placeholder="Course No.">
+        <mat-option *ngFor="let course of coursesOffered" [value]="course.value">
+          {{ course.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select placeholder="Status">
+        <mat-option *ngFor="let status of studentOrTutor" [value]="status.value">
+          {{ status.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-icon-button>
+      <mat-icon>add</mat-icon>
+    </button>
+  </form>
+</mat-card>
