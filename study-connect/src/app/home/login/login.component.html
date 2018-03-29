@@ -3,13 +3,13 @@
     <div id="loginWrapper">
       <mat-tab-group md-stretch-tabs="true">
         <mat-tab label="Login">
-          <form id="login-form" [formGroup]="loginGroup">
+          <form id="login-form" [formGroup]="loginForm">
               <mat-form-field>
-                <input matInput placeholder="Email" type="email" formControlName="loginCtrl">
+                <input matInput placeholder="Email" type="email" formControlName="email" required>
               </mat-form-field>
               <br>
               <mat-form-field>
-                <input matInput placeholder="Password" type="password" formControlName="loginCtrl">
+                <input matInput placeholder="Password" type="password" formControlName="password" required>
               </mat-form-field>
               <br>
               <button mat-icon-button>
@@ -19,15 +19,15 @@
         </mat-tab>
         <mat-tab label="Register">
           <mat-horizontal-stepper [linear]="isLinear" #stepper="matHorizontalStepper">
-            <mat-step [stepControl]="firstRegisterGroup">
-              <form [formGroup]="firstRegisterGroup">
+            <mat-step [stepControl]="regForm1">
+              <form [formGroup]="regForm1">
                   <ng-template matStepLabel>Email and Phone Number</ng-template>
                   <mat-form-field>
-                    <input matInput placeholder="Email" type="email" formControlName="firstRegisterCtrl" required>
+                    <input matInput placeholder="Email" type="email" formControlName="email" required>
                   </mat-form-field>
                   <br>
                   <mat-form-field>
-                    <input matInput placeholder="Phone number" formControlName="firstRegisterCtrl" required>
+                    <input matInput placeholder="Phone number" formControlName="phoneNumber" required>
                   </mat-form-field>
                   <br>
                   <button mat-icon-button matStepperNext>
@@ -35,14 +35,14 @@
                   </button>
               </form>
             </mat-step>
-            <mat-step [stepControl]="secondRegisterGroup">
-              <form [formGroup]="secondRegisterGroup">
+            <mat-step [stepControl]="regForm2">
+              <form [formGroup]="regForm2">
                 <ng-template matStepLabel>Name</ng-template>
               <mat-form-field>
-                <input matInput placeholder="First name" formControlName="secondRegisterCtrl" required>
+                <input matInput placeholder="First name" formControlName="firstName" required>
               </mat-form-field>
               <mat-form-field>
-                <input matInput placeholder="Last name" formControlName="secondRegisterCtrl" required>
+                <input matInput placeholder="Last name" formControlName="lastName" required>
               </mat-form-field>
               <div>
                 <button mat-icon-button matStepperPrevious>
@@ -54,11 +54,11 @@
               </div>
               </form>
             </mat-step>
-            <mat-step [stepControl]="thirdRegisterGroup">
-              <form [formGroup]="thirdRegisterGroup">
+            <mat-step [stepControl]="regForm3">
+              <form [formGroup]="regForm3">
                 <ng-template matStepLabel>Choose a password</ng-template>
               <mat-form-field>
-                <input matInput placeholder="Password" type="password" formControlName="thirdRegisterCtrl" required>
+                <input matInput placeholder="Password" type="password" formControlName="password" required>
               </mat-form-field>
               <div>
                 <button mat-icon-button matStepperPrevious>

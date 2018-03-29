@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import { HomeService } from '../home.service';
 import { ISubscription } from 'rxjs/Subscription';
 import { User } from '../../library/objects/user';
@@ -11,10 +11,10 @@ import { User } from '../../library/objects/user';
 })
 export class LoginComponent implements OnInit {
   isLinear = false;
-  loginGroup: FormGroup;
-  firstRegisterGroup: FormGroup;
-  secondRegisterGroup: FormGroup;
-  thirdRegisterGroup: FormGroup;
+  loginForm: FormGroup;
+  regForm1: FormGroup;
+  regForm2: FormGroup;
+  regForm3: FormGroup;
   user: User;
   userSubscription: ISubscription;
 
@@ -26,17 +26,20 @@ export class LoginComponent implements OnInit {
         this.user = user;
       }
     );
-    this.loginGroup = this._formBuilder.group({
-      loginCtrl: ['', Validators.required]
-    })
-    this.firstRegisterGroup = this._formBuilder.group({
-      firstRegisterCtrl: ['', Validators.required]
+    this.loginForm = this._formBuilder.group({
+      email: ['', Validators.required],
+      password: ['', Validators.required]
     });
-    this.secondRegisterGroup = this._formBuilder.group({
-      secondRegisterCtrl: ['', Validators.required]
+    this.regForm1 = this._formBuilder.group({
+      email: ['', Validators.required],
+      phoneNumber: ['', Validators.required]
     });
-    this.thirdRegisterGroup = this._formBuilder.group({
-      thirdRegisterCtrl: ['', Validators.required]
+    this.regForm2 = this._formBuilder.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required]
+    });
+    this.regForm3 = this._formBuilder.group({
+      password: ['', Validators.required]    
     });
   }
 
