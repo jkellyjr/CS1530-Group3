@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
 import { ISubscription } from 'rxjs/Subscription';
-import { User } from '../../library/objects/user';
-import { Group } from '../../library/objects/group';
+import { User } from '../../library/objects/User';
+import { Group } from '../../library/objects/Group';
 
 @Component({
   selector: 'app-search',

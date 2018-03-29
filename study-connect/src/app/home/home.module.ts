@@ -16,6 +16,7 @@ import { AboutUsComponent } from './about-us/about-us.component';
 
 import { LibraryModule } from '../library/library.module';
 import { HomeService } from './home.service';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,7 @@ import { HomeService } from './home.service';
     MatInputModule,
     MatTabsModule,
     MatStepperModule,
-    ReactiveFormsModule,
+    FormsModule,
     MatButtonModule,
     MatIconModule,
     MatCardModule

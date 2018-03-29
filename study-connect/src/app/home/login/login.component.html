@@ -3,13 +3,13 @@
     <div id="loginWrapper">
       <mat-tab-group md-stretch-tabs="true">
         <mat-tab label="Login">
-          <form id="login-form" [formGroup]="loginForm">
+          <form id="login-form">
               <mat-form-field>
-                <input matInput placeholder="Email" type="email" formControlName="email" [ngModel]="user.email" required>
+                <input matInput placeholder="Email" type="email" [ngModel]="user.email" required>
               </mat-form-field>
               <br>
               <mat-form-field>
-                <input matInput placeholder="Password" type="password" formControlName="password" [ngModel]="user.password" required>
+                <input matInput placeholder="Password" type="password"[ngModel]="user.password" required>
               </mat-form-field>
               <br>
               <button mat-icon-button>
@@ -18,59 +18,31 @@
             </form>
         </mat-tab>
         <mat-tab label="Register">
-          <mat-horizontal-stepper [linear]="isLinear" #stepper="matHorizontalStepper">
-            <mat-step [stepControl]="regForm1">
-              <form [formGroup]="regForm1">
-                  <ng-template matStepLabel>Email and Phone Number</ng-template>
+              <form>
                   <mat-form-field>
-                    <input matInput placeholder="Email" type="email" formControlName="email" [ngModel]="user.email" required>
+                    <input matInput placeholder="Email" type="email" [ngModel]="user.email" required>
                   </mat-form-field>
                   <br>
                   <mat-form-field>
-                    <input matInput placeholder="Phone number" formControlName="phoneNumber" [ngModel]="user.phone" required>
+                    <input matInput placeholder="Phone number" [ngModel]="user.phone" required>
                   </mat-form-field>
                   <br>
-                  <button mat-icon-button matStepperNext>
-                    <mat-icon>arrow_forward</mat-icon>
-                  </button>
-              </form>
-            </mat-step>
-            <mat-step [stepControl]="regForm2">
-              <form [formGroup]="regForm2">
-                <ng-template matStepLabel>Name</ng-template>
+                
               <mat-form-field>
-                <input matInput placeholder="First name" formControlName="firstName" [ngModel]="user.first_name" required>
+                <input matInput placeholder="First name" [ngModel]="user.first_name" required>
               </mat-form-field>
               <mat-form-field>
-                <input matInput placeholder="Last name" formControlName="lastName" [ngModel]="user.last_name" required>
+                <input matInput placeholder="Last name" [ngModel]="user.last_name" required>
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput placeholder="Password" type="password" [ngModel]="user.password" required>
               </mat-form-field>
               <div>
-                <button mat-icon-button matStepperPrevious>
-                  <mat-icon>arrow_back</mat-icon>
-                </button>
-                <button mat-icon-button matStepperNext>
-                  <mat-icon>arrow_forward</mat-icon>
-                </button>
-              </div>
-              </form>
-            </mat-step>
-            <mat-step [stepControl]="regForm3">
-              <form [formGroup]="regForm3">
-                <ng-template matStepLabel>Choose a password</ng-template>
-              <mat-form-field>
-                <input matInput placeholder="Password" type="password" formControlName="password" [ngModel]="user.password" required>
-              </mat-form-field>
-              <div>
-                <button mat-icon-button matStepperPrevious>
-                  <mat-icon>arrow_back</mat-icon>
-                </button>
                 <button mat-icon-button>
                   <mat-icon>check</mat-icon>
                 </button>
               </div>
               </form>
-            </mat-step>
-          </mat-horizontal-stepper>
         </mat-tab>
       </mat-tab-group>
     </div>
