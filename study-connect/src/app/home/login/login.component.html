@@ -1,45 +1,49 @@
+<!-- {{email}} -->
 <mat-card>
     <mat-card-title>Login/Register</mat-card-title>
     <div id="loginWrapper">
       <mat-tab-group md-stretch-tabs="true">
         <mat-tab label="Login">
-          <form id="login-form">
+          <form id="login-form" (ngSubmit)="login()" #loginForm="ngForm">
               <mat-form-field>
-                <input matInput placeholder="Email" type="email" [ngModel]="user.email" required>
+                <input matInput placeholder="Email" type="email" [(ngModel)]="email" name="email" required>
               </mat-form-field>
               <br>
               <mat-form-field>
-                <input matInput placeholder="Password" type="password"[ngModel]="user.password" required>
+                <input matInput placeholder="Password" type="password"[(ngModel)]="password"  name="password" required>
               </mat-form-field>
               <br>
               <button mat-icon-button>
-                <mat-icon>check</mat-icon>
+                <!-- <mat-icon>check</mat-icon> -->
+                <button type="submit" name="button" routerLink="user/"><mat-icon>check</mat-icon></button>
+
               </button>
             </form>
         </mat-tab>
         <mat-tab label="Register">
-              <form>
+              <form (ngSubmit)="register()" #registerForm="ngForm">
                   <mat-form-field>
-                    <input matInput placeholder="Email" type="email" [ngModel]="user.email" required>
+                    <input matInput placeholder="Email" type="email" [(ngModel)]="email" name="email" required>
                   </mat-form-field>
                   <br>
                   <mat-form-field>
-                    <input matInput placeholder="Phone number" [ngModel]="user.phone" required>
+                    <input matInput placeholder="Phone number" [(ngModel)]="phone" name="phone" required>
                   </mat-form-field>
                   <br>
-                
-              <mat-form-field>
-                <input matInput placeholder="First name" [ngModel]="user.first_name" required>
-              </mat-form-field>
-              <mat-form-field>
-                <input matInput placeholder="Last name" [ngModel]="user.last_name" required>
-              </mat-form-field>
-              <mat-form-field>
-                <input matInput placeholder="Password" type="password" [ngModel]="user.password" required>
-              </mat-form-field>
-              <div>
+
+                <mat-form-field>
+                  <input matInput placeholder="First name" [(ngModel)]="first_name" name="first_name" required>
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="Last name" [(ngModel)]="last_name" name="last_name" required>
+                </mat-form-field>
+                <mat-form-field>
+                  <input matInput placeholder="Password" type="password" [(ngModel)]="password" name="password" required>
+                </mat-form-field>
+                <div>
                 <button mat-icon-button>
-                  <mat-icon>check</mat-icon>
+
+                  <button type="submit" name="button" routerLink="user/"><mat-icon>check</mat-icon></button>
                 </button>
               </div>
               </form>
