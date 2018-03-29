@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from './../user.service';
+import { ISubscription } from 'rxjs/Subscription';
+import { User } from '../../library/objects/User';
+import { Group } from '../../library/objects/Group';
+import { Course } from '../../library/objects/Course';
 
 @Component({
   selector: 'app-profile',
@@ -6,6 +11,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+
+  courses: Course[];
+  courseSubscription: ISubscription;
+
+  user: User;
+  userSubscription:ISubscription;
 
   coursesOffered = [
     {value: 'CS1530', viewValue: 'CS1530'},
@@ -18,9 +29,25 @@ export class ProfileComponent implements OnInit {
     {value: 'tutor', viewValue: 'Have Taken'}
   ];
 
-  constructor() { }
+  constructor(private service:UserService) { }
 
   ngOnInit() {
+    this.courseSubscription = this.service.courses.subscribe(
+      courses => {
+        this.courses = courses;
+      });
+
+      this.userSubscription = this.service.user.subscribe(
+        user => {
+          this.user = user;
+        });
+    this.service.getCourses();
   }
+
+  addCourse(course:Course): void {
+    this.user.user_courses.push(course);
+  }
+
+
 
 }
