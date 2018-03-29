@@ -15,6 +15,8 @@ import {MatCardModule} from '@angular/material/card';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AboutUsComponent } from './about-us/about-us.component';
 
+import { LibraryModule } from '../library/library.module';
+import { HomeService } from './home.service';
 
 @NgModule({
   declarations: [
@@ -35,6 +37,6 @@ import { AboutUsComponent } from './about-us/about-us.component';
   exports: [
     HomeComponent
   ],
-  providers: []
+  providers: [HomeService]
 })
 export class HomeModule { }

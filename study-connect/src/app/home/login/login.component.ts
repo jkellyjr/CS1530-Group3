@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { HomeService } from '../home.service';
+import { ISubscription } from 'rxjs/Subscription';
+import { User } from '../../library/objects/user';
 
 @Component({
   selector: 'app-login',
@@ -12,12 +15,17 @@ export class LoginComponent implements OnInit {
   firstRegisterGroup: FormGroup;
   secondRegisterGroup: FormGroup;
   thirdRegisterGroup: FormGroup;
-  fourthRegisterGroup: FormGroup;
-  fifthRegisterGroup: FormGroup;
+  user: User;
+  userSubscription: ISubscription;
 
-  constructor(private _formBuilder: FormBuilder) { }
+  constructor(private _formBuilder: FormBuilder, private _homeService: HomeService) { }
 
   ngOnInit() {
+    this.userSubscription = this._homeService.user.subscribe(
+      user => {
+        this.user = user;
+      }
+    );
     this.loginGroup = this._formBuilder.group({
       loginCtrl: ['', Validators.required]
     })
