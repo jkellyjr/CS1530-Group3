@@ -5,6 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { User } from '../library/objects/User';
 import { Group } from '../library/objects/Group';
+import { Course } from '../library/objects/Course';
 
 @Injectable()
 export class UserService {
@@ -29,13 +30,13 @@ export class UserService {
     this.userSubject = new BehaviorSubject(null);
     this.userObservable = this.userSubject.asObservable();
 
-    this.tutorsSubject = new BehaviorSubject([]]);
+    this.tutorsSubject = new BehaviorSubject([]);
     this.tutorsObservable = this.studentsSubject.asObservable();
 
-    this.studentsSubject = new BehaviorSubject([]]);
+    this.studentsSubject = new BehaviorSubject([]);
     this.studentsObservable = this.studentsSubject.asObservable();
 
-    this.groupsSubject = new BehaviorSubject([]]);
+    this.groupsSubject = new BehaviorSubject([]);
     this.groupsObservable = this.groupsSubject.asObservable();
 
     this.coursesSubject = new BehaviorSubject([]);
@@ -95,7 +96,7 @@ export class UserService {
   }
 
   updateUser(user:User): Observable<User>{
-      this.userSubject.next([]);
+      this.userSubject.next(null);
 
       this.http.put(this.restUrl + 'user/', user)
         .subscribe(
