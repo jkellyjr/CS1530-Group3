@@ -5,6 +5,8 @@ export class Course {
   description:string;
   subj_code:string;
   course_num:number;
+  tutor_list:any[];
+  group_list:any[]
 }
 
 // id = db.Column(db.Integer, unique = True, primary_key = True)
