@@ -1,5 +1,4 @@
-// import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 
 
 import { HomeComponent } from './home.component';
@@ -37,6 +36,13 @@ import { HomeService } from './home.service';
   exports: [
     HomeComponent
   ],
-  providers: [HomeService]
+  providers: []
 })
-export class HomeModule { }
+export class HomeModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: HomeModule,
+      providers: [HomeService]
+    };
+  }
+}
