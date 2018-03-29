@@ -21,7 +21,7 @@ export class HomeService {
   login(info:User): Observable<User> {
     this.userSubject.next(null);
 
-    this.http.post(this.restUrl + 'login?expand=all', info)
+    this.http.post(this.restUrl + 'login/', info)
       .subscribe(
         body => {
           this.userSubject.next(body.json() as User);
@@ -33,7 +33,7 @@ export class HomeService {
 
   register(info:User): Observable<User> {
     this.userSubject.next(null);
-    this.http.post(this.restUrl+ 'register?expand=all', info)
+    this.http.post(this.restUrl+ 'register/', info)
       .subscribe(
         body =>{
           this.userSubject.next(body.json() as User);
