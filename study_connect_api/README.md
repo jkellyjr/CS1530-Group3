@@ -11,4 +11,4 @@
 
 ## Running the App
 
-Once installed, the application can be started with `flask run`.
+Once installed, the application can be started with `python app.py`.
