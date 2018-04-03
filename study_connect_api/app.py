@@ -178,7 +178,6 @@ get_group_parser.add_argument('id')
 
 post_group_parser = reqparse.RequestParser()
 post_group_parser.add_argument('name', location='form')
-post_group_parser.add_argument('name', location='form')
 
 class GroupAPI(Resource):
 
@@ -207,7 +206,7 @@ class GroupAPI(Resource):
 
 
 class MeetingAPI(Resource):
-    def get(self, meeting_id):
+    def get(self):
         meetings = []
         temp = Meeting.query.filter_by(id = meeting_id).first()
 
@@ -231,26 +230,24 @@ class MeetingAPI(Resource):
         db.session.commit()
         return 200
 
+get_course_parser = reqparse.RequestParser()
+get_course_parser.add_argument('id')
 
 class CourseAPI(Resource):
 
-    def get(self, course_id):
-        temp = Course.query.filter_by(id = course_id).first()
+    def get(self):
+        args = get_course_parser.parse_args()
+        if args['id'] is None:
+            courses = []
+            temp = Course.query.all()
+            for x in temp:
+                courses.append(x.serialize())
+            return courses
+        temp = Course.query.filter_by(id = args['id']).first()
 
-        tutorList = [{'id': tutor.id, 'name': tutor.user_id} for tutor in temp.course_tutors]
-        groupList = [{'id': group.id, 'name': group.name} for group in temp.course_groups]
-
-        course = {
-            'id' : temp.id,
-            'name' : temp.name,
-            'description' : temp.description,
-            'subj_code' : temp.subj_code,
-            'course_num' : temp.course_num,
-            'tutor_list': tutorList,
-            'group_list': groupList
-        }
-
-        return course
+        if temp is None:
+            return 404
+        return temp.serialize()
 
 
     def post(self, course_id):
@@ -270,74 +267,74 @@ class CourseAPI(Resource):
         return 200
 
 
-class TutorAPI(Resource):
+# class TutorAPI(Resource):
 
-    def get(self, tutor_id):
-        temp = Tutor.query.filter_by(id = tutor_id).first()
-        user = User.query.filter_by(id = temp.user.id).first()
-        course = Course.query.filter_by(id = temp.course_id).first()
+#     def get(self, tutor_id):
+#         temp = Tutor.query.filter_by(id = tutor_id).first()
+#         user = User.query.filter_by(id = temp.user.id).first()
+#         course = Course.query.filter_by(id = temp.course_id).first()
 
-        meetingList = [{'id': meeting.id, 'name': meeting.name} for meeting in temp.meetings]
+#         meetingList = [{'id': meeting.id, 'name': meeting.name} for meeting in temp.meetings]
 
-        tut = {
-            'user_id' : temp.user.id,
-            'user_first_name': user.first_name,
-            'user_last_name': user.last_name
-        }
+#         tut = {
+#             'user_id' : temp.user.id,
+#             'user_first_name': user.first_name,
+#             'user_last_name': user.last_name
+#         }
 
-        course = {
-            'course_id' : temp.course.id,
-            'course_name': course.name
-        }
+#         course = {
+#             'course_id' : temp.course.id,
+#             'course_name': course.name
+#         }
 
-        tutor = {
-            'id' : temp.id,
-            'user': tut,
-            'course': course,
-            'meeting_list': meetingList
-        }
+#         tutor = {
+#             'id' : temp.id,
+#             'user': tut,
+#             'course': course,
+#             'meeting_list': meetingList
+#         }
 
-        return tutor
+#         return tutor
 
-    def post(self, tutor_id):
-        args = parser.parse_args()
-        data = json.loads(args['gonads'])
+#     def post(self, tutor_id):
+#         args = parser.parse_args()
+#         data = json.loads(args['gonads'])
 
-        new_tutor = Tutor(data['user_id'], data['course_id'])
+#         new_tutor = Tutor(data['user_id'], data['course_id'])
 
-        db.session.add(new_tutor)
-        db.session.commit()
-        return 201
+#         db.session.add(new_tutor)
+#         db.session.commit()
+#         return 201
 
-    def delete(self, tutor_id):
-        temp = Tutor.query.filter_by(id = tutor_id).first()
-        db.session.delete(temp)
-        db.session.commit()
-        return 200
-
-
+#     def delete(self, tutor_id):
+#         temp = Tutor.query.filter_by(id = tutor_id).first()
+#         db.session.delete(temp)
+#         db.session.commit()
+#         return 200
 
 
-class RegisterAPI(Resource):
 
-    def post(self):
-        user = User.query.filter_by(email = request.form['email']).first()
-        if user is not None:
-            return 401
-        else:
-            temp = User(request.form['first_name'], request.form['last_name'], request.form['email'], request.form['phone'], request.form['password'], request.form['bio'])
+
+# class RegisterAPI(Resource):
+
+#     def post(self):
+#         user = User.query.filter_by(email = request.form['email']).first()
+#         if user is not None:
+#             return 401
+#         else:
+#             temp = User(request.form['first_name'], request.form['last_name'], request.form['email'], request.form['phone'], request.form['password'], request.form['bio'])
  
-        print(temp)
+#         print(temp)
 
-        db.session.add(temp)
-        db.session.commit()
+#         db.session.add(temp)
+#         db.session.commit()
 
-        final_user = {'id' : temp.id, 'first_name' : temp.first_name, 'last_name' : temp.last_name, 'email': temp.email, 'phone' : temp.phone, 'bio' : temp.bio}
+#         final_user = {'id' : temp.id, 'first_name' : temp.first_name, 'last_name' : temp.last_name, 'email': temp.email, 'phone' : temp.phone, 'bio' : temp.bio}
 
 
 
-        #user = User.query.filter
-        return final_user
+#         #user = User.query.filter
+#         return final_user
     
     
     
@@ -391,7 +388,7 @@ api.add_resource(CourseAPI, '/api/course/')
 api.add_resource(rating, '/rating/<rating_id>')
 api.add_resource(message, '/message/<message_id>')
 '''
-api.add_resource(RegisterAPI, '/api/register')
+# api.add_resource(RegisterAPI, '/api/register')
 
 
 
