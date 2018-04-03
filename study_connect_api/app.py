@@ -65,25 +65,43 @@ get_user_parser = reqparse.RequestParser()
 get_user_parser.add_argument('id')
 
 post_user_parser = reqparse.RequestParser()
-post_user_parser.add_argument('id')
-post_user_parser.add_argument('first_name')
-post_user_parser.add_argument('last_name')
-post_user_parser.add_argument('email')
-post_user_parser.add_argument('phone')
-post_user_parser.add_argument('bio')
-post_user_parser.add_argument('password')
+post_user_parser.add_argument('first_name', location='form')
+post_user_parser.add_argument('last_name', location='form')
+post_user_parser.add_argument('email', location='form')
+post_user_parser.add_argument('phone', location='form')
+post_user_parser.add_argument('password', location='form')
 
-get_login_parser = reqparse.RequestParser()
+put_user_parser = reqparse.RequestParser()
+put_user_parser.add_argument('id', location='form')
+put_user_parser.add_argument('first_name', location='form')
+put_user_parser.add_argument('last_name', location='form')
+put_user_parser.add_argument('email', location='form')
+put_user_parser.add_argument('phone', location='form')
+put_user_parser.add_argument('bio', location='form')
+
+login_parser = reqparse.RequestParser()
+login_parser.add_argument('email')
+login_parser.add_argument('password')
 
 class UserAPI(Resource):
 
     def get(self):
         args = get_user_parser.parse_args()
-        print(args['id'])
         temp = User.query.filter_by(id = args['id']).first()
 
         if temp is None:
             return 404
+        return temp.serialize()
+
+    def put(self):
+        args = put_user_parser.parse_args()
+        salted_pass = generate_password_hash(args['password'])
+        
+        # Registration
+        db.session.add(User(first_name=args['first_name'], last_name=args['last_name'], email=args['email'], phone=args['phone'], password=salted_pass))
+        db.session.commit()
+
+        temp = User.query.filter_by(email = args['email']).first()
         return temp.serialize()
 
     def post(self):
@@ -105,15 +123,19 @@ class UserAPI(Resource):
 
             return temp.serialize();
 
-        salted_pass = generate_password_hash(args['password'])
+        return 400
         
-        # Registration
-        db.session.add(User(first_name=args['first_name'], last_name=args['last_name'], email=args['email'], phone=args['phone'], password=salted_pass))
-        db.session.commit()
 
+
+class LoginAPI(Resource):
+    def post(self):
+        args = login_parser.parse_args();
         temp = User.query.filter_by(email = args['email']).first()
-        return temp.serialize()
 
+        if temp is None or not check_password_hash(temp.password, args['password']):
+            return 404
+        
+        return temp.serialize()
 
 
 class GroupAPI(Resource):
@@ -264,29 +286,6 @@ class TutorAPI(Resource):
         return 200
 
 
-class LoginAPI(Resource):
-    def post(self):
-        args = parser.parse_args()
-        data = json.loads(args['gonads'])
-        
-        print(data)
-
-        user = User.query.filter_by(email = data['email']).first()
-        
-        if user is None:
-            return 401
-        elif not check_password_hash(user.password, data['password']):
-            return 401
-        else:
-            #users = []
-            #users.append({'id' : user.id})
-            user = { 'id' : user.id, 'first_name' : user.first_name, 'last_name' : user.last_name, 'email' : user.email, 'phone' : user.phone, 'bio' : user.bio}
-            
-            
-            return user
-            #return jsonify({'users' : users})
-
-
 
 
 class RegisterAPI(Resource):
@@ -354,6 +353,7 @@ class message(Resource):
 
 
 api.add_resource(UserAPI, '/api/user/')
+api.add_resource(LoginAPI, '/api/login/')
 api.add_resource(GroupAPI, '/api/group/')
 api.add_resource(MeetingAPI, '/api/meeting/')
 api.add_resource(CourseAPI, '/api/course/')
