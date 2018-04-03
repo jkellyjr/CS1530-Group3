@@ -3,3 +3,4 @@ include/
 lib/
 .Python
 *.db
+__pycache__/
