@@ -203,6 +203,31 @@ class GroupAPI(Resource):
         db.session.commit()
         return 201
 
+suggested_groups_parser = reqparse.RequestParser()
+suggested_groups_parser.add_argument('user_id')
+
+class SuggestedGroupsAPI(Resource):
+    def get(self):
+        args = suggested_groups_parser.parse_args()
+        if args['user_id'] is None:
+            return 400
+        u = User.query.filter_by(id = args['user_id']).first()
+        if u is None:
+            return 404
+        groups = Group.query.all()
+        sug_groups = []
+        for x in groups:
+            sug = False
+            if x not in u.groups:
+                for y in u.current_courses:
+                    if y in x.group_courses:
+                        sug = True
+            if sug:
+                sug_groups.append(x.serialize())
+        
+        return sug_groups
+
+
 
 class MeetingAPI(Resource):
     def get(self):
@@ -283,6 +308,7 @@ class CourseAPI(Resource):
 api.add_resource(UserAPI, '/api/user/')
 api.add_resource(LoginAPI, '/api/login/')
 api.add_resource(GroupAPI, '/api/group/')
+api.add_resource(SuggestedGroupsAPI, '/api/group/suggested/')
 api.add_resource(MeetingAPI, '/api/meeting/')
 api.add_resource(CourseAPI, '/api/course/')
 # api.add_resource(rating, '/rating/<rating_id>')
