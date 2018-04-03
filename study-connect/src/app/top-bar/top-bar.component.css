@@ -1,0 +1,21 @@
+#topBarTitle {
+    margin-left: 5px;
+}
+mat-toolbar {
+    color: #ffffff;
+    background: #25313f;
+}
+#leftStuff {
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+    align-items: baseline;
+}
+#rightStuff {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 50%;
+}
+
+

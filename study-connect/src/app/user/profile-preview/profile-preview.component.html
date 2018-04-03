@@ -1,0 +1,24 @@
+<mat-card>
+  <mat-card-title>
+    {{user.first_name}} {{user.last_name}}
+  </mat-card-title>
+  <mat-card-content>
+    <mat-list>
+      <mat-list-item>Phone: {{user.phone}} </mat-list-item>
+      <mat-list-item>Bio: {{user.bio}} </mat-list-item>
+
+      <mat-list-item>Current courses:
+        <mat-chip-list>
+          <mat-chip *ngFor="let c of user.current_courses">{{c.name}}</mat-chip>
+        </mat-chip-list>
+      </mat-list-item>
+
+      <mat-list-item>Previous courses:
+        <mat-chip-list>
+          <mat-chip *ngFor="let p of user.past_courses">{{p.name}}</mat-chip>
+        </mat-chip-list>
+      </mat-list-item>
+
+    </mat-list>
+  </mat-card-content>
+</mat-card>
