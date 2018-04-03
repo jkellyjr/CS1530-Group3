@@ -13,7 +13,7 @@ export class UserComponent implements OnInit {
 
  constructor(private service:UserService){
    service.getCourses();
-   service.getTutors();
+  //  service.getTutors();
    service.getGroups();
    service.getStudents();
  }

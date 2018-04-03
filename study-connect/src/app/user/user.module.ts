@@ -11,6 +11,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { SearchComponent } from './search/search.component';
 import { ProfilePreviewComponent } from './profile-preview/profile-preview.component';
 
+
 import {MatInputModule} from '@angular/material/input';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatTabsModule} from '@angular/material/tabs';

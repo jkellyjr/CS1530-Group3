@@ -13,7 +13,6 @@ const userRoutes: Routes = [
   {
     path: '',
     component: UserComponent,
-    canActivate: [ AuthGuard ],
     children: [
       {
         path: '',

@@ -16,6 +16,9 @@ export class LoginComponent implements OnInit {
   loggedIn: User;
   userSubscription: ISubscription;
 
+  loggedSubscription: ISubscription;
+  isLogged: Boolean;
+
   temp:string;
 
   constructor(public authService: AuthService,
@@ -24,19 +27,35 @@ export class LoginComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.loggedSubscription = this.authService.logged.subscribe(
+      logged => {
 
+        console.log("Is logged changed");
+        this.isLogged = logged;
+
+        // let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : "/user/dashboard";
+        // console.log(logged);
+        // console.log(redirect);
+        if (logged) {
+          this.router.navigate(["/user"]);
+        }
+        
+      }
+    )
   }
 
   login() {
     console.log("login");
     this.authService.login(this.user).subscribe(() => {
-          if (this.authService.isLoggedIn) {
+          console.log(this.authService.isLoggedIn);
+          if (true) {
             // Get the redirect URL from our auth service
             // If no redirect has been set, use the default
-            let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/user/dashboard';
 
-            // Redirect the user
-            this.router.navigate([redirect]);
+            // let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/user';
+            // console.log(redirect);
+            // // Redirect the user
+            // this.router.navigate(["/user"]);
           }
         });
   }

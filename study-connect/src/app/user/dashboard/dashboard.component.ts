@@ -23,9 +23,11 @@ export class DashboardComponent implements OnInit {
     this.userSubscription = this.authService.user.subscribe(
       user => {
         this.user = user;
+        console.log(JSON.stringify(this.user));
       });
 
-
   }
-
+  logout(): void {
+    this.authService.logout();
+  }
 }

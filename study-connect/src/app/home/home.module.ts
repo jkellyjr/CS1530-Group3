@@ -16,6 +16,7 @@ import { AboutUsComponent } from './about-us/about-us.component';
 
 import { LibraryModule } from '../library/library.module';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @NgModule({
   declarations: [

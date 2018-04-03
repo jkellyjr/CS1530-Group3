@@ -18,9 +18,15 @@ export class AuthService {
   userSubject: BehaviorSubject<User>;
   userObservable: Observable<User>;
 
+  loggedSubject: BehaviorSubject<Boolean>;
+  loggedObservable: Observable<Boolean>;
+
   constructor(private http: Http) {
     this.userSubject = new BehaviorSubject(null);
     this.userObservable = this.userSubject.asObservable();
+
+    this.loggedSubject = new BehaviorSubject(false);
+    this.loggedObservable = this.loggedSubject.asObservable();
   }
 
   login(info:User): Observable<Boolean> {
@@ -30,7 +36,10 @@ export class AuthService {
       .subscribe(
         body => {
           this.userSubject.next(body.json() as User);
-
+          console.log(JSON.stringify((body.json() as User)));
+          this.redirectUrl = "user/dashboard";
+          this.isLoggedIn = true;
+          this.loggedSubject.next(true);
           return Observable.of(true);
         }, error => {
           console.log(error.text());
@@ -40,11 +49,12 @@ export class AuthService {
 
   register(info:User): Observable<Boolean> {
     this.userSubject.next(null);
-    this.http.post(this.restUrl+ 'register/', info)
+    this.http.post(this.restUrl+ 'user/', info)
       .subscribe(
         body =>{
+          this.isLoggedIn = true;
           this.userSubject.next(body.json() as User);
-
+          this.redirectUrl = "user/profile"
           return Observable.of(true);
         }, error => {
           console.log(error.text());
@@ -59,5 +69,9 @@ export class AuthService {
 
   get user(): Observable<User>{
     return this.userObservable;
+  }
+
+  get logged(): Observable<Boolean>{
+    return this.loggedObservable;
   }
 }

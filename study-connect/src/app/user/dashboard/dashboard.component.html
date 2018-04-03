@@ -1,8 +1,9 @@
 <mat-card>
   <mat-card-title>Profile</mat-card-title>
-  <profile-preview></profile-preview>
+  <profile-preview [user]="user"></profile-preview>
 </mat-card>
 <mat-card>
   <mat-card-title>Search</mat-card-title>
   <app-search [user]="user"></app-search>
 </mat-card>
+<button (click)="logout()" routerLink="/">Logout</button>

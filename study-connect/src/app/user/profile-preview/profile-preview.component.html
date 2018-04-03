@@ -19,6 +19,12 @@
         </mat-chip-list>
       </mat-list-item>
 
+      <mat-list-item>Groups:
+        <mat-chip-list>
+          <mat-chip *ngFor="let g of user.groups">{{g.name}}</mat-chip>
+        </mat-chip-list>
+      </mat-list-item>
+
     </mat-list>
   </mat-card-content>
 </mat-card>
