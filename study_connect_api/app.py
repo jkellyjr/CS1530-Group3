@@ -1,14 +1,65 @@
-from be import app
-from flask import request, render_template, jsonify
+import os
+from flask import Flask, request, render_template, jsonify
 from flask_restful import reqparse, abort, Api, Resource
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User, Group, Meeting, Tutor, Course
-import json
-from be import db
+from models import db, User, Group, Meeting, Tutor, Course
+import json, datetime
 
 
-
+app = Flask(__name__)
 api = Api(app)
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://studyconnect:studyconnect@localhost:5000/sc'
+app.config.update(dict(SQLALCHEMY_DATABASE_URI="sqlite:///"+os.path.join(app.root_path, "sc.db")))
+db.init_app(app)
+
+@app.cli.command('initdb')
+def initdb_command():
+    """Reinitializes the database"""
+    db.drop_all()
+    db.create_all()
+    db.session.commit()
+
+    user1 = User('Bob', 'Smith', 'a@gmail.com', '1111111111', generate_password_hash('123'))
+    user2 = User('Carol', 'Stevens', 'b@gmail.com', '1111111111', generate_password_hash('123'))
+    user3 = User('Anna','Martin','c@gmail.com','1111111111', generate_password_hash('123'))
+    user4 = User('Daniel','Rutgers','d@gmail.com','1111111111', generate_password_hash('123'))
+    user5 = User('Frank','Lorris','e@gmail.com','1111111111', generate_password_hash('123'))
+
+    db.session.add(user1)
+    db.session.add(user2)
+    db.session.add(user3)
+    db.session.add(user4)
+    db.session.add(user5)
+    db.session.commit()
+
+    group1 = Group('tits', 'fuck bitches get money', user1.id)
+    group2 = Group('five0', 'fun fun fun', user1.id)
+    db.session.add(group1)
+    db.session.add(group2)
+    db.session.commit()
+
+    user2.groups.append(group1)
+    user5.groups.append(group1)
+    db.session.add(user2)
+    db.session.add(user5)
+    db.session.commit()
+
+    course1 = Course('course 1', 'this class sucks', 'CS', 1530)
+    db.session.add(course1)
+    db.session.commit()
+
+    tutor1 =  Tutor(course1.id, user2.id)
+    db.session.add(tutor1)
+    db.session.commit()
+
+    group1.group_courses.append(course1)
+    db.session.add(group1)
+    db.session.commit()
+
+    meeting1 = Meeting( 'shalom', datetime.datetime.now(), 'yo bitches house', user1.id, None, tutor1.id)
+    db.session.add(meeting1)
+    db.session.commit()
 
 parser = reqparse.RequestParser()
 parser.add_argument('gonads')

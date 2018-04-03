@@ -29,8 +29,9 @@
 
 #SQLAlchemy models for StudyConnect application
 # from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
-from be import db
+from flask_sqlalchemy import SQLAlchemy
+import datetime
+db = SQLAlchemy()
 from flask_login import UserMixin
 
 '''---------------------------------- Association Tables -------------------------'''
