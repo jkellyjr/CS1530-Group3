@@ -39,7 +39,6 @@ export class CourseFormComponent implements OnInit {
     } else {
       this.user.past_courses.push(this.selectedCourse);
     }
-    this.user = this.service.updateUser(this.user);
   }
 
 }

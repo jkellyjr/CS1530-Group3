@@ -1,4 +1,29 @@
-<mat-card>
-  <mat-card-title>Add Courses</mat-card-title>
-  <course-form [user]="user"></course-form>
-</mat-card>
+<form class="" (ngSubmit)="updateUser()" #profileForm="ngForm">
+  <mat-card>
+    <mat-card-title>Edit Profile</mat-card-title>
+    <user-form [user]="tempUser" [oldPass]="oldPass" [newPass]="newPass" [duplicatePass]="duplicatePass"></user-form>
+  </mat-card>
+  <mat-card>
+    <mat-card-title>Add Courses</mat-card-title>
+    <mat-card-content>
+      <ul>
+        <p>Current courses:</p>
+        <li *ngFor="let c of tempUser.current_courses"> {{c.name}}</li>
+      </ul>
+      <ul>
+        <p>Previous courses:</p>
+        <li *ngFor="let p of tempUser.previous_courses"> {{p.name}}</li>
+      </ul>
+    </mat-card-content>
+    <mat-card-footer>
+      <course-form [user]="user"></course-form>
+    </mat-card-footer>
+  </mat-card>
+  <mat-card>
+    <mat-card-actions>
+      <button mat-raised-button type="submit">
+        Update Profile
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>
