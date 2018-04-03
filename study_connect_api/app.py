@@ -47,28 +47,23 @@ def initdb_command():
     users[2].groups.append(groups[1])
     db.session.commit()
 
-    course1 = Course('Software Engineering', 'Formal methods of software engineering', 'CS', 1530)
+    courses = []
+    courses.append(Course('Software Engineering', 'Formal methods of software engineering', 'CS', 1530))
+    courses.append(Course('Database Management Systems', 'Database Management Systems', 'CS', 1555))
+    courses.append(Course('Web Applications', 'Web Applications', 'CS', 1520))
+    courses.append(Course('Operating Systems', 'Operating Systems', 'CS', 1550))
+    courses.append(Course('Interface Design Methodology', 'Interface design for mobile applications', 'CS', 1635))
+    for x in courses:
+        db.session.add(x)
+
     for x in users:
-        x.current_courses.append(course1)
+        x.current_courses.append(courses[0])
     
-    for x in groups:
-        x.group_courses.append(course1)
+    groups[0].group_courses.append(courses[0])
+    groups[1].group_courses.append(courses[0])
 
-    db.session.add(course1)
+    
     db.session.commit()
-
-
-    # tutor1 =  Tutor(course1.id, user2.id)
-    # db.session.add(tutor1)
-    # db.session.commit()
-
-    # group1.group_courses.append(course1)
-    # db.session.add(group1)
-    # db.session.commit()
-
-    # meeting1 = Meeting( 'shalom', datetime.datetime.now(), 'yo bitches house', user1.id, None, tutor1.id)
-    # db.session.add(meeting1)
-    # db.session.commit()
 
 get_user_parser = reqparse.RequestParser()
 get_user_parser.add_argument('id')
@@ -85,6 +80,7 @@ put_user_parser.add_argument('id', location='form')
 put_user_parser.add_argument('first_name', location='form')
 put_user_parser.add_argument('last_name', location='form')
 put_user_parser.add_argument('email', location='form')
+put_user_parser.add_argument('password', location='form')
 put_user_parser.add_argument('phone', location='form')
 put_user_parser.add_argument('bio', location='form')
 put_user_parser.add_argument('groups', location='form')
@@ -142,6 +138,9 @@ class UserAPI(Resource):
                 temp.past_courses = []
                 for x in past_courses_json:
                     temp.past_courses.append(Course.query.filter_by(id = x['id']).first())
+            
+            if args['password'] is not None:
+                temp.password = generate_password_hash(args['password'])
 
             db.session.commit();
 
