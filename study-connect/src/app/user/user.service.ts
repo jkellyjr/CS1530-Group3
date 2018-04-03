@@ -108,6 +108,15 @@ export class UserService {
           return this.userObservable;
   }
 
+  joinGroup(user:User, groupId:number){
+    this.http.post(this.restUrl+'group/?id='+groupId+'/join',user)
+      .subscribe(
+        body => {
+
+        }
+      )
+  }
+
   get user(): Observable<User>{
     return this.userObservable;
   }
