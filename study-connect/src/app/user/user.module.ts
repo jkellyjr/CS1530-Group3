@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { UserComponent } from './user.component';
 import { UserRoutingModule } from './user-routing.module';
@@ -20,10 +21,12 @@ import {MatListModule} from '@angular/material/list';
 import {MatTableModule} from '@angular/material/table';
 import {MatDialogModule} from '@angular/material/dialog';
 import { GroupPreviewDialog } from './group-preview-dialog/group-preview-dialog.component';
+import { CourseFormComponent } from './profile/course-form/course-form.component';
 
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     UserRoutingModule,
     MatInputModule,
     MatTabsModule,
@@ -42,7 +45,8 @@ import { GroupPreviewDialog } from './group-preview-dialog/group-preview-dialog.
     SearchComponent,
     SettingsComponent,
     ProfilePreviewComponent,
-    GroupPreviewDialog
+    GroupPreviewDialog,
+    CourseFormComponent
   ],
   exports: [
   ],

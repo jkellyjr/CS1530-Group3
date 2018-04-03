@@ -3,16 +3,11 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { User } from '../library/objects/User';
-import { Group } from '../library/objects/Group';
-import { Course } from '../library/objects/Course';
+import { Course, Group, User } from '../library/objects/index';
 
 @Injectable()
 export class UserService {
   restUrl = 'api/';
-
-  userSubject: BehaviorSubject<User>;
-  userObservable: Observable<User>;
 
   tutorsSubject: BehaviorSubject<User[]>;
   tutorsObservable: Observable<User[]>;
@@ -27,8 +22,6 @@ export class UserService {
   coursesObservable: Observable<Course[]>;
 
   constructor(private http: Http) {
-    this.userSubject = new BehaviorSubject(null);
-    this.userObservable = this.userSubject.asObservable();
 
     this.tutorsSubject = new BehaviorSubject([]);
     this.tutorsObservable = this.tutorsSubject.asObservable();
@@ -43,10 +36,10 @@ export class UserService {
     this.coursesObservable = this.coursesSubject.asObservable();
   }
 
-  getTutors(courseNum:number): Observable<User[]> {
+  getTutors(): Observable<User[]> {
     this.tutorsSubject.next([]);
 
-    this.http.get(this.restUrl+ 'tutor/?course_num=courseNum' + courseNum)
+    this.http.get(this.restUrl+ 'tutor/')
       .subscribe(
         body => {
           this.tutorsSubject.next(body.json() as User[]);
@@ -56,10 +49,10 @@ export class UserService {
         return this.tutorsObservable;
   }
 
-  getStudents(courseNum:number): Observable<User[]> {
+  getStudents(): Observable<User[]> {
     this.studentsSubject.next([]);
 
-    this.http.get(this.restUrl+ 'user/?course_num=courseNum' + courseNum)
+    this.http.get(this.restUrl+ 'user/')
       .subscribe(
         body => {
           this.studentsSubject.next(body.json() as User[]);
@@ -69,10 +62,10 @@ export class UserService {
         return this.studentsObservable;
   }
 
-  getGroups(courseNum:number): Observable<Group[]> {
+  getGroups(): Observable<Group[]> {
     this.groupsSubject.next([]);
 
-    this.http.get(this.restUrl + 'group/?course_num=courseNum' + courseNum)
+    this.http.get(this.restUrl + 'group/')
       .subscribe(
         body => {
           this.groupsSubject.next(body.json() as Group[]);
@@ -95,30 +88,25 @@ export class UserService {
         return this.coursesObservable;
   }
 
-  updateUser(user:User): Observable<User>{
-      this.userSubject.next(null);
-
+  updateUser(user:User): User{
       this.http.put(this.restUrl + 'user/', user)
         .subscribe(
           body => {
-            this.userSubject.next(body.json() as User)
+            return (body.json() as User);
           }, error => {
 
           })
-          return this.userObservable;
+          return new User();
   }
 
   joinGroup(user:User, groupId:number){
-    this.http.post(this.restUrl+'group/?id='+groupId+'/join',user)
+    this.http.post(this.restUrl+'group/join/?group_id='+groupId,user)
       .subscribe(
         body => {
 
-        }
-      )
-  }
+        }, error => {
 
-  get user(): Observable<User>{
-    return this.userObservable;
+        })
   }
 
   get tutors(): Observable<User[]> {

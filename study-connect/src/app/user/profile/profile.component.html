@@ -1,25 +1,4 @@
 <mat-card>
   <mat-card-title>Add Courses</mat-card-title>
-  <form id=editProfileForm (ngSubmit)="addCourse(course)">
-    <mat-form-field>
-      <mat-select placeholder="Course No.">
-        <mat-option *ngFor="let course of coursesOffered" [value]="course.value">
-          {{ course.viewValue }}
-        </mat-option>
-        <!-- <mat-option *ngFor="let course of courses" [value]="course.value">
-          {{ course.name }}
-        </mat-option> -->
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-select placeholder="Status">
-        <mat-option *ngFor="let status of studentOrTutor" [value]="status.value">
-          {{ status.viewValue }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <button mat-icon-button>
-      <mat-icon (click)="addCourse()">add</mat-icon>
-    </button>
-  </form>
+  <course-form [user]="user"></course-form>
 </mat-card>
