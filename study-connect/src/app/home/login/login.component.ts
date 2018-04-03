@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    if(this.user.email)
+    console.log("login");
     this.authService.login(this.user).subscribe(() => {
           if (this.authService.isLoggedIn) {
             // Get the redirect URL from our auth service
@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
   }
 
   register() {
+    console.log("register");
     this.authService.register(this.user).subscribe(() => {
           if (this.authService.isLoggedIn) {
             // Get the redirect URL from our auth service

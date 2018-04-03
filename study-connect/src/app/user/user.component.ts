@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../library/objects/index';
+import { UserService } from './user.service';
 
 @Component({
   selector: 'user-component',
@@ -10,7 +11,12 @@ import { User } from '../library/objects/index';
 export class UserComponent implements OnInit {
 
 
- constructor(){}
+ constructor(private service:UserService){
+   service.getCourses();
+   service.getTutors();
+   service.getGroups();
+   service.getStudents();
+ }
 
  ngOnInit(){
 

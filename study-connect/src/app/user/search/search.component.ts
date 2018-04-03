@@ -16,12 +16,17 @@ export class SearchComponent implements OnInit {
   @Input()
   user: User;
 
-  // @Input()
-  // groups: Group[];
-  group: Group;
 
-  tempGroups = [{name: "1530 Exams and Quizzes", description: "Studying"}];
-  dataSource = new MatTableDataSource(this.tempGroups);
+  groups: Group[];
+  groupsSubscription:ISubscription;
+
+  // tutors: User[];
+  // tutorssSubscription:ISubscription;
+  //
+  // students: User[];
+  // studentssSubscription:ISubscription;
+
+  dataSource: MatTableDataSource;
   displayedColumns = ['name', 'description', 'join'];
 
 
@@ -31,13 +36,11 @@ export class SearchComponent implements OnInit {
                }
 
   ngOnInit() {
-    // this.groups[1].name = "1530 Exams and Quizzes";
-    // this.groups[1].description = "Studying";
-    // this.userSubscription = this._userService.user.subscribe(
-    //   user => {
-    //     this.user = user;
-    //   }
-    // );
+    this.groupsSubscription = this._userService.groups.subscribe(
+      groups => {
+        this.groups = groups;
+        this.dataSource = new MatTableDataSource(this.groups);
+      });
   }
 
   openDialog(): void {

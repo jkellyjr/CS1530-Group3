@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from './../user.service';
+import { AuthService } from '../../auth/auth.service';
 import { ISubscription } from 'rxjs/Subscription';
-import { User } from '../../library/objects/User';
-import { Group } from '../../library/objects/Group';
-import { Course } from '../../library/objects/Course';
+import { Course, Group, Meeting, User } from '../../library/objects/index';
 
 @Component({
   selector: 'app-profile',
@@ -18,24 +17,14 @@ export class ProfileComponent implements OnInit {
   newPass: string;
   duplicatePass: string;
 
-  tempUser:User;
-  constructor(private service:UserService) {
-    this.tempUser = new User();
-    this.tempUser.id=0;
-    this.tempUser.first_name = "first_name";
-    this.tempUser.last_name = "last_name";
-    this.tempUser.email = "email";
-    this.tempUser.phone = "phone";
-    this.tempUser.password = "password";
-    this.tempUser.bio = "bio";
-    this.tempUser.groups = new Array<Group>();
-    this.tempUser.current_courses = new Array<Course>();
-    this.tempUser.past_courses = new Array<Course>();
-    this.tempUser.meetings: new Array<Meeting>();
-   }
+  constructor(private service:UserService,
+              private authService:AuthService) { }
 
   ngOnInit() {
-
+    this.userSubscription = this.authService.user.subscribe(
+      user => {
+        this.user = user;
+      };)
   }
 
   updateUser(): void{

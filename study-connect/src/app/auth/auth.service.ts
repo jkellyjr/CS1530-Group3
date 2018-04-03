@@ -54,6 +54,7 @@ export class AuthService {
 
   logout(): void {
     this.isLoggedIn = false;
+    this.userSubject.next(null);
   }
 
   get user(): Observable<User>{
