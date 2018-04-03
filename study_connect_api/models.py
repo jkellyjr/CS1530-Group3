@@ -40,6 +40,11 @@ def dump_datetime(value):
         return None
     return [value.strftime("%Y-%m-%d"), value.strftime("%H:%M:%S")]
 
+def serialize_many(many):
+    ret = []
+    for x in many:
+        ret.append(x.serialize())
+
 '''---------------------------------- Association Tables -------------------------'''
 group_members = db.Table('group_members',
     db.Column('group_id', db.Integer, db.ForeignKey('group.id')),
@@ -77,7 +82,6 @@ class User(db.Model, UserMixin):
     bio = db.Column(db.String(80), nullable = True)
     groups_created = db.relationship('Group', backref = "creator")
     groups = db.relationship('Group', secondary = group_members, backref = db.backref('group_members', lazy = 'dynamic'))
-    # tutor = db.relationship('Tutor', backref = db.backref('user', lazy = True))
     current_courses = db.relationship('Course', secondary = course_students, backref = db.backref('current_students', lazy = 'dynamic'))
     past_courses = db.relationship('Course', secondary = course_tutors, backref = db.backref('past_students', lazy = 'dynamic'))
 
@@ -90,19 +94,20 @@ class User(db.Model, UserMixin):
     # rated = db.relationship('Rating', backref = db.backref('user_rated', lazy = True))
 
     def serialize(self):
+        combined_meetings = list(self.tutor_meetings)
+        combined_meetings.extend(self.student_meetings)
         return {
             'id':self.id,
             'first_name':self.first_name,
             'last_name':self.last_name,
             'email':self.email,
             'phone':self.phone,
-            'bio':self.bio
-            # 'groups_created':serialize_many_groups(self.groups_created),
+            'bio':self.bio,
+            'groups_created':serialize_many(self.groups_created),
             # 'groups':serialize_many_groups(self.groups),
-            # 'current_courses':serialize_many_courses(self.current_courses),
-            # 'past_courses':serialize_many_courses(self.past_courses),
-            # 'tutor_meetings':serialize_many_meetings(self.tutor_meetings),
-            # 'student_meetings':serialize_many_meetings(self.student_meetings),
+            'current_courses':serialize_many(self.current_courses),
+            'past_courses':serialize_many(self.past_courses),
+            'meetings':serialize_many(combined_meetings)
             # 'sent_messages':serialize_many_messages(self.sent_messages),
             # 'single_rcpt_messages':serialize_many_messages(self.single_rcpt_messages)
         }
@@ -138,10 +143,10 @@ class Group(db.Model):
         return {
             'id':self.id,
             'name':self.name,
-            'description':self.description
-            # 'group_courses':serialize_many_courses(self.group_courses),
+            'description':self.description,
+            'group_courses':serialize_many(self.group_courses),
             # 'group_members':serialize_many_users(self.group_members),
-            # 'meetings':serialize_many_meetings(self.meetings),
+            'meetings':serialize_many(self.meetings)
             # 'group_rcpt_messages':serialize_many_messages(self.group_rcpt_messages)
         }
 
@@ -292,10 +297,10 @@ class Meeting(db.Model):
             'id':self.id,
             'name':self.name,
             'meeting_time':dump_datetime(self.meeting_time),
-            'location':self.location,
-            'group':self.group.serialize(),
-            'student':self.student.serialize(),
-            'tutor':self.tutor.serialize()
+            'location':self.location
+            # 'group':self.group.serialize(),
+            # 'student':self.student.serialize(),
+            # 'tutor':self.tutor.serialize()
         }
 
     def __init__(self, name, meeting_time, location, student, group, tutor):

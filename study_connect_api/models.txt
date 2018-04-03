@@ -7,14 +7,17 @@ email: String
 phone: String
 password: String
 bio: String
-groups_created: Group[]
 groups: Group[]
 current_courses: Course[]
 past_courses: Course[]
-tutor_meetings: Meeting[]
-student_meetings: Meeting[]
+meetings: Meeting[]
+
+Not Sending in JSON
+-----------------------------------
+groups_created: Group[]
 sent_messages: Message[]
 single_rcpt_messages: Message[]
+-----------------------------------
 
 Group
 ==================================
@@ -22,9 +25,13 @@ id: Integer
 name: String
 description: String
 group_courses: Course[]
-group_members: User[]
 meetings: Meeting[]
+
+Not Sending in JSON
+-----------------------------------
+group_members: User[]
 group_rcpt_messages: Message[]
+-----------------------------------
 
 Course
 ==================================
@@ -33,9 +40,13 @@ name: String
 description: String
 subj_code: String
 course_num: Integer
+
+Not Sending in JSON
+-----------------------------------
 current_students: User[]
 past_students: User[]
 study_groups: Group[]
+-----------------------------------
 
 Meeting
 ==================================
@@ -43,9 +54,13 @@ id: Integer
 name: String
 meeting_time: DateTime
 location: String
+
+Not Sending in JSON
+-----------------------------------
 group: Group
 student: User
 tutor: User
+-----------------------------------
 
 Message
 ==================================

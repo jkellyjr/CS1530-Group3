@@ -79,14 +79,16 @@ put_user_parser.add_argument('email', location='form')
 put_user_parser.add_argument('phone', location='form')
 put_user_parser.add_argument('bio', location='form')
 
-login_parser = reqparse.RequestParser()
-login_parser.add_argument('email')
-login_parser.add_argument('password')
-
 class UserAPI(Resource):
 
     def get(self):
         args = get_user_parser.parse_args()
+        if args['id'] is None:
+            users = []
+            temp = User.query.all()
+            for u in temp:
+                users.append(u.serialize())
+            return users
         temp = User.query.filter_by(id = args['id']).first()
 
         if temp is None:
@@ -95,17 +97,6 @@ class UserAPI(Resource):
 
     def put(self):
         args = put_user_parser.parse_args()
-        salted_pass = generate_password_hash(args['password'])
-        
-        # Registration
-        db.session.add(User(first_name=args['first_name'], last_name=args['last_name'], email=args['email'], phone=args['phone'], password=salted_pass))
-        db.session.commit()
-
-        temp = User.query.filter_by(email = args['email']).first()
-        return temp.serialize()
-
-    def post(self):
-        args = post_user_parser.parse_args()
         if args['id'] is not None:
             temp = User.query.filter_by(id = args['id']).first()
 
@@ -124,8 +115,22 @@ class UserAPI(Resource):
             return temp.serialize();
 
         return 400
+
+    def post(self):
+        args = post_user_parser.parse_args()
+        salted_pass = generate_password_hash(args['password'])
+        
+        # Registration
+        db.session.add(User(first_name=args['first_name'], last_name=args['last_name'], email=args['email'], phone=args['phone'], password=salted_pass))
+        db.session.commit()
+
+        temp = User.query.filter_by(email = args['email']).first()
+        return temp.serialize()
         
 
+login_parser = reqparse.RequestParser()
+login_parser.add_argument('email', location='form')
+login_parser.add_argument('password', location='form')
 
 class LoginAPI(Resource):
     def post(self):
@@ -137,43 +142,37 @@ class LoginAPI(Resource):
         
         return temp.serialize()
 
+get_group_parser = reqparse.RequestParser()
+get_group_parser.add_argument('id')
+
+post_group_parser = reqparse.RequestParser()
+post_group_parser.add_argument('name', location='form')
+post_group_parser.add_argument('name', location='form')
 
 class GroupAPI(Resource):
 
-    def get(self, group_id):
-        temp = Group.query.filter_by(id = group_id).first()
+    def get(self):
+        args = get_group_parser.parse_args()
+        if args['id'] is None:
+            groups = []
+            temp = Group.query.all()
+            for x in temp:
+                groups.append(x.serialize())
+            return groups
+        temp = Group.query.filter_by(id = args['id']).first()
 
-        courseMembersList = [{'id': member.id, 'first_name': member.first_name, 'last_name': member.last_name} for member in temp.group_members]
-        courseList = [{'id': course.id, 'name': course.name} for course in temp.group_courses]
-        meetingList = [{'id': meeting.id, 'name': meeting.name} for meeting in temp.meetings]
-
-        group = {
-            'id' : temp.id,
-            'name' : temp.name,
-            'description' : temp.description,
-            'creater': temp.user.id,
-            'members': courseMembersList,
-            'course_list': courseList,
-            'meeting_list': meetingList
-        }
-
-        return group
+        if temp is None:
+            return 404
+        return temp.serialize()
 
     def post(self, group_id):
-        args = parser.parse_args()
+        args = post_group_parser.parse_args()
         data = json.loads(args['gonads'])
 
         new_group = Group(data['name'], data['description'], data['creater'])
         db.session.add(new_group)
         db.session.commit()
         return 201
-
-
-    def delete(self, group_id):
-        temp = Group.query.filter_by(id = group_id).first()
-        db.session.delete(temp)
-        db.session.commit()
-        return 200
 
 
 class MeetingAPI(Resource):
