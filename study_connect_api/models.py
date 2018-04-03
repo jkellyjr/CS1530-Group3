@@ -34,6 +34,12 @@ import datetime
 db = SQLAlchemy()
 from flask_login import UserMixin
 
+def dump_datetime(value):
+    """Deserialize datetime object into string form for JSON processing."""
+    if value is None:
+        return None
+    return [value.strftime("%Y-%m-%d"), value.strftime("%H:%M:%S")]
+
 '''---------------------------------- Association Tables -------------------------'''
 group_members = db.Table('group_members',
     db.Column('group_id', db.Integer, db.ForeignKey('group.id')),
@@ -83,6 +89,24 @@ class User(db.Model, UserMixin):
     # rating = db.relationship('Rating', backref = db.backref('user_rating', lazy = True))
     # rated = db.relationship('Rating', backref = db.backref('user_rated', lazy = True))
 
+    def serialize(self):
+        return {
+            'id':self.id,
+            'first_name':self.first_name,
+            'last_name':self.last_name,
+            'email':self.email,
+            'phone':self.phone,
+            'bio':self.bio
+            # 'groups_created':serialize_many_groups(self.groups_created),
+            # 'groups':serialize_many_groups(self.groups),
+            # 'current_courses':serialize_many_courses(self.current_courses),
+            # 'past_courses':serialize_many_courses(self.past_courses),
+            # 'tutor_meetings':serialize_many_meetings(self.tutor_meetings),
+            # 'student_meetings':serialize_many_meetings(self.student_meetings),
+            # 'sent_messages':serialize_many_messages(self.sent_messages),
+            # 'single_rcpt_messages':serialize_many_messages(self.single_rcpt_messages)
+        }
+
 
     def __init__(self, first_name, last_name, email, phone, password):
         self.first_name = first_name
@@ -110,8 +134,16 @@ class Group(db.Model):
     # rating = db.relationship('Ratings', backref = db.backref('study_group_rating', lazy = True))
     # rated = db.relationship('Ratings', backref = db.backref('study_group_rated', lazy = True))
 
-    # message = db.relationship('Message', backref = db.backref('group', lazy = True))
-
+    def serialize(self):
+        return {
+            'id':self.id,
+            'name':self.name,
+            'description':self.description
+            # 'group_courses':serialize_many_courses(self.group_courses),
+            # 'group_members':serialize_many_users(self.group_members),
+            # 'meetings':serialize_many_meetings(self.meetings),
+            # 'group_rcpt_messages':serialize_many_messages(self.group_rcpt_messages)
+        }
 
     def __init__(self, name, description, creator_id):
         self.name = name
@@ -134,6 +166,18 @@ class Course(db.Model):
     course_num = db.Column(db.Integer, nullable = False)
 
     # course_tutor = db.relationship('Tutor', backref = db.backref('course', lazy = True))
+
+    def serialize(self):
+        return {
+            'id':self.id,
+            'name':self.name,
+            'description':self.description,
+            'subj_code':self.subj_code,
+            'course_num':self.course_num
+            # 'current_students':serialize_many_users(self.current_students),
+            # 'past_students':serialize_many_users(self.past_students),
+            # 'study_groups':serialize_many_groups(self.study_groups)
+        }
 
     def __init__(self, name, description, subj_code, course_num):
         self.name = name
@@ -173,6 +217,16 @@ class Message(db.Model):
     group_rcpt_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable = True)
     sent_time = db.Column(db.DateTime, nullable = False)
     content = db.Column(db.Text, nullable = False)
+
+    def serialize(self):
+        return {
+            'id':self.id,
+            'sender':self.sender.serialize(),
+            'single_rcpt':self.single_rcpt.serialize(),
+            'group_rcpt':self.group_rcpt.serialize(),
+            'send_time':dump_datetime(self.send_time),
+            'content':self.content
+        }
 
     def __init__(self, sender_id, single_rcpt, group_rcpt, sent_time, content):
         self.sender_id = sender_id
@@ -232,6 +286,17 @@ class Meeting(db.Model):
 
     student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tutor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def serialize(self):
+        return {
+            'id':self.id,
+            'name':self.name,
+            'meeting_time':dump_datetime(self.meeting_time),
+            'location':self.location,
+            'group':self.group.serialize(),
+            'student':self.student.serialize(),
+            'tutor':self.tutor.serialize()
+        }
 
     def __init__(self, name, meeting_time, location, student, group, tutor):
         self.name = name
