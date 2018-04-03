@@ -36,18 +36,23 @@ from flask_login import UserMixin
 
 '''---------------------------------- Association Tables -------------------------'''
 group_members = db.Table('group_members',
-    db.Column('group_id', db.Integer, db.ForeignKey('study_group.id')),
+    db.Column('group_id', db.Integer, db.ForeignKey('group.id')),
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
 )
 
 course_groups = db.Table('course_groups',
-    db.Column('group_id', db.Integer, db.ForeignKey('study_group.id')),
+    db.Column('group_id', db.Integer, db.ForeignKey('group.id')),
     db.Column('course_id', db.Integer, db.ForeignKey('course.id'))
 )
 
-course_users = db.Table('course_users',
-    db.Column('group_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('course_id', db.Integer, db.ForeignKey('course.id'))
+course_tutors = db.Table('course_tutors',
+    db.Column('course_id', db.Integer, db.ForeignKey('course.id')),
+    db.Column('tutor_id', db.Integer, db.ForeignKey('user.id'))
+)
+
+course_students = db.Table('course_students',
+    db.Column('course_id', db.Integer, db.ForeignKey('course.id')),
+    db.Column('student_id', db.Integer, db.ForeignKey('user.id'))
 )
 
 
@@ -64,14 +69,17 @@ class User(db.Model, UserMixin):
     phone = db.Column(db.String(12), nullable = False)
     password = db.Column(db.String(300), nullable = False)
     bio = db.Column(db.String(80), nullable = True)
-
-    groups_created = db.relationship('Group', backref = db.backref('user', lazy = True))
+    groups_created = db.relationship('Group', backref = "creator")
     groups = db.relationship('Group', secondary = group_members, backref = db.backref('group_members', lazy = 'dynamic'))
-    tutor = db.relationship('Tutor', backref = db.backref('user', lazy = True))
-    user_courses = db.relationship('Course', secondary = course_users, backref = db.backref('course_users', lazy = 'dynamic'))
-    meetings = db.relationship('Meeting', backref = db.backref('user', lazy = True))
+    # tutor = db.relationship('Tutor', backref = db.backref('user', lazy = True))
+    current_courses = db.relationship('Course', secondary = course_students, backref = db.backref('current_students', lazy = 'dynamic'))
+    past_courses = db.relationship('Course', secondary = course_tutors, backref = db.backref('past_students', lazy = 'dynamic'))
 
-    # message = db.relationship('Messages', backref = db.backref('user', lazy = True))
+    tutor_meetings = db.relationship('Meeting', primaryjoin='User.id == Meeting.tutor_id', backref='tutor', lazy='dynamic')
+    student_meetings = db.relationship('Meeting', primaryjoin='User.id == Meeting.student_id', backref='student', lazy='dynamic')
+
+    sent_messages = db.relationship('Message', primaryjoin='User.id == Message.sender_id', backref='sender', lazy='dynamic')
+    single_rcpt_messages = db.relationship('Message', primaryjoin='User.id == Message.single_rcpt_id', backref='single_rcpt', lazy='dynamic')
     # rating = db.relationship('Rating', backref = db.backref('user_rating', lazy = True))
     # rated = db.relationship('Rating', backref = db.backref('user_rated', lazy = True))
 
@@ -89,25 +97,26 @@ class User(db.Model, UserMixin):
 
 
 class Group(db.Model):
-    __tablename__ = 'study_group'
+    __tablename__ = 'group'
 
     id = db.Column(db.Integer, unique = True, primary_key = True)
     name = db.Column(db.String(30), nullable = False)
     description = db.Column(db.String(80), nullable = True)
-    creator = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
 
-    group_courses = db.relationship('Course', secondary = course_groups, backref = db.backref('course_groups', lazy = 'dynamic'))
+    group_courses = db.relationship('Course', secondary = course_groups, backref = db.backref('study_groups', lazy = 'dynamic'))
     meetings = db.relationship('Meeting', backref = db.backref('study_group', lazy = True))
+    group_rcpt_messages = db.relationship('Message', primaryjoin='Group.id == Message.group_rcpt_id', backref='group_rcpt', lazy='dynamic')
     # rating = db.relationship('Ratings', backref = db.backref('study_group_rating', lazy = True))
     # rated = db.relationship('Ratings', backref = db.backref('study_group_rated', lazy = True))
 
     # message = db.relationship('Message', backref = db.backref('group', lazy = True))
 
 
-    def __init__(self, name, description, creator):
+    def __init__(self, name, description, creator_id):
         self.name = name
         self.description = description
-        self.creator = creator
+        self.creator_id = creator_id
 
     def __repr__(self):
         #return "<Groups {}>".format(self.name, self.decription, self.course_id, self.creater)
@@ -124,7 +133,7 @@ class Course(db.Model):
     subj_code = db.Column(db.String(10), nullable = False)
     course_num = db.Column(db.Integer, nullable = False)
 
-    course_tutor = db.relationship('Tutor', backref = db.backref('course', lazy = True))
+    # course_tutor = db.relationship('Tutor', backref = db.backref('course', lazy = True))
 
     def __init__(self, name, description, subj_code, course_num):
         self.name = name
@@ -136,43 +145,44 @@ class Course(db.Model):
         return "<CourseInfo %r, %r, %r>" % (self.name,self.subj_code, self.course_num)
 
 
-class Tutor(db.Model):
-    __tablename__ = 'tutor'
+# class Tutor(db.Model):
+#     __tablename__ = 'tutor'
 
+#     id = db.Column(db.Integer, unique = True, primary_key = True)
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+#     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable = False)
+
+#     meeting = db.relationship('Meeting', backref = db.backref('tutor', lazy = True))
+#     # rating = db.relationship('Ratings', backref = db.backref('tutor_rating', lazy = True))
+#     # rated = db.relationship('Ratings', backref = db.backref('tutor_rated', lazy = True))
+
+#     def __init__(self, course_id, user_id):
+#         self.course_id = course_id
+#         self.user_id = user_id
+
+#     def __repr__(self):
+#         return "<CourseTutor: %r>" % (self.user_id)
+
+
+
+
+class Message(db.Model):
     id = db.Column(db.Integer, unique = True, primary_key = True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable = False)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    single_rcpt_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
+    group_rcpt_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable = True)
+    sent_time = db.Column(db.DateTime, nullable = False)
+    content = db.Column(db.Text, nullable = False)
 
-    meeting = db.relationship('Meeting', backref = db.backref('tutor', lazy = True))
-    # rating = db.relationship('Ratings', backref = db.backref('tutor_rating', lazy = True))
-    # rated = db.relationship('Ratings', backref = db.backref('tutor_rated', lazy = True))
-
-    def __init__(self, course_id, user_id):
-        self.course_id = course_id
-        self.user_id = user_id
+    def __init__(self, sender_id, single_rcpt, group_rcpt, sent_time, content):
+        self.sender_id = sender_id
+        self.single_rcpt_id = single_rcpt
+        self.group_rcpt_id = group_rcpt
+        self.sent_time = sent_time
+        self.content = content
 
     def __repr__(self):
-        return "<CourseTutor: %r>" % (self.user_id)
-
-
-
-
-# class Message(db.Model):
-#     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
-#     single_rcpt = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
-#     group_rcpt = db.Column(db.Integer, db.ForeignKey('group.id'), nullable = True)
-#     sent_time = db.Column(db.DateTime, nullable = False)
-#     content = db.Column(db.Text, nullable = False)
-#
-#     def __init__(self, sender_id, single_rcpt, group_rcpt, sent_time, content):
-#         self.sender_id = sender_id
-#         self.single_rcpt = single_rcpt
-#         self.group_rcpt = group_rcpt
-#         self.sent_time = sent_time
-#         self.content = content
-#
-#     def __repr__(self):
-#         return "<Messages {}>".format(self.send_id, self.single_rcpt, self.group_rcpt, self.sent_time, self.content)
+        return "<Messages {}>".format(self.send_id, self.single_rcpt, self.group_rcpt, self.sent_time, self.content)
 
 
 # class Rating(db.Model):
@@ -218,10 +228,10 @@ class Meeting(db.Model):
     name = db.Column(db.String(50), nullable = False)
     meeting_time = db.Column(db.DateTime, nullable = False)
     location = db.Column(db.String(50), nullable = True)
+    group_id = db.Column(db.Integer, db.ForeignKey('group.id'))
 
     student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    group_id = db.Column(db.Integer, db.ForeignKey('study_group.id'))
-    tutor_id = db.Column(db.Integer, db.ForeignKey('tutor.id'))
+    tutor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self, name, meeting_time, location, student, group, tutor):
         self.name = name

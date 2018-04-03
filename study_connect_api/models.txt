@@ -1,0 +1,58 @@
+User
+==================================
+id: Integer
+first_name: String
+last_name: String
+email: String
+phone: String
+password: String
+bio: String
+groups_created: Group[]
+groups: Group[]
+current_courses: Course[]
+past_courses: Course[]
+tutor_meetings: Meeting[]
+student_meetings: Meeting[]
+sent_messages: Message[]
+single_rcpt_messages: Message[]
+
+Group
+==================================
+id: Integer
+name: String
+description: String
+group_courses: Course[]
+group_members: User[]
+meetings: Meeting[]
+group_rcpt_messages: Message[]
+
+Course
+==================================
+id: Integer
+name: String
+description: String
+subj_code: String
+course_num: Integer
+current_students: User[]
+past_students: User[]
+study_groups: Group[]
+
+Meeting
+==================================
+id: Integer
+name: String
+meeting_time: DateTime
+location: String
+group: Group
+student: User
+tutor: User
+
+Message
+==================================
+id: Integer
+sender: User
+single_rcpt: User
+group_rcpt: Group
+sent_time: DateTime
+content: String
+

@@ -3,7 +3,7 @@ from flask import Flask, request, render_template, jsonify
 from flask_restful import reqparse, abort, Api, Resource
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import db, User, Group, Meeting, Tutor, Course
+from models import db, User, Group, Meeting, Course
 import json, datetime
 
 
@@ -49,17 +49,17 @@ def initdb_command():
     db.session.add(course1)
     db.session.commit()
 
-    tutor1 =  Tutor(course1.id, user2.id)
-    db.session.add(tutor1)
-    db.session.commit()
+    # tutor1 =  Tutor(course1.id, user2.id)
+    # db.session.add(tutor1)
+    # db.session.commit()
 
-    group1.group_courses.append(course1)
-    db.session.add(group1)
-    db.session.commit()
+    # group1.group_courses.append(course1)
+    # db.session.add(group1)
+    # db.session.commit()
 
-    meeting1 = Meeting( 'shalom', datetime.datetime.now(), 'yo bitches house', user1.id, None, tutor1.id)
-    db.session.add(meeting1)
-    db.session.commit()
+    # meeting1 = Meeting( 'shalom', datetime.datetime.now(), 'yo bitches house', user1.id, None, tutor1.id)
+    # db.session.add(meeting1)
+    # db.session.commit()
 
 parser = reqparse.RequestParser()
 parser.add_argument('gonads')
@@ -92,6 +92,7 @@ class UserAPI(Resource):
             'course_list': courseList,
             'meeting_list': meetingList
         }
+
 
         return user
 
