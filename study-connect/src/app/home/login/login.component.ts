@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HomeService } from '../home.service';
 import { ISubscription } from 'rxjs/Subscription';
 import { User } from '../../library/objects/User';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,38 +12,31 @@ import { User } from '../../library/objects/User';
 export class LoginComponent implements OnInit {
   isLinear = false;
   user: User;
+  loggedIn: User;
   userSubscription: ISubscription;
 
-  email:string;
-  password:string;
-  first_name:string;
-  last_name:string;
-  phone:string;
+  temp:string;
 
-  constructor(private _homeService: HomeService) {
-
+  constructor(private _homeService: HomeService,
+              private router: Router) {
+    this.user = new User();
    }
 
   ngOnInit() {
-    this.email = "";
-    this.password="";
-    this.first_name="";
-    this.last_name="";
-    this.phone="";
+    this._homeService.userObservable.subscribe(
+      user => {
+        this.loggedIn = user;
+      });
   }
 
   login() {
-    this.user.email = this.email;
-    this.user.password = this.password;
-    this._homeService.login(this.user);
+
   }
 
   register() {
-    this.user.email = this.email;
-    this.user.password = this.password;
-    this.user.first_name = this.first_name;
-    this.user.last_name = this.last_name;
-    this.user.phone = this.phone;
     this._homeService.register(this.user);
+    if(this.loggedIn.id > 0){
+      this.router.navigateByUrl("user/profile");
+    }
   }
 }

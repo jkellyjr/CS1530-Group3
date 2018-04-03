@@ -15,6 +15,13 @@ export class User {
 
   user_courses:Course[];
   meeting:Meeting[];
+
+  constructor(){
+    this.groups_created = new Array<Group>();
+    this.groups = new Array<Group>();
+    this.user_courses = new Array<Course>();
+    this.meeting = new Array<Meeting>();
+  }
 }
 
 
