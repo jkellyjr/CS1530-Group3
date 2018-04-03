@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { HomeService } from '../home.service';
 import { ISubscription } from 'rxjs/Subscription';
-import { User } from '../../library/objects/User';
 import {Router} from '@angular/router';
+
+import { AuthService } from '../../auth/auth.service';
+import { User } from '../../library/objects/User';
 
 @Component({
   selector: 'app-login',
@@ -17,24 +18,30 @@ export class LoginComponent implements OnInit {
 
   temp:string;
 
-  constructor(private _homeService: HomeService,
+  constructor(public authService: AuthService,
               private router: Router) {
     this.user = new User();
    }
 
   ngOnInit() {
-    this._homeService.userObservable.subscribe(
-      user => {
-        this.loggedIn = user;
-      });
+
   }
 
   login() {
+    this.authService.login(this.user).subscribe(() => {
+          if (this.authService.isLoggedIn) {
+            // Get the redirect URL from our auth service
+            // If no redirect has been set, use the default
+            let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/user/dashboard';
 
+            // Redirect the user
+            this.router.navigate([redirect]);
+          }
+        });
   }
 
   register() {
-    this._homeService.register(this.user);
+    this.authService.register(this.user);
     if(this.loggedIn.id > 0){
       this.router.navigateByUrl("user/profile");
     }
