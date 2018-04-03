@@ -61,85 +61,58 @@ def initdb_command():
     # db.session.add(meeting1)
     # db.session.commit()
 
-parser = reqparse.RequestParser()
-parser.add_argument('gonads')
+get_user_parser = reqparse.RequestParser()
+get_user_parser.add_argument('id')
 
+post_user_parser = reqparse.RequestParser()
+post_user_parser.add_argument('id')
+post_user_parser.add_argument('first_name')
+post_user_parser.add_argument('last_name')
+post_user_parser.add_argument('email')
+post_user_parser.add_argument('phone')
+post_user_parser.add_argument('bio')
+post_user_parser.add_argument('password')
+
+get_login_parser = reqparse.RequestParser()
 
 class UserAPI(Resource):
 
-    def get(self, user_id):
-        temp = User.query.filter_by(id = user_id).first()
+    def get(self):
+        args = get_user_parser.parse_args()
+        print(args['id'])
+        temp = User.query.filter_by(id = args['id']).first()
 
         if temp is None:
             return 404
+        return temp.serialize()
 
-        groupCreatedList = [{'id': group.id, 'name': group.name} for group in temp.groups_created]
-        groupList = [{'id': group.id, 'name': group.name} for group in temp.groups]
-        tutorList = [{'id': tut.id, 'course_id': tut.course_id} for tut in temp.tutor]
-        courseList = [{'id': course.id, 'name': course.name} for course in temp.user_courses]
-        meetingList = [{'id': meeting.id, 'name': meeting.name} for meeting in temp.meetings]
+    def post(self):
+        args = post_user_parser.parse_args()
+        if args['id'] is not None:
+            temp = User.query.filter_by(id = args['id']).first()
 
-        user = {
-            'id' : temp.id,
-            'first_name' : temp.first_name,
-            'last_name' : temp.last_name,
-            'email': temp.email,
-            'phone' : temp.phone,
-            'bio' : temp.bio,
-            'groups_created': groupCreatedList,
-            'groups': groupList,
-            'tutors': tutorList,
-            'course_list': courseList,
-            'meeting_list': meetingList
-        }
+            if temp is None:
+                return 404
 
+            # Update User
+            temp.first_name = args['first_name']
+            temp.last_name = args['last_name']
+            temp.email = args['email']
+            temp.phone = args['phone']
+            temp.bio = args['bio']
 
-        return user
+            db.session.commit();
 
-    def put(self, user_id):
-        users = []
-        args = parser.parse_args()
-        data = json.loads(args['gonads'])
+            return temp.serialize();
 
-        #user = User.query.filter_by(id = user_id).first()
-
-        #db.session.query(User).filter_by(id = user_id).update({'first_name' : request.form['first_name'], 'last_name' : request.form['last_name'], 'email' : request.form['email'], 'phone' : request.form['phone'], 'password' : request.form['password'], 'bio' : request.form['bio']})
+        salted_pass = generate_password_hash(args['password'])
         
-
-    
-        print(data)
-
-
-        #print(final_user)
-        for key in data.keys():
-            db.session.query(User).filter_by(id = user_id).update({key : data[key]})
-    
+        # Registration
+        db.session.add(User(first_name=args['first_name'], last_name=args['last_name'], email=args['email'], phone=args['phone'], password=salted_pass))
         db.session.commit()
-        
-        
-        temp = User.query.filter_by(id = user_id).first()
-        
-        
-        final_user = {'id' : temp.id, 'first_name' : temp.first_name, 'last_name' : temp.last_name, 'email': temp.email, 'phone' : temp.phone, 'bio' : temp.bio}
-        
-        #print(user)
-        #data = {
-         #   'data': args['gonads']
-       # }
 
-        #print("\n\n args: " + str(data) + "\n\n")
-
-        # new_user = User(data['first_name'], data['last_name'], data['email'], data['phone'], generate_password_hash(data['password']))
-        # db.session.add(new_user)
-        # db.session.commit()
-        return final_user
-
-
-    def delete(self, user_id):
-        temp = User.query.filter_by(id = user_id).first()
-        db.session.delete(temp)
-        db.session.commit()
-        return 200
+        temp = User.query.filter_by(email = args['email']).first()
+        return temp.serialize()
 
 
 
@@ -380,11 +353,10 @@ class message(Resource):
 '''
 
 
-api.add_resource(UserAPI, '/api/user/<user_id>')
-api.add_resource(GroupAPI, '/api/group/<group_id>')
-api.add_resource(MeetingAPI, '/api/meeting/<meeting_id>')
-api.add_resource(CourseAPI, '/api/course/<course_id>')
-api.add_resource(TutorAPI, '/api/tutor/<tutor_id>')
+api.add_resource(UserAPI, '/api/user/')
+api.add_resource(GroupAPI, '/api/group/')
+api.add_resource(MeetingAPI, '/api/meeting/')
+api.add_resource(CourseAPI, '/api/course/')
 '''
 api.add_resource(rating, '/rating/<rating_id>')
 api.add_resource(message, '/message/<message_id>')
