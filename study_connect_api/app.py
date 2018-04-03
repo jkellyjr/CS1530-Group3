@@ -3,7 +3,6 @@ from flask import Flask, request, render_template, jsonify
 from flask_restful import reqparse, abort, Api, Resource
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User, Group, Meeting, Course
 import json, datetime
 
@@ -23,11 +22,11 @@ def initdb_command():
     db.session.commit()
 
     users = []
-    users.append(User('Bob', 'Smith', 'a@gmail.com', '1111111111', generate_password_hash('123')))
-    users.append(User('Carol', 'Stevens', 'b@gmail.com', '1111111111', generate_password_hash('123')))
-    users.append(User('Anna','Martin','c@gmail.com','1111111111', generate_password_hash('123')))
-    users.append(User('Daniel','Rutgers','d@gmail.com','1111111111', generate_password_hash('123')))
-    users.append(User('Frank','Lorris','e@gmail.com','1111111111', generate_password_hash('123')))
+    users.append(User('Bob', 'Smith', 'a@gmail.com', '1111111111', '123'))
+    users.append(User('Carol', 'Stevens', 'b@gmail.com', '1111111111', '123'))
+    users.append(User('Anna','Martin','c@gmail.com','1111111111', '123'))
+    users.append(User('Daniel','Rutgers','d@gmail.com','1111111111', '123'))
+    users.append(User('Frank','Lorris','e@gmail.com','1111111111', '123'))
 
     for x in users:
         db.session.add(x)
@@ -140,7 +139,7 @@ class UserAPI(Resource):
                     temp.past_courses.append(Course.query.filter_by(id = x['id']).first())
             
             if args['password'] is not None:
-                temp.password = generate_password_hash(args['password'])
+                temp.set_password(args['password'])
 
             db.session.commit();
 
@@ -150,10 +149,9 @@ class UserAPI(Resource):
 
     def post(self):
         args = post_user_parser.parse_args()
-        salted_pass = generate_password_hash(args['password'])
         
         # Registration
-        db.session.add(User(first_name=args['first_name'], last_name=args['last_name'], email=args['email'], phone=args['phone'], password=salted_pass))
+        db.session.add(User(first_name=args['first_name'], last_name=args['last_name'], email=args['email'], phone=args['phone'], password=args['password']))
         db.session.commit()
 
         temp = User.query.filter_by(email = args['email']).first()
@@ -169,7 +167,7 @@ class LoginAPI(Resource):
         args = login_parser.parse_args();
         temp = User.query.filter_by(email = args['email']).first()
 
-        if temp is None or not check_password_hash(temp.password, args['password']):
+        if temp is None or not temp.check_password(args['password']):
             return 404
         
         return temp.serialize()

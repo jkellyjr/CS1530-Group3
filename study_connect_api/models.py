@@ -33,6 +33,7 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime
 db = SQLAlchemy()
 from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 def dump_datetime(value):
     """Deserialize datetime object into string form for JSON processing."""
@@ -113,13 +114,18 @@ class User(db.Model, UserMixin):
             # 'single_rcpt_messages':serialize_many_messages(self.single_rcpt_messages)
         }
 
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+    
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
     def __init__(self, first_name, last_name, email, phone, password):
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.phone = phone
-        self.password = password
+        self.set_password(password)
 
     def __repr__(self):
         return "<User %r, %r>" % (self.first_name, self.last_name)
