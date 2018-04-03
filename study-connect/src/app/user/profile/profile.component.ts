@@ -24,14 +24,14 @@ export class ProfileComponent implements OnInit {
     this.userSubscription = this.authService.user.subscribe(
       user => {
         this.user = user;
-      };)
+      });
   }
 
   updateUser(): void{
 
-    if(this.oldPass != "" && this.oldPass == this.tempUser.password){ //user entered a password so verify
+    if(this.oldPass != "" && this.oldPass == this.user.password){ //user entered a password so verify
         if(this.newPass != "" && this.newPass == this.duplicatePass){
-          this.tempUser.password = this.newPass;
+          this.user.password = this.newPass;
 
           this.user = this.service.updateUser(this.user);
         } else {

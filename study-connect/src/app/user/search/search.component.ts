@@ -26,27 +26,26 @@ export class SearchComponent implements OnInit {
   // students: User[];
   // studentssSubscription:ISubscription;
 
-  dataSource: MatTableDataSource;
+  // dataSource: MatTableDataSource<Group[]>;
   displayedColumns = ['name', 'description', 'join'];
 
 
   constructor(private _userService: UserService,
               public dialog: MatDialog) {
-                this.group = new Group();
                }
 
   ngOnInit() {
     this.groupsSubscription = this._userService.groups.subscribe(
       groups => {
         this.groups = groups;
-        this.dataSource = new MatTableDataSource(this.groups);
+        // this.dataSource = new MatTableDataSource<Group[]>(this.groups);
       });
   }
 
-  openDialog(): void {
+  openDialog(group:Group): void {
     let dialogRef = this.dialog.open(GroupPreviewDialog, {
       width: '500px',
-      data: { group: this.group, user: this.user}
+      data: { group: group, user: this.user}
     });
 
     dialogRef.afterClosed().subscribe(result => {
