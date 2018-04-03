@@ -44,6 +44,7 @@ def serialize_many(many):
     ret = []
     for x in many:
         ret.append(x.serialize())
+    return ret
 
 '''---------------------------------- Association Tables -------------------------'''
 group_members = db.Table('group_members',
@@ -81,7 +82,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(300), nullable = False)
     bio = db.Column(db.String(80), nullable = True)
     groups_created = db.relationship('Group', backref = "creator")
-    groups = db.relationship('Group', secondary = group_members, backref = db.backref('group_members', lazy = 'dynamic'))
+    groups = db.relationship('Group', secondary = group_members, backref = db.backref('members', lazy = 'dynamic'))
     current_courses = db.relationship('Course', secondary = course_students, backref = db.backref('current_students', lazy = 'dynamic'))
     past_courses = db.relationship('Course', secondary = course_tutors, backref = db.backref('past_students', lazy = 'dynamic'))
 
@@ -103,8 +104,8 @@ class User(db.Model, UserMixin):
             'email':self.email,
             'phone':self.phone,
             'bio':self.bio,
-            'groups_created':serialize_many(self.groups_created),
-            # 'groups':serialize_many_groups(self.groups),
+            # 'groups_created':serialize_many(self.groups_created),
+            'groups':serialize_many(self.groups),
             'current_courses':serialize_many(self.current_courses),
             'past_courses':serialize_many(self.past_courses),
             'meetings':serialize_many(combined_meetings)
