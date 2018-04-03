@@ -1,18 +1,19 @@
+import { Group } from './Group';
+import { User } from './User';
 
 export class Course {
-  id:number;
-  name:string;
-  description:string;
-  subj_code:string;
-  course_num:number;
-  tutor_list:any[];
-  group_list:any[]
-}
+  id: number;
+  name: string;
+  description: string;
+  subj_code: string;
+  course_num: number;
+  current_students: User[];
+  past_students: User[];
+  study_groups: Group[];
 
-// id = db.Column(db.Integer, unique = True, primary_key = True)
-// name = db.Column(db.String(30), nullable = False)
-// description = db.Column(db.String(80), nullable = True)
-// subj_code = db.Column(db.String(10), nullable = False)
-// course_num = db.Column(db.Integer, nullable = False)
-//
-// course_tutor = db.relationship('Tutor', backref = db.backref('course', lazy = True))
+  constructor(){
+    this.current_students = new Array<User>();
+    this.past_students = new Array<User>();
+    this.study_groups = new Array<Group>();
+  }
+}

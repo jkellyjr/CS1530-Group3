@@ -1,19 +1,21 @@
 import { Course } from './Course';
 import { Meeting } from './Meeting';
+import { Message } from './Message';
+import { User } from './User';
 
 export class Group {
-  id:number;
-  name:string;
-  description:string;
-  creator:number;
-  group_courses:Course[];
-  meeting:Meeting;
-}
+  id: number;
+  name: string;
+  description: string;
+  group_courses: Course[];
+  group_members: User[];
+  meetings: Meeting[];
+  group_rcpt_messages: Message[];
 
-//
-// group_courses = db.relationship('Course', secondary = course_groups, backref = db.backref('course_groups', lazy = 'dynamic'))
-// meeting = db.relationship('Meeting', backref = db.backref('study_group', lazy = True))
-// # rating = db.relationship('Ratings', backref = db.backref('study_group_rating', lazy = True))
-// # rated = db.relationship('Ratings', backref = db.backref('study_group_rated', lazy = True))
-//
-// # message = db.relationship('Message', backref = db.backref('group', lazy = True))
+  constructor(){
+    this.group_courses = new Array<Course>();
+    this.group_members = new Array<User>();
+    this.meetings = new Array<Meeting>();
+    this.group_rcpt_messages = new Array<Message>();
+  }
+}

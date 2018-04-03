@@ -1,26 +1,34 @@
 import { Course } from './Course';
 import { Group } from './Group';
 import { Meeting } from './Meeting';
+import { Message } from './Message';
 
 export class User {
-  id:number;
-  first_name:string;
-  last_name:string;
-  email:string;
-  phone:string;
-  password:string;
-  bio:string;
-  groups_created:Group[];
-  groups:Group[];
-
-  user_courses:Course[];
-  meeting:Meeting[];
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  password: string;
+  bio: string;
+  groups_created: Group[];
+  groups: Group[];
+  current_courses: Course[];
+  past_courses: Course[];
+  tutor_meetings: Meeting[];
+  student_meetings: Meeting[];
+  sent_messages: Message[];
+  single_rcpt_messages: Message[];
 
   constructor(){
     this.groups_created = new Array<Group>();
     this.groups = new Array<Group>();
-    this.user_courses = new Array<Course>();
-    this.meeting = new Array<Meeting>();
+    this.current_courses = new Array<Course>();
+    this.past_courses = new Array<Course>();
+    this.tutor_meetings = new Array<Meeting>();
+    this.student_meetings = new Array<Meeting>();
+    this.sent_messages = new Array<Message>();
+    this.single_rcpt_messages = new Array<Message>();
   }
 }
 

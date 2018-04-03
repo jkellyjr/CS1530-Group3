@@ -45,7 +45,7 @@ export class ProfileComponent implements OnInit {
   }
 
   addCourse(course:Course): void {
-    this.user.user_courses.push(course);
+    // this.user.user_courses.push(course);
   }
 
 
