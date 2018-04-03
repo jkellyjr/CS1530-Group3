@@ -4,7 +4,7 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { AuthService } from './auth/auth.service';
+import { AuthGuard, AuthService } from './auth/index';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { HomeModule } from './home/home.module';
@@ -27,7 +27,7 @@ import {MatIconModule} from '@angular/material/icon';
     HomeModule.forRoot(),
     HttpModule
   ],
-  providers: [ AuthService ],
+  providers: [ AuthGuard, AuthService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

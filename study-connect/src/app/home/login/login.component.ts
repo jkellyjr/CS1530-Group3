@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 import {Router} from '@angular/router';
 
-import { AuthService } from '../../auth/auth.service';
+import { AuthService } from '../../auth/index';
 import { User } from '../../library/objects/User';
 
 @Component({
@@ -28,6 +28,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+    if(this.user.email)
     this.authService.login(this.user).subscribe(() => {
           if (this.authService.isLoggedIn) {
             // Get the redirect URL from our auth service
@@ -41,9 +42,15 @@ export class LoginComponent implements OnInit {
   }
 
   register() {
-    this.authService.register(this.user);
-    if(this.loggedIn.id > 0){
-      this.router.navigateByUrl("user/profile");
-    }
+    this.authService.register(this.user).subscribe(() => {
+          if (this.authService.isLoggedIn) {
+            // Get the redirect URL from our auth service
+            // If no redirect has been set, use the default
+            let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/user/profile';
+
+            // Redirect the user
+            this.router.navigate([redirect]);
+          }
+        });
   }
 }
