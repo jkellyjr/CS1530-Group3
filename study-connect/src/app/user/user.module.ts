@@ -12,6 +12,7 @@ import { SearchComponent } from './search/search.component';
 import { ProfilePreviewComponent } from './profile-preview/profile-preview.component';
 
 import {MatInputModule} from '@angular/material/input';
+import {MatChipsModule} from '@angular/material/chips';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatCardModule} from '@angular/material/card';
 import {MatSelectModule} from '@angular/material/select';
@@ -31,6 +32,7 @@ import { UserFormComponent } from './profile/user-form/user-form.component';
     UserRoutingModule,
     MatInputModule,
     MatTabsModule,
+    MatChipsModule,
     MatCardModule,
     MatSelectModule,
     MatButtonModule,
