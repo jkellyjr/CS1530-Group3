@@ -34,7 +34,7 @@ export class ProfileComponent implements OnInit {
         if(this.newPass != "" && this.newPass == this.duplicatePass){
           this.user.password = this.newPass;
 
-          // this.user = this.service.updateUser(this.user);
+          this.user = this.service.updateUser(this.user);
         } else {
           console.log("New password and re-type must match");
         }

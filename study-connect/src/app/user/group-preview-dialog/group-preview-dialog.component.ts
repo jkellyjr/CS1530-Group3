@@ -21,8 +21,8 @@ export class GroupPreviewDialog implements OnInit {
 
   onJoinClick(): void {
     this.data.user.groups.push(this.data.group);
+    this.service.updateUser(this.data.user);
     this.dialogRef.close();
-    // this.service.updateUser(this.data.user);
   }
 
   onNoClick(): void {
