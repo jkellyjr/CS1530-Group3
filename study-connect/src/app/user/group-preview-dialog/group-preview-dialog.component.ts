@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { Group } from '../../library/objects/index';
+import { Group, User } from '../../library/objects/index';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { UserService } from '../user.service';
 
@@ -10,18 +10,24 @@ import { UserService } from '../user.service';
   styleUrls: ['./group-preview-dialog.component.css']
 })
 export class GroupPreviewDialog implements OnInit {
+  group:Group;
+  user:User;
 
   constructor(
     public dialogRef: MatDialogRef<GroupPreviewDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public service: UserService) { }
+    public service: UserService) {
+      // this.user = new User();
+     }
 
   ngOnInit() {
+    this.group = this.data.group;
+    this.user = this.data.user;
   }
 
   onJoinClick(): void {
-    this.data.user.groups.push(this.data.group);
-    this.service.updateUser(this.data.user);
+    this.user.groups.push(this.group);
+    this.service.updateUser(this.user);
     this.dialogRef.close();
   }
 

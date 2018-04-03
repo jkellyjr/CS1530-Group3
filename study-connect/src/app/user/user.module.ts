@@ -25,6 +25,9 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { GroupPreviewDialog } from './group-preview-dialog/group-preview-dialog.component';
 import { CourseFormComponent } from './profile/course-form/course-form.component';
 import { UserFormComponent } from './profile/user-form/user-form.component';
+import { GroupTableComponent } from './search/group-table/group-table.component';
+import { TutorTableComponent } from './search/tutor-table/tutor-table.component';
+import { StudentTableComponent } from './search/student-table/student-table.component';
 
 @NgModule({
   imports: [
@@ -51,7 +54,10 @@ import { UserFormComponent } from './profile/user-form/user-form.component';
     ProfilePreviewComponent,
     GroupPreviewDialog,
     CourseFormComponent,
-    UserFormComponent
+    UserFormComponent,
+    GroupTableComponent,
+    TutorTableComponent,
+    StudentTableComponent
   ],
   exports: [
   ],
