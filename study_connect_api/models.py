@@ -68,6 +68,10 @@ course_students = db.Table('course_students',
     db.Column('student_id', db.Integer, db.ForeignKey('user.id'))
 )
 
+tutors_and_students = db.Table('tutors_and_students',
+    db.Column('tutor_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('student_id', db.Integer, db.ForeignKey('user.id'))
+)
 
 
 
@@ -86,6 +90,7 @@ class User(db.Model, UserMixin):
     groups = db.relationship('Group', secondary = group_members, backref = db.backref('members', lazy = 'dynamic'))
     current_courses = db.relationship('Course', secondary = course_students, backref = db.backref('current_students', lazy = 'dynamic'))
     past_courses = db.relationship('Course', secondary = course_tutors, backref = db.backref('past_students', lazy = 'dynamic'))
+    tutors = db.relationship('User', secondary = tutors_and_students, primaryjoin = "User.id == tutors_and_students.c.student_id", secondaryjoin = "User.id == tutors_and_students.c.tutor_id", backref = db.backref('students', lazy = 'dynamic'))
 
     tutor_meetings = db.relationship('Meeting', primaryjoin='User.id == Meeting.tutor_id', backref='tutor', lazy='dynamic')
     student_meetings = db.relationship('Meeting', primaryjoin='User.id == Meeting.student_id', backref='student', lazy='dynamic')
@@ -99,17 +104,17 @@ class User(db.Model, UserMixin):
         combined_meetings = list(self.tutor_meetings)
         combined_meetings.extend(self.student_meetings)
         return {
-            'id':self.id,
-            'first_name':self.first_name,
-            'last_name':self.last_name,
-            'email':self.email,
-            'phone':self.phone,
-            'bio':self.bio,
+            "id":self.id,
+            "first_name":self.first_name,
+            "last_name":self.last_name,
+            "email":self.email,
+            "phone":self.phone,
+            "bio":self.bio,
             # 'groups_created':serialize_many(self.groups_created),
-            'groups':serialize_many(self.groups),
-            'current_courses':serialize_many(self.current_courses),
-            'past_courses':serialize_many(self.past_courses),
-            'meetings':serialize_many(combined_meetings)
+            "groups":serialize_many(self.groups),
+            "current_courses":serialize_many(self.current_courses),
+            "past_courses":serialize_many(self.past_courses),
+            "meetings":serialize_many(combined_meetings)
             # 'sent_messages':serialize_many_messages(self.sent_messages),
             # 'single_rcpt_messages':serialize_many_messages(self.single_rcpt_messages)
         }
@@ -148,12 +153,12 @@ class Group(db.Model):
 
     def serialize(self):
         return {
-            'id':self.id,
-            'name':self.name,
-            'description':self.description,
-            'group_courses':serialize_many(self.group_courses),
+            "id":self.id,
+            "name":self.name,
+            "description":self.description,
+            "group_courses":serialize_many(self.group_courses),
             # 'group_members':serialize_many_users(self.group_members),
-            'meetings':serialize_many(self.meetings)
+            "meetings":serialize_many(self.meetings)
             # 'group_rcpt_messages':serialize_many_messages(self.group_rcpt_messages)
         }
 
@@ -181,11 +186,11 @@ class Course(db.Model):
 
     def serialize(self):
         return {
-            'id':self.id,
-            'name':self.name,
-            'description':self.description,
-            'subj_code':self.subj_code,
-            'course_num':self.course_num
+            "id":self.id,
+            "name":self.name,
+            "description":self.description,
+            "subj_code":self.subj_code,
+            "course_num":self.course_num
             # 'current_students':serialize_many_users(self.current_students),
             # 'past_students':serialize_many_users(self.past_students),
             # 'study_groups':serialize_many_groups(self.study_groups)
