@@ -68,23 +68,23 @@ get_user_parser = reqparse.RequestParser()
 get_user_parser.add_argument('id')
 
 post_user_parser = reqparse.RequestParser()
-post_user_parser.add_argument('first_name', location='form')
-post_user_parser.add_argument('last_name', location='form')
-post_user_parser.add_argument('email', location='form')
-post_user_parser.add_argument('phone', location='form')
-post_user_parser.add_argument('password', location='form')
+post_user_parser.add_argument('first_name' )
+post_user_parser.add_argument('last_name' )
+post_user_parser.add_argument('email' )
+post_user_parser.add_argument('phone' )
+post_user_parser.add_argument('password' )
 
 put_user_parser = reqparse.RequestParser()
-put_user_parser.add_argument('id', location='form')
-put_user_parser.add_argument('first_name', location='form')
-put_user_parser.add_argument('last_name', location='form')
-put_user_parser.add_argument('email', location='form')
-put_user_parser.add_argument('password', location='form')
-put_user_parser.add_argument('phone', location='form')
-put_user_parser.add_argument('bio', location='form')
-put_user_parser.add_argument('groups', location='form')
-put_user_parser.add_argument('current_courses', location='form')
-put_user_parser.add_argument('past_courses', location='form')
+put_user_parser.add_argument('id')
+put_user_parser.add_argument('first_name')
+put_user_parser.add_argument('last_name')
+put_user_parser.add_argument('email')
+put_user_parser.add_argument('password')
+put_user_parser.add_argument('phone')
+put_user_parser.add_argument('bio')
+put_user_parser.add_argument('groups', action='append')
+put_user_parser.add_argument('current_courses', action='append')
+put_user_parser.add_argument('past_courses', action='append')
 
 class UserAPI(Resource):
 
@@ -117,26 +117,23 @@ class UserAPI(Resource):
             temp.phone = args['phone']
             temp.bio = args['bio']
 
-            groups_str = args['groups']
-            if groups_str is not None and len(groups_str) > 2:
-                groups_json = json.loads(groups_str)
+            if args['groups'] is not None and len(args['groups']) > 1:
                 temp.groups = []
-                for x in groups_json:
-                    temp.groups.append(Group.query.filter_by(id = x['id']).first())
-            
-            cur_courses_str = args['current_courses']
-            if cur_courses_str is not None and len(cur_courses_str) > 2:
-                cur_courses_json = json.loads(cur_courses_str)
-                temp.current_courses = []
-                for x in cur_courses_json:
-                    temp.current_courses.append(Course.query.filter_by(id = x['id']).first())
+                for x in args['groups']:
+                    y = json.loads(x.replace("'",'"'))
+                    temp.groups.append(Group.query.filter_by(id = y['id']).first())
 
-            past_courses_str = args['past_courses']
-            if past_courses_str is not None and len(past_courses_str) > 2:
-                past_courses_json = json.loads(past_courses_str)
+            if args['current_courses'] is not None and len(args['current_courses']) > 1:
+                temp.current_courses = []
+                for x in args['current_courses']:
+                    y = json.loads(x.replace("'",'"'))
+                    temp.current_courses.append(Course.query.filter_by(id = y['id']).first())
+
+            if args['past_courses'] is not None and len(args['past_courses']) > 1:
                 temp.past_courses = []
-                for x in past_courses_json:
-                    temp.past_courses.append(Course.query.filter_by(id = x['id']).first())
+                for x in args['past_courses']:
+                    y = json.loads(x.replace("'",'"'))
+                    temp.past_courses.append(Course.query.filter_by(id = y['id']).first())
             
             if args['password'] is not None:
                 temp.set_password(args['password'])
@@ -159,12 +156,13 @@ class UserAPI(Resource):
         
 
 login_parser = reqparse.RequestParser()
-login_parser.add_argument('email', location='form')
-login_parser.add_argument('password', location='form')
+login_parser.add_argument('email')
+login_parser.add_argument('password')
 
 class LoginAPI(Resource):
     def post(self):
         args = login_parser.parse_args();
+        print(args)
         temp = User.query.filter_by(email = args['email']).first()
 
         if temp is None or not temp.check_password(args['password']):
@@ -176,7 +174,7 @@ get_group_parser = reqparse.RequestParser()
 get_group_parser.add_argument('id')
 
 post_group_parser = reqparse.RequestParser()
-post_group_parser.add_argument('name', location='form')
+post_group_parser.add_argument('name' )
 
 class GroupAPI(Resource):
 
@@ -224,9 +222,53 @@ class SuggestedGroupsAPI(Resource):
                         sug = True
             if sug:
                 sug_groups.append(x.serialize())
-        
         return sug_groups
 
+suggested_tutors_parser = reqparse.RequestParser()
+suggested_tutors_parser.add_argument('user_id')
+
+class SuggestedTutorsAPI(Resource):
+    def get(self):
+        args = suggested_tutors_parser.parse_args()
+        if args['user_id'] is None:
+            return 400
+        u = User.query.filter_by(id = args['user_id']).first()
+        if u is None:
+            return 404
+        users = User.query.all()
+        sug_tutors = []
+        for x in users:
+            sug = False
+            if x not in u.tutors:
+                for y in u.current_courses:
+                    if y in x.past_courses:
+                        sug = True
+            if sug:
+                sug_tutors.append(x.serialize())
+        return sug_tutors
+
+suggested_students_parser = reqparse.RequestParser()
+suggested_students_parser.add_argument('user_id')
+
+class SuggestedStudentsAPI(Resource):
+    def get(self):
+        args = suggested_students_parser.parse_args()
+        if args['user_id'] is None:
+            return 400
+        u = User.query.filter_by(id = args['user_id']).first()
+        if u is None:
+            return 404
+        users = User.query.all()
+        sug_students = []
+        for x in users:
+            sug = False
+            if x not in u.students:
+                for y in u.past_courses:
+                    if y in x.current_courses:
+                        sug = True
+            if sug:
+                sug_students.append(x.serialize())
+        return sug_students
 
 
 class MeetingAPI(Resource):
@@ -309,6 +351,8 @@ api.add_resource(UserAPI, '/api/user/')
 api.add_resource(LoginAPI, '/api/login/')
 api.add_resource(GroupAPI, '/api/group/')
 api.add_resource(SuggestedGroupsAPI, '/api/group/suggested/')
+api.add_resource(SuggestedTutorsAPI, '/api/tutor/suggested/')
+api.add_resource(SuggestedStudentsAPI, '/api/student/suggested/')
 api.add_resource(MeetingAPI, '/api/meeting/')
 api.add_resource(CourseAPI, '/api/course/')
 # api.add_resource(rating, '/rating/<rating_id>')
