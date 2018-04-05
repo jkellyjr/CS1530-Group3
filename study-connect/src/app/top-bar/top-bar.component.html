@@ -1,11 +1,11 @@
 <mat-toolbar>
     <div id="leftStuff">
-        <button mat-icon-button>
+        <button mat-icon-button *ngIf="logged">
             <mat-icon id="homeButton" routerLink="user/">home</mat-icon>
         </button>
         <div id="topBarTitle">StudyConnect</div>
     </div>
-    <div id="rightStuff">
+    <div id="rightStuff" *ngIf="logged">
         <button mat-icon-button>
             <mat-icon id="messagingButton">message</mat-icon>
         </button>
