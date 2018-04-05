@@ -31,9 +31,9 @@ export class AuthGuard implements CanActivate {
     this.authService.redirectUrl = url;
     console.log("Not logged in");
     // Navigate to the login page with extras
-    // this.router.navigate(['/']);
+    this.router.navigate(['/']);
 
-    return true;
+    return false;
   }
 
   canLoad(route: Route): boolean {
