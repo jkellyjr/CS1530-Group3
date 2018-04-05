@@ -37,7 +37,7 @@ export class AuthService {
         body => {
           this.userSubject.next(body.json() as User);
           console.log(JSON.stringify((body.json() as User)));
-          this.redirectUrl = "user/dashboard";
+          this.redirectUrl = "user/";
           this.isLoggedIn = true;
           this.loggedSubject.next(true);
           return Observable.of(true);
@@ -48,13 +48,15 @@ export class AuthService {
   }
 
   register(info:User): Observable<Boolean> {
+    console.log("Posting to server");
     this.userSubject.next(null);
     this.http.post(this.restUrl+ 'user/', info)
       .subscribe(
         body =>{
-          this.isLoggedIn = true;
           this.userSubject.next(body.json() as User);
-          this.redirectUrl = "user/profile"
+          console.log(JSON.stringify((body.json() as User)));
+          this.redirectUrl = "user/profile";
+          this.isLoggedIn = true;          this.loggedSubject.next(true);
           return Observable.of(true);
         }, error => {
           console.log(error.text());

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ISubscription } from 'rxjs/Subscription';
 
-import { AuthService } form '../../auth/index';
+import { AuthService } from '../../auth/index';
 import { Meeting, User } from '../../library/objects/index';
 
 
