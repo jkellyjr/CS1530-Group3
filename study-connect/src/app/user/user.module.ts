@@ -30,6 +30,7 @@ import { TutorTableComponent } from './search/tutor-table/tutor-table.component'
 import { StudentTableComponent } from './search/student-table/student-table.component';
 import { StudentPreviewDialogComponent } from './search/student-table/student-preview-dialog/student-preview-dialog.component';
 import { TutorPreviewDialogComponent } from './search/tutor-table/tutor-preview-dialog/tutor-preview-dialog.component';
+import { NotificationComponent } from './notification/notification.component';
 
 @NgModule({
   imports: [
@@ -61,7 +62,8 @@ import { TutorPreviewDialogComponent } from './search/tutor-table/tutor-preview-
     TutorTableComponent,
     StudentTableComponent,
     StudentPreviewDialogComponent,
-    TutorPreviewDialogComponent
+    TutorPreviewDialogComponent,
+    NotificationComponent
   ],
   exports: [
   ],
