@@ -13,9 +13,9 @@ export class UserComponent implements OnInit {
 
  constructor(private service:UserService){
    service.getCourses();
-  //  service.getTutors();
-   service.getGroups();
-   service.getStudents();
+   service.getSuggestedTutors();
+   service.getSuggestedGroups();
+   service.getSuggestedStudents();
  }
 
  ngOnInit(){

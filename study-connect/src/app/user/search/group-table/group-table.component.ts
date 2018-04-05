@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {MatTableDataSource, MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { Group, User } from '../../../library/objects/index';
-import { GroupPreviewDialog } from '../../group-preview-dialog/group-preview-dialog.component';
+import { GroupPreviewDialog } from './group-preview-dialog/group-preview-dialog.component';
 
 @Component({
   selector: 'group-table',

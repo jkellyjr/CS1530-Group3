@@ -22,12 +22,14 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
 import {MatTableModule} from '@angular/material/table';
 import {MatDialogModule} from '@angular/material/dialog';
-import { GroupPreviewDialog } from './group-preview-dialog/group-preview-dialog.component';
+import { GroupPreviewDialog } from './search/group-table/group-preview-dialog/group-preview-dialog.component';
 import { CourseFormComponent } from './profile/course-form/course-form.component';
 import { UserFormComponent } from './profile/user-form/user-form.component';
 import { GroupTableComponent } from './search/group-table/group-table.component';
 import { TutorTableComponent } from './search/tutor-table/tutor-table.component';
 import { StudentTableComponent } from './search/student-table/student-table.component';
+import { StudentPreviewDialogComponent } from './search/student-table/student-preview-dialog/student-preview-dialog.component';
+import { TutorPreviewDialogComponent } from './search/tutor-table/tutor-preview-dialog/tutor-preview-dialog.component';
 
 @NgModule({
   imports: [
@@ -57,7 +59,9 @@ import { StudentTableComponent } from './search/student-table/student-table.comp
     UserFormComponent,
     GroupTableComponent,
     TutorTableComponent,
-    StudentTableComponent
+    StudentTableComponent,
+    StudentPreviewDialogComponent,
+    TutorPreviewDialogComponent
   ],
   exports: [
   ],

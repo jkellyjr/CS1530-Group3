@@ -1,3 +1,21 @@
-<p>
-  student-table works!
-</p>
+<mat-list>
+  <mat-table #table [dataSource]="students">
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <mat-cell *matCellDef="let student"> {{student.first_name}} {{student.last_name}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="description">
+      <mat-header-cell *matHeaderCellDef> Bio </mat-header-cell>
+      <mat-cell *matCellDef="let student"> {{student.bio}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="join">
+        <mat-header-cell *matHeaderCellDef> Contact </mat-header-cell>
+        <mat-cell *matCellDef="let student">
+          <button mat-button class="contactButton" (click)="openDialog(student,user)">Contact</button>
+        </mat-cell>
+      </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+</mat-list>

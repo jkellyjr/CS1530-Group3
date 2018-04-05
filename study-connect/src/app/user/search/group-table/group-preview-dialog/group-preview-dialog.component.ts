@@ -1,11 +1,11 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { Group, User } from '../../library/objects/index';
+import { Group, User } from '../../../../library/objects/index';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import { UserService } from '../user.service';
+import { UserService } from '../../../user.service';
 
 
 @Component({
-  selector: 'app-group-preview-dialog',
+  selector: 'group-preview-dialog',
   templateUrl: './group-preview-dialog.component.html',
   styleUrls: ['./group-preview-dialog.component.css']
 })

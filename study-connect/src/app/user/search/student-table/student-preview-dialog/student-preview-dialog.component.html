@@ -1,15 +1,15 @@
 <mat-card>
   <mat-card-title>
-    {{data.group.name}}
+    {{student.first_name}} {{student.last_name}}
   </mat-card-title>
- 
+
   <mat-card-content>
-    {{data.group.description}}
+    {{student.bio}}
   </mat-card-content>
- 
+
   <mat-card-actions>
-    <button (click)="onJoinClick()" mat-button >Join</button>
+    <button (click)="onContactClick()" mat-button >Contact</button>
     <button (click)="onNoClick()" mat-button >Cancel</button>
   </mat-card-actions>
- 
+
  </mat-card>

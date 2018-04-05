@@ -1,7 +1,7 @@
 <div id="searchWrapper">
   <mat-tab-group>
-    <mat-tab label="Tutors"></mat-tab>
-    <mat-tab label="Students"></mat-tab>
+    <mat-tab label="Tutors" [tutors]="tutors" [user]="user"></mat-tab>
+    <mat-tab label="Students" [students]="students" [user]="user"></mat-tab>
     <mat-tab label="Groups">
       <group-table [groups]="groups" [user]="user"></group-table>
     </mat-tab>

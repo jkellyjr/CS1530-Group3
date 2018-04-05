@@ -36,10 +36,10 @@ export class UserService {
     this.coursesObservable = this.coursesSubject.asObservable();
   }
 
-  getTutors(): Observable<User[]> {
+  getSuggestedTutors(): Observable<User[]> {
     this.tutorsSubject.next([]);
 
-    this.http.get(this.restUrl+ 'tutor/')
+    this.http.get(this.restUrl+ 'tutor/suggested/')
       .subscribe(
         body => {
           this.tutorsSubject.next(body.json() as User[]);
@@ -49,10 +49,10 @@ export class UserService {
         return this.tutorsObservable;
   }
 
-  getStudents(): Observable<User[]> {
+  getSuggestedStudents(): Observable<User[]> {
     this.studentsSubject.next([]);
 
-    this.http.get(this.restUrl+ 'user/')
+    this.http.get(this.restUrl+ 'student/suggested/')
       .subscribe(
         body => {
           this.studentsSubject.next(body.json() as User[]);
@@ -62,10 +62,10 @@ export class UserService {
         return this.studentsObservable;
   }
 
-  getGroups(): Observable<Group[]> {
+  getSuggestedGroups(): Observable<Group[]> {
     this.groupsSubject.next([]);
 
-    this.http.get(this.restUrl + 'group/')
+    this.http.get(this.restUrl + 'group/suggested/')
       .subscribe(
         body => {
           this.groupsSubject.next(body.json() as Group[]);

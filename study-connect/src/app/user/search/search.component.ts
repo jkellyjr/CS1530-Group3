@@ -15,15 +15,14 @@ export class SearchComponent implements OnInit {
   @Input()
   user: User;
 
-
   groups: Group[];
   groupsSubscription:ISubscription;
 
-  // tutors: User[];
-  // tutorssSubscription:ISubscription;
-  //
-  // students: User[];
-  // studentssSubscription:ISubscription;
+  tutors: User[];
+  tutorsSubscription:ISubscription;
+
+  students: User[];
+  studentsSubscription:ISubscription;
 
   constructor(private _userService: UserService) { }
 
@@ -31,8 +30,18 @@ export class SearchComponent implements OnInit {
     this.groupsSubscription = this._userService.groups.subscribe(
       groups => {
         this.groups = groups;
-        // this.dataSource = new MatTableDataSource<Group[]>(this.groups);
       });
+
+    this.tutorsSubscription = this._userService.tutors.subscribe(
+      tutors => {
+        this.tutors = tutors;
+      });
+
+    this.studentsSubscription = this._userService.students.subscribe(
+      students => {
+        this.students = students;
+      });
+
   }
 
 }
