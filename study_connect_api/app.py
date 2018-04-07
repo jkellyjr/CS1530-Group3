@@ -1,5 +1,5 @@
 import os, sys
-from flask import Flask, request, render_template, jsonify
+from flask import Flask
 from flask_restful import reqparse, abort, Api, Resource
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -57,6 +57,10 @@ def initdb_command():
 
     for x in users:
         x.current_courses.append(courses[0])
+
+    users.append(User('John','Doe','f@gmail.com','1111111111', '123'))
+    users[5].past_courses.append(courses[0])
+    db.session.add(users[5])
     
     groups[0].group_courses.append(courses[0])
     groups[1].group_courses.append(courses[0])
@@ -270,6 +274,40 @@ class SuggestedStudentsAPI(Resource):
                 sug_students.append(x.serialize())
         return sug_students
 
+search_parser = reqparse.RequestParser()
+search_parser.add_argument('user_id') #Id of user performing the search
+search_parser.add_argument('search_type') #"group", "tutor", or "student"
+search_parser.add_argument('course_id') #Id of course you're searching for a group/tutor/student for
+
+class SearchAPI(Resource):
+    def get(self):
+        args = search_parser.parse_args()
+        u = User.query.filter_by(id = args['user_id']).first()
+        c = Course.query.filter_by(id = args['course_id']).first()
+        results = []
+        if u is None or c is None:
+            return 404
+        if args['search_type'] == 'group':
+            for g in c.study_groups:
+                if g not in u.groups:
+                    results.append(g.serialize())
+        
+        elif args['search_type'] == 'tutor':
+            for s in c.past_students:
+                if s not in u.tutors and s != u:
+                    results.append(s.serialize())
+        
+        elif args['search_type'] == 'student':
+            if c not in u.past_courses:
+                return 400
+            for s in c.current_students:
+                if s not in u.students and s != u:
+                    results.append(s.serialize())
+        
+        else:
+            return 400
+
+        return results
 
 class MeetingAPI(Resource):
     def get(self):
@@ -355,6 +393,7 @@ api.add_resource(SuggestedTutorsAPI, '/api/tutor/suggested/')
 api.add_resource(SuggestedStudentsAPI, '/api/student/suggested/')
 api.add_resource(MeetingAPI, '/api/meeting/')
 api.add_resource(CourseAPI, '/api/course/')
+api.add_resource(SearchAPI, '/api/search/')
 # api.add_resource(rating, '/rating/<rating_id>')
 # api.add_resource(message, '/message/<message_id>')
 # api.add_resource(RegisterAPI, '/api/register')
