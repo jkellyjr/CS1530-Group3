@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Course, User } from '../../../library/objects/index';
+import { Course, Group, User } from '../../../library/objects/index';
 import { UserService } from '../../user.service';
 import { ISubscription } from 'rxjs/Subscription';
 
@@ -21,28 +21,48 @@ export class SearchFormComponent implements OnInit {
     {value: 1, viewValue: 'Tutors'},
     {value: 2, viewValue: 'Students'}
   ];
-
   option = 0;
-  selectedCourse:Course;
+  selectedCourse:number;
+  searched:boolean;
 
+  groups:Group[];
+  groupsSubscription:ISubscription;
+
+  tutors:User[];
+  tutorsSubscription:ISubscription;
+
+  students:User[];
+  studentsSubscription:ISubscription;
   constructor(private service:UserService) { }
 
   ngOnInit() {
+    this.searched = false;
     this.coursesSubscription = this.service.courses.subscribe(
       courses => {
         this.courses = courses;
-        // this.selectedCourse = this.courses[0];
       });
+
+    this.groupsSubscription = this.service.searchGroupResult.subscribe(groups => {
+      this.groups = groups;
+    });
+
+    this.tutorsSubscription = this.service.searchTutorResult.subscribe(tutors => {
+      this.tutors = tutors;
+    });
+
+    this.studentsSubscription = this.service.searchStudentResult.subscribe(students => {
+      this.students = students;
+    });
   }
 
   /*
   *@param id course_id
   */
   groupSearch(): void {
-    console.log("search group");
+    console.log("group search");
     if(this.selectedCourse != null){
-      console.log("selected course not null");
-      this.service.searchGroups(this.user.id, this.selectedCourse.id);
+      this.service.searchGroups(this.user.id, this.selectedCourse);
+      this.searched = true;
     }
   }
 
@@ -50,8 +70,10 @@ export class SearchFormComponent implements OnInit {
   *@param id course_id
   */
   tutorSearch(): void {
+    console.log("tutor search");
+
     if(this.selectedCourse !=null){
-      this.service.searchTutors(this.user.id, this.selectedCourse.id);
+      this.service.searchTutors(this.user.id, this.selectedCourse);      this.searched = true;
     }
   }
 
@@ -59,8 +81,10 @@ export class SearchFormComponent implements OnInit {
   *@param id course_id
   */
   studentSearch(): void {
+    console.log("student search");
+
     if(this.selectedCourse != null){
-      this.service.searchStudents(this.user.id, this.selectedCourse.id);
+      this.service.searchStudents(this.user.id, this.selectedCourse);      this.searched = true;
     }
   }
 

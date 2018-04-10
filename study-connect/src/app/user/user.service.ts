@@ -131,10 +131,11 @@ export class UserService {
   searchGroups(user_id:number, course_id:number): Observable<Group[]> {
     this.groupSearchSubject.next([]);
 
-    this.http.get('api/search/?user_id='+user_id+"&?course_id="+course_id+"&?search_type=group")
+    this.http.get('api/search/?user_id='+user_id+"&course_id="+course_id+"&search_type=group")
       .subscribe(
         body => {
           this.groupSearchSubject.next(body.json() as Group[]);
+          console.log(JSON.stringify(body.json()));
         }, error => {
           console.log(error.text());
         })
@@ -144,7 +145,7 @@ export class UserService {
   searchTutors(user_id:number, course_id:number): Observable<User[]> {
     this.tutorSearchSubject.next([]);
 
-    this.http.get('api/search/?user_id='+user_id+"&?course_id="+course_id+"&?search_type=tutor")
+    this.http.get('api/search/?user_id='+user_id+"&course_id="+course_id+"&search_type=tutor")
       .subscribe(
         body => {
           this.tutorSearchSubject.next(body.json() as User[]);
@@ -157,7 +158,7 @@ export class UserService {
   searchStudents(user_id:number, course_id:number): Observable<User[]> {
     this.studentSearchSubject.next([]);
 
-    this.http.get('api/search/?user_id='+user_id+"&?course_id="+course_id+"&?search_type=student")
+    this.http.get('api/search/?user_id='+user_id+"&course_id="+course_id+"&search_type=student")
       .subscribe(
         body => {
           this.studentSearchSubject.next(body.json() as User[]);
