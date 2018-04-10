@@ -20,6 +20,9 @@ export class TutorTableComponent implements OnInit {
   constructor(public dialog:MatDialog) { }
 
   ngOnInit() {
+    for(let i=0;i<this.tutors.length;i++){
+      JSON.stringify(this.tutors[i]);
+    }
   }
 
   openDialog(tutor:User, user:User): void {

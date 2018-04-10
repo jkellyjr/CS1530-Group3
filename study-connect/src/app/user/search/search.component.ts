@@ -1,10 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { UserService } from '../user.service';
 import { ISubscription } from 'rxjs/Subscription';
-import { User } from '../../library/objects/User';
-import { Group } from '../../library/objects/Group';
-import {MatTableDataSource, MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-
+import { Group, User } from '../../library/objects/index';
 
 @Component({
   selector: 'app-search',

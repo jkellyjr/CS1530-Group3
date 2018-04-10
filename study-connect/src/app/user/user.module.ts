@@ -31,6 +31,12 @@ import { StudentTableComponent } from './search/student-table/student-table.comp
 import { StudentPreviewDialogComponent } from './search/student-table/student-preview-dialog/student-preview-dialog.component';
 import { TutorPreviewDialogComponent } from './search/tutor-table/tutor-preview-dialog/tutor-preview-dialog.component';
 import { NotificationComponent } from './notification/notification.component';
+import { TablesComponent } from './notification/tables/tables.component';
+import { NotificationService } from './notification/notification.service';
+import { MeetingsTableComponent } from './notification/tables/meetings-table/meetings-table.component';
+import { RequestsTableComponent } from './notification/tables/requests-table/requests-table.component';
+import { PendingTableComponent } from './notification/tables/pending-table/pending-table.component';
+import { MessagesTableComponent } from './notification/tables/messages-table/messages-table.component';
 
 @NgModule({
   imports: [
@@ -63,11 +69,17 @@ import { NotificationComponent } from './notification/notification.component';
     StudentTableComponent,
     StudentPreviewDialogComponent,
     TutorPreviewDialogComponent,
-    NotificationComponent
+    NotificationComponent,
+    TablesComponent,
+    MeetingsTableComponent,
+    RequestsTableComponent,
+    PendingTableComponent,
+    MessagesTableComponent
   ],
   exports: [
   ],
   providers: [
+    NotificationService,
     UserService
   ],
   entryComponents: [

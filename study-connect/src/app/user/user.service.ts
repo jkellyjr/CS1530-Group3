@@ -3,7 +3,7 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Course, Group, User } from '../library/objects/index';
+import { Course, Group, Meeting, User } from '../library/objects/index';
 
 @Injectable()
 export class UserService {
@@ -36,10 +36,10 @@ export class UserService {
     this.coursesObservable = this.coursesSubject.asObservable();
   }
 
-  getSuggestedTutors(): Observable<User[]> {
+  getSuggestedTutors(id:number): Observable<User[]> {
     this.tutorsSubject.next([]);
 
-    this.http.get(this.restUrl+ 'tutor/suggested/')
+    this.http.get(this.restUrl+ 'tutor/suggested/?user_id='+id)
       .subscribe(
         body => {
           this.tutorsSubject.next(body.json() as User[]);
@@ -49,10 +49,10 @@ export class UserService {
         return this.tutorsObservable;
   }
 
-  getSuggestedStudents(): Observable<User[]> {
+  getSuggestedStudents(id:number): Observable<User[]> {
     this.studentsSubject.next([]);
 
-    this.http.get(this.restUrl+ 'student/suggested/')
+    this.http.get(this.restUrl+ 'student/suggested/?user_id='+id)
       .subscribe(
         body => {
           this.studentsSubject.next(body.json() as User[]);
@@ -62,13 +62,14 @@ export class UserService {
         return this.studentsObservable;
   }
 
-  getSuggestedGroups(): Observable<Group[]> {
+  getSuggestedGroups(id:number): Observable<Group[]> {
     this.groupsSubject.next([]);
 
-    this.http.get(this.restUrl + 'group/suggested/')
+    this.http.get(this.restUrl + 'group/suggested/?user_id='+id)
       .subscribe(
         body => {
           this.groupsSubject.next(body.json() as Group[]);
+          console.log(JSON.stringify(body.json()));
         }, error => {
           console.log(error.text());
         })
