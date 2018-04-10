@@ -85,7 +85,9 @@ import { SearchFormComponent } from './search/search-form/search-form.component'
     UserService
   ],
   entryComponents: [
-    GroupPreviewDialog
+    GroupPreviewDialog,
+    TutorPreviewDialogComponent,
+    StudentPreviewDialogComponent
   ]
 })
 export class UserModule { }
