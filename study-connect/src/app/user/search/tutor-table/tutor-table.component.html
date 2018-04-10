@@ -1,20 +1,20 @@
 <mat-list>
-  <!-- <mat-table #table [dataSource]="tutors">
+  <mat-table #table [dataSource]="tutors">
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
       <mat-cell *matCellDef="let tutor"> {{tutor.first_name}} {{tutor.last_name}} </mat-cell>
     </ng-container>
-    <ng-container matColumnDef="description">
+    <ng-container matColumnDef="bio" >
       <mat-header-cell *matHeaderCellDef> Bio </mat-header-cell>
-      <mat-cell *matCellDef="let tutor"> {{tutor.bio}} </mat-cell>
+      <mat-cell *matCellDef="let tutor"> <span *ngIf="tutor.bio !=null">{{tutor.bio}}</span></mat-cell>
     </ng-container>
-    <ng-container matColumnDef="join">
-        <mat-header-cell *matHeaderCellDef> Contact </mat-header-cell>
-        <mat-cell *matCellDef="let tutor">
-          <button mat-button class="contactButton" (click)="openDialog(tutor,user)">Contact</button>
-        </mat-cell>
-      </ng-container>
+    <ng-container matColumnDef="contact">
+      <mat-header-cell *matHeaderCellDef> Contact </mat-header-cell>
+      <mat-cell *matCellDef="let tutor">
+        <button mat-button class="contactButton" (click)="openDialog(tutor,user)">Contact</button>
+      </mat-cell>
+    </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-  </mat-table> -->
+  </mat-table>
 </mat-list>

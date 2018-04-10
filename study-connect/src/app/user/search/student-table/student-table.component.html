@@ -1,14 +1,14 @@
 <mat-list>
-  <!-- <mat-table #table [dataSource]="students">
+  <mat-table #table [dataSource]="students">
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
       <mat-cell *matCellDef="let student"> {{student.first_name}} {{student.last_name}} </mat-cell>
     </ng-container>
-    <ng-container matColumnDef="description">
+    <ng-container matColumnDef="bio" >
       <mat-header-cell *matHeaderCellDef> Bio </mat-header-cell>
-      <mat-cell *matCellDef="let student"> {{student.bio}} </mat-cell>
+      <mat-cell *matCellDef="let student"> <span *ngIf="student.bio !=null">{{student.bio}}</span></mat-cell>
     </ng-container>
-    <ng-container matColumnDef="join">
+    <ng-container matColumnDef="contact">
         <mat-header-cell *matHeaderCellDef> Contact </mat-header-cell>
         <mat-cell *matCellDef="let student">
           <button mat-button class="contactButton" (click)="openDialog(student,user)">Contact</button>
@@ -16,5 +16,5 @@
       </ng-container>
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-  </mat-table> -->
+  </mat-table>
 </mat-list>

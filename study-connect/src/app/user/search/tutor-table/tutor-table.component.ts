@@ -15,7 +15,7 @@ export class TutorTableComponent implements OnInit {
   @Input()
   user:User;
 
-  displayedColumns = ['name', 'bio', 'contact'];
+  displayedColumns = ['name','bio', 'contact'];
 
   constructor(public dialog:MatDialog) { }
 
