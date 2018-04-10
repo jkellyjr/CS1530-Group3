@@ -1,0 +1,50 @@
+<mat-card>
+  <mat-form-field>
+  <mat-select placeholder="Searching For..." [(ngModel)]="option">
+    <mat-option *ngFor="let opt of options" [value]="opt.value">
+      {{ opt.viewValue }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+  <form id="group-search-form" (ngSubmit)="groupSearch()" #groupForm="ngForm" *ngIf="option == 0">
+    <mat-form-field>
+      <mat-select placeholder="Course" [(ngModel)]="selectedCourse" name="course">
+        <mat-option *ngFor="let course of courses" [value]="course.id">
+          {{ course.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
+    <button mat-icon-button type="submit">
+      Search!
+    </button>
+  </form>
+
+  <form id="tutor-search-form" (ngSubmit)="tutorSearch()" #tutorForm="ngForm" *ngIf="option == 1">
+    <mat-form-field>
+      <mat-select placeholder="Course" [(ngModel)]="selectedCourse" name="course">
+        <mat-option *ngFor="let course of courses" [value]="course.id">
+          {{ course.subj_code }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
+    <button mat-icon-button type="submit">
+      Search!
+    </button>
+  </form>
+
+  <form id="student-search-form" (ngSubmit)="studentSearch()" #studentForm="ngForm" *ngIf="option == 2">
+    <mat-form-field>
+      <mat-select placeholder="Course" [(ngModel)]="selectedCourse" name="course">
+        <mat-option *ngFor="let course of courses" [value]="course.id">
+          {{ course.subj_code }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
+    <button mat-icon-button type="submit">
+      Search!
+    </button>
+  </form>
+  </mat-card>

@@ -37,6 +37,7 @@ import { MeetingsTableComponent } from './notification/tables/meetings-table/mee
 import { RequestsTableComponent } from './notification/tables/requests-table/requests-table.component';
 import { PendingTableComponent } from './notification/tables/pending-table/pending-table.component';
 import { MessagesTableComponent } from './notification/tables/messages-table/messages-table.component';
+import { SearchFormComponent } from './search/search-form/search-form.component';
 
 @NgModule({
   imports: [
@@ -74,7 +75,8 @@ import { MessagesTableComponent } from './notification/tables/messages-table/mes
     MeetingsTableComponent,
     RequestsTableComponent,
     PendingTableComponent,
-    MessagesTableComponent
+    MessagesTableComponent,
+    SearchFormComponent
   ],
   exports: [
   ],

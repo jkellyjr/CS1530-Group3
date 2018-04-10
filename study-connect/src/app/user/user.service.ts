@@ -21,6 +21,15 @@ export class UserService {
   coursesSubject: BehaviorSubject<Course[]>;
   coursesObservable: Observable<Course[]>;
 
+  groupSearchSubject: BehaviorSubject<Group[]>;
+  groupSearchObservable: Observable<Group[]>;
+
+  tutorSearchSubject: BehaviorSubject<User[]>;
+  tutorSearchObservable: Observable<User[]>;
+
+  studentSearchSubject: BehaviorSubject<User[]>;
+  studentSearchObservable: Observable<User[]>;
+
   constructor(private http: Http) {
 
     this.tutorsSubject = new BehaviorSubject([]);
@@ -34,6 +43,15 @@ export class UserService {
 
     this.coursesSubject = new BehaviorSubject([]);
     this.coursesObservable = this.coursesSubject.asObservable();
+
+    this.groupSearchSubject = new BehaviorSubject([]);
+    this.groupSearchObservable = this.groupSearchSubject.asObservable();
+
+    this.tutorSearchSubject = new BehaviorSubject([]);
+    this.tutorSearchObservable = this.tutorSearchSubject.asObservable();
+
+    this.studentSearchSubject = new BehaviorSubject([]);
+    this.studentSearchObservable = this.studentSearchSubject.asObservable();
   }
 
   getSuggestedTutors(id:number): Observable<User[]> {
@@ -110,6 +128,45 @@ export class UserService {
         })
   }
 
+  searchGroups(user_id:number, course_id:number): Observable<Group[]> {
+    this.groupSearchSubject.next([]);
+
+    this.http.get('api/search/?user_id='+user_id+"&?course_id="+course_id+"&?search_type=group")
+      .subscribe(
+        body => {
+          this.groupSearchSubject.next(body.json() as Group[]);
+        }, error => {
+          console.log(error.text());
+        })
+        return this.groupSearchObservable;
+  }
+
+  searchTutors(user_id:number, course_id:number): Observable<User[]> {
+    this.tutorSearchSubject.next([]);
+
+    this.http.get('api/search/?user_id='+user_id+"&?course_id="+course_id+"&?search_type=tutor")
+      .subscribe(
+        body => {
+          this.tutorSearchSubject.next(body.json() as User[]);
+        }, error => {
+          console.log(error.text());
+        })
+        return this.tutorSearchObservable;
+  }
+
+  searchStudents(user_id:number, course_id:number): Observable<User[]> {
+    this.studentSearchSubject.next([]);
+
+    this.http.get('api/search/?user_id='+user_id+"&?course_id="+course_id+"&?search_type=student")
+      .subscribe(
+        body => {
+          this.studentSearchSubject.next(body.json() as User[]);
+        }, error => {
+          console.log(error.text());
+        })
+        return this.studentSearchObservable;
+  }
+
   get tutors(): Observable<User[]> {
     return this.tutorsObservable;
   }
@@ -124,5 +181,15 @@ export class UserService {
 
   get courses(): Observable<Course[]> {
     return this.coursesObservable;
+  }
+
+  get searchGroupResult(): Observable<Group[]> {
+    return this.groupSearchObservable;
+  }
+  get searchTutorResult(): Observable<User[]> {
+    return this.tutorSearchObservable;
+  }
+  get searchStudentResult(): Observable<User[]> {
+    return this.tutorSearchObservable;
   }
 }

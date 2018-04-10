@@ -21,6 +21,7 @@ export class SearchComponent implements OnInit {
   students: User[];
   studentsSubscription:ISubscription;
 
+
   constructor(private _userService: UserService) { }
 
   ngOnInit() {
@@ -38,6 +39,7 @@ export class SearchComponent implements OnInit {
       students => {
         this.students = students;
       });
+
 
   }
 
