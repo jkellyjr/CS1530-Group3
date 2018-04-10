@@ -1,0 +1,23 @@
+<mat-list>
+  <mat-table #table [dataSource]="messages">
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> Sender </mat-header-cell>
+      <mat-cell *matCellDef="let message"> {{message.sender}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="time" *ngIf="message.single_rcpt !=null">
+      <mat-header-cell *matHeaderCellDef> Recipient </mat-header-cell>
+      <mat-cell *matCellDef="let message"> {{message.single_rcpt.name}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="time" *ngIf="message.group_rcpt !=null">
+      <mat-header-cell *matHeaderCellDef> Group </mat-header-cell>
+      <mat-cell *matCellDef="let message"> {{message.group_rcpt.name}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="location">
+      <mat-header-cell *matHeaderCellDef> Sent Time </mat-header-cell>
+      <mat-cell *matCellDef="let message"> {{messages.sent_time}} </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+</mat-list>
