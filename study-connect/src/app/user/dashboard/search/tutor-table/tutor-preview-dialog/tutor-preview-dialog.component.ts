@@ -11,7 +11,6 @@ import { UserService } from '../../../../user.service';
 export class TutorPreviewDialogComponent implements OnInit {
   tutor:User;
   user:User;
-
   message: string;
 
   constructor(public dialogRef: MatDialogRef<TutorPreviewDialogComponent>,

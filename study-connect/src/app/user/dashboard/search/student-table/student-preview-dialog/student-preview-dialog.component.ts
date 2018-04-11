@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { User } from '../../../../../library/objects/index';
+import { RequestContact, User } from '../../../../../library/objects/index';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { UserService } from '../../../../user.service';
 @Component({
@@ -10,7 +10,7 @@ import { UserService } from '../../../../user.service';
 export class StudentPreviewDialogComponent implements OnInit {
   student:User;
   user:User;
-
+  message: string;
 
   constructor(public dialogRef: MatDialogRef<StudentPreviewDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data:any,
@@ -22,7 +22,7 @@ export class StudentPreviewDialogComponent implements OnInit {
   }
 
   onContactClick(): void {
-    //open messages with the student
+    let request = new RequestContact(null, this.user.id, this.student.id, null, this.user.id, this.message);
     this.dialogRef.close();
   }
 
