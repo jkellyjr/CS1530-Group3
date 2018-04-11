@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { User } from '../../../../library/objects/index';
+import { User } from '../../../../../library/objects/index';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import { UserService } from '../../../user.service';
+import { UserService } from '../../../../user.service';
 @Component({
   selector: 'student-preview-dialog',
   templateUrl: './student-preview-dialog.component.html',

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { UserService } from '../user.service';
+import { UserService } from '../../user.service';
 import { ISubscription } from 'rxjs/Subscription';
-import { Group, User } from '../../library/objects/index';
+import { Group, User } from '../../../library/objects/index';
 
 @Component({
   selector: 'app-search',

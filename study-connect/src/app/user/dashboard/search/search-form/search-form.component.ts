@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Course, Group, User } from '../../../library/objects/index';
-import { UserService } from '../../user.service';
+import { Course, Group, User } from '../../../../library/objects/index';
+import { UserService } from '../../../user.service';
 import { ISubscription } from 'rxjs/Subscription';
 
 

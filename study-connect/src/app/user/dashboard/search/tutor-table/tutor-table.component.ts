@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {MatTableDataSource, MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import { Group, User } from '../../../library/objects/index';
+import { Group, User } from '../../../../library/objects/index';
 import { TutorPreviewDialogComponent } from './tutor-preview-dialog/tutor-preview-dialog.component';
 
 @Component({

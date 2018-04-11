@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { User } from '../../../../library/objects/index';
+import { RequestContact, User } from '../../../../../library/objects/index';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import { UserService } from '../../../user.service';
+import { UserService } from '../../../../user.service';
 
 @Component({
   selector: 'tutor-preview-dialog',
@@ -11,6 +11,8 @@ import { UserService } from '../../../user.service';
 export class TutorPreviewDialogComponent implements OnInit {
   tutor:User;
   user:User;
+
+  message: string;
 
   constructor(public dialogRef: MatDialogRef<TutorPreviewDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data:any,
@@ -22,7 +24,7 @@ export class TutorPreviewDialogComponent implements OnInit {
   }
 
   onContactClick(): void {
-    //open messages with the tutor
+    let request = new RequestContact(null, this.tutor.id, this.user.id, null, this.user.id, this.message);
     this.dialogRef.close();
   }
 

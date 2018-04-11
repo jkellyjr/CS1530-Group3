@@ -1,8 +1,10 @@
 export class RequestContact {
-  id: number;
-  tutor_id: number;
-  student_id: number;
-  group_id: number;
-  requestor_id: number;
-  message: string;
+  constructor(
+    private id:number,
+    private tutor_id: number,
+    private student_id: number,
+    private group_id: number,
+    private requestor_id: number,
+    private message: string
+  ) { }
 }
