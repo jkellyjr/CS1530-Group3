@@ -16,7 +16,7 @@ export class User {
   groups: Group[];
   current_courses: Course[];
   past_courses: Course[];
-  // meetings: Meeting[];
+  meetings: Meeting[];
 
   tutor_conversations: Conversation[];
   student_conversations: Conversation[];
