@@ -1,12 +1,12 @@
 
 export class MeetingRequest{
-  id: number;
-  conversation_id: number;
-  date: Date;
-  location: string;
-  course_id: number;
-
-  constructor(){
+  constructor(
+    public id:number,
+    public conversation_id: number,
+    public date: Date,
+    public location: string,
+    public course_id: number
+  ){
     this.date = new Date();
   }
 }

@@ -4,21 +4,21 @@
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
         <mat-cell *matCellDef="let conversation">
-          <span *ng-If="conversation.group_id != null">
+          <span *ngIf="conversation.group_id != null">
             {{ conversation.group_name }}
           </span>
-          <span *ng-If="conversation.student_id == user.id">
+          <span *ngIf="conversation.student_id == user.id">
             {{ conversation.tutor_name }}
           </span>
-          <span *ng-If="conversation.tutor_id == user.id">
+          <span *ngIf="conversation.tutor_id == user.id">
               {{ conversation.student_name }}
             </span>
         </mat-cell>
       </ng-container>
       <ng-container matColumnDef="openConvo">
         <mat-header-cell *matHeaderCellDef> Open Conversation </mat-header-cell>
-        <mat-cell *matCellDef="let conversation"> 
-          <button mat-button class="openButton" (click)="openConversation(conversation)">Join</button> 
+        <mat-cell *matCellDef="let conversation">
+          <button mat-button class="openButton" (click)="openConversation(conversation)">Join</button>
         </mat-cell>
       </ng-container>
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
