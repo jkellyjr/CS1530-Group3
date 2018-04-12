@@ -39,6 +39,7 @@ import { PendingTableComponent } from './notification/tables/pending-table/pendi
 import { MessagesTableComponent } from './notification/tables/messages-table/messages-table.component';
 import { SearchFormComponent } from './dashboard/search/search-form/search-form.component';
 import { MessengerComponent } from './messenger/messenger.component';
+import { SchedulerComponent } from './messenger/scheduler/scheduler.component';
 
 @NgModule({
   imports: [
@@ -78,7 +79,8 @@ import { MessengerComponent } from './messenger/messenger.component';
     PendingTableComponent,
     MessagesTableComponent,
     SearchFormComponent,
-    MessengerComponent
+    MessengerComponent,
+    SchedulerComponent
   ],
   exports: [
   ],
