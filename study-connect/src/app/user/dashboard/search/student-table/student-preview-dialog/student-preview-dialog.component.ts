@@ -22,7 +22,7 @@ export class StudentPreviewDialogComponent implements OnInit {
   }
 
   onContactClick(): void {
-    let request = new RequestContact(null, this.user.id, this.student.id, null, this.user.id, this.message);
+    let request = new RequestContact(null, this.user.id, this.student.id, null, this.user.id, false, this.message);
     this.dialogRef.close();
   }
 
