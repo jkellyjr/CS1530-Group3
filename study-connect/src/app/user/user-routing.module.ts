@@ -8,6 +8,7 @@ import { NotificationComponent } from './notification/notification.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SettingsComponent } from './settings/settings.component';
 import { UserComponent } from './user.component';
+import { MessengerComponent } from './messenger/messenger.component';
 
 const userRoutes: Routes = [
   {
@@ -20,7 +21,8 @@ const userRoutes: Routes = [
         children: [
           { path: '', component: DashboardComponent },
           { path: 'profile', component: ProfileComponent },
-          { path: 'notification', component: NotificationComponent }
+          { path: 'notification', component: NotificationComponent },
+          { path: 'messenger', component: MessengerComponent }
         ]
       }
     ]
