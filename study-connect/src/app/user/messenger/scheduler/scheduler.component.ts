@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Input } from '@angular/core';
 
 import { UserService } from '../../user.service';
-import {MeetingRequest } from '../../../library/objects/index';
+import { Conversation, MeetingRequest } from '../../../library/objects/index';
 
 @Component({
   selector: 'app-scheduler',
@@ -9,6 +9,12 @@ import {MeetingRequest } from '../../../library/objects/index';
   styleUrls: ['./scheduler.component.css']
 })
 export class SchedulerComponent implements OnInit {
+  @Input()
+  conversation_id:number;
+
+  date:string;
+  time:string;
+  location: string;
 
   constructor(private service: UserService) { }
 
@@ -16,7 +22,9 @@ export class SchedulerComponent implements OnInit {
   }
 
   requestMeeting(): void {
-    // let meetingRequest = new MeetingRequest();
+    let meetingRequest = new MeetingRequest(null, this.conversation_id, this.date+" "+this.time, this.location, null);
+
+    this.service.sendMeetingRequest(meetingRequest);
   }
 
 }

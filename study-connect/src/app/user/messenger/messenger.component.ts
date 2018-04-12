@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
-import { Group, User } from '../../library/objects/index';
+import { Group, User, Conversation } from '../../library/objects/index';
 import { ISubscription } from 'rxjs/Subscription';
 import { AuthService } from '../../auth/index';
+import { MessengerService} from './messenger.service';
 
 @Component({
   selector: 'app-messenger',
@@ -13,8 +14,13 @@ export class MessengerComponent implements OnInit {
   user: User;
   userSubscription:ISubscription;
 
+  conversation:Conversation;
+
   constructor(private userService: UserService,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private messengerService: MessengerService) {
+      this.conversation = this.messengerService.getCurrentConversation();
+    }
 
   ngOnInit() {
     this.userSubscription = this.authService.user.subscribe(
@@ -41,7 +47,7 @@ export class MessengerComponent implements OnInit {
         message.classList.add("others");
     }
     label.textContent = m.sender_name + ":";
-    
+
     message.appendChild(label);
 
     var textNode = document.createTextNode(m.content);
@@ -51,18 +57,10 @@ export class MessengerComponent implements OnInit {
 
     var content = document.getElementById("chatContent");
     content.appendChild(wrapper);
-  } 
+  }
 
   sendNewMessage() {
 
-  }
-
-  acceptRequest() {
-
-  }
-
-  declineRequest() {
-    
   }
 
 }
