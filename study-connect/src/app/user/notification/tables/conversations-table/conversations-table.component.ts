@@ -13,6 +13,7 @@ export class ConversationsTableComponent implements OnInit {
   user: User;
 
   con_source: Conversation[] = [];
+  displayedColumns: String[] = ["name", "openConvo"];
 
   constructor() { }
 

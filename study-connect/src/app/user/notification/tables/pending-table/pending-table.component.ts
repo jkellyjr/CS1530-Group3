@@ -20,7 +20,7 @@ export class PendingTableComponent implements OnInit {
 
   pending: RequestContact[];
 
-  displayedColumns = ['user', 'message'];
+  displayedColumns = ['sender', 'message'];
   constructor(private service:UserService) {
     this.pending = new Array<RequestContact>();
   }
