@@ -4,10 +4,10 @@
       <!-- <meetings-table [meetings]="meetings" [user]="user"></meetings-table> -->
     </mat-tab>
     <mat-tab label="Requests" >
-      <requests-table [temp]="user.contact_requests" [userId]="user.id"></requests-table>
+      <requests-table [tempOne]="user.tutor_contact_requests" [tempTwo]="user.student_contact_requests" [userId]="user.id"></requests-table>
     </mat-tab>
     <mat-tab label="Pending">
-      <pending-table [temp]="user.contact_requests" [userId]="user.id"></pending-table>
+      <pending-table [temp]="user.tutor_contact_requests" [tempTwo]="user.student_contact_requests" [userId]="user.id"></pending-table>
     </mat-tab>
     <mat-tab label="Conversations">
       <!-- <messages-table [messages]="messages" [messages]="messages"></pending-table> -->

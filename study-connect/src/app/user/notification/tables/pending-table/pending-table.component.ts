@@ -10,7 +10,10 @@ import { UserService} from '../../../user.service';
 })
 export class PendingTableComponent implements OnInit {
   @Input()
-  temp: RequestContact[];
+  tempOne: RequestContact[];
+
+  @Input()
+  tempTwo: RequestContact[];
 
   @Input()
   userId:number;
@@ -23,9 +26,15 @@ export class PendingTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    for(let i=0;i<this.temp.length;i++){
-      if(this.temp[i].requestor_id == this.userId){
-        this.pending.push(this.temp[i]);
+    for(let i=0;i<this.tempOne.length;i++){
+      if(this.tempOne[i].requestor_id != this.userId){
+        this.pending.push(this.tempOne[i]);
+      }
+    }
+
+    for(let i=0;i<this.tempTwo.length;i++){
+      if(this.tempTwo[i].requestor_id != this.userId){
+        this.pending.push(this.tempTwo[i]);
       }
     }
   }
