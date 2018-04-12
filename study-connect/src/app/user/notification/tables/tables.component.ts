@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { ISubscription } from 'rxjs/Subscription';
-import { Meeting, Message, User } from '../../../library/objects/index';
+import { Meeting, Message, User, RequestContact } from '../../../library/objects/index';
 import { NotificationService } from '../notification.service';
 
 
@@ -14,12 +14,6 @@ export class TablesComponent implements OnInit {
   @Input()
   user:User;
 
-  // requests: User[];
-  // requestsSubscription:ISubscription;
-
-  // pending: User[];
-  // pendingSubscription:ISubscription;
-
   messages: Message[];
   messagesSubscription:ISubscription;
 
@@ -27,15 +21,6 @@ export class TablesComponent implements OnInit {
 
   ngOnInit() {
 
-    // this.requestsSubscription = this._notificationService.requests.subscribe(
-    //   requests => {
-    //     this.requests = requests;
-    //   });
-    //
-    // this.pendingSubscription = this._notificationService.pending.subscribe(
-    //   pending => {
-    //     this.pending = pending;
-    //   });
 
     this.messagesSubscription = this._notificationService.messages.subscribe(
       messages => {

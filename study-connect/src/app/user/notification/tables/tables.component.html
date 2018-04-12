@@ -7,7 +7,7 @@
       <!-- <requests-table [requests]="requests" [user]="user"></requests-table> -->
     </mat-tab>
     <mat-tab label="Pending">
-      <!-- <pending-table [pendings]="pendings" [user]="user"></pending-table> -->
+      <pending-table [pending]="user.contact_requests" [user]="user"></pending-table>
     </mat-tab>
     <mat-tab label="Messages">
       <!-- <messages-table [messages]="messages" [messages]="messages"></pending-table> -->
