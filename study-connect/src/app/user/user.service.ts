@@ -169,7 +169,7 @@ export class UserService {
   }
 
   sendContactRequest(request:RequestContact): void {
-    this.http.post('api/contact/request',request).subscribe(
+    this.http.post('api/contact/request/',request).subscribe(
       body=>{
         console.log("succesful contact request")
     }, error =>{
@@ -179,7 +179,7 @@ export class UserService {
   }
 
   respondContactRequest(id:number, accepted:string): void {
-    this.http.post('api/contact/request?id='+id+'&accepted='+accepted, null).subscribe(
+    this.http.post('api/contact/request/?id='+id+'&accepted='+accepted, null).subscribe(
       body=>{
         console.log("succesful contact request response")
     }, error =>{
@@ -189,7 +189,7 @@ export class UserService {
   }
 
   sendMeetingRequest(request:MeetingRequest): void {
-    this.http.post('api/schedule',request).subscribe(
+    this.http.post('api/schedule/',request).subscribe(
       body=>{
         console.log("succesful meeting request")
     }, error =>{
@@ -199,7 +199,7 @@ export class UserService {
   }
 
   respondMeetingRequest(id:number, accepted:string): void {
-    this.http.post('api/schedule?id='+id+'&accepted='+accepted, null).subscribe(
+    this.http.post('api/schedule/?id='+id+'&accepted='+accepted, null).subscribe(
       body=>{
         console.log("succesful meeting request response")
     }, error =>{
