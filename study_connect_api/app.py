@@ -415,8 +415,8 @@ class ContactRequestAPI(Resource):
         temp2 = ContactRequest.query.filter_by(tutor_id= args['id']).all()
         if temp is None or temp2 is None:
             return 404
-        reqs = [req.serialize() for req in temp]
-        reqs2 = [req.serialize() for req in temp2]
+        reqs = [req.serialize() for req in temp if req.approved == False]
+        reqs2 = [req.serialize() for req in temp2 if req.approved == False]
         return reqs + reqs2
 
     def post(self):
@@ -448,25 +448,28 @@ post_contact_req_parser.add_argument('location')
 post_contact_req_parser.add_argument('course_id')
 post_contact_req_parser.add_argument('conversation_id')
 
-def MeetingRequestAPI(Resource):
+class MeetingRequestAPI(Resource):
+
     def get(self):
         args = get_contact_req_parser.parse_args()
         if args['id'] is None:
             return 404
-        
         temp = MeetingRequest.query.filter_by(conversation_id = args['id']).all()
         if temp is None:
             return 404
-        
+
         reqs = [req.serialize() for req in temp]
-        
+
         return reqs
 
     def post(self):
         args = post_contact_req_parser.parse_args()
         if args['id'] is None:
-            db.session.add(MeetingRequest(meeting_date = datetime.strptime(args['meeting_date'], '%Y-%m-%dT%H:%M:%S.%fZ'), location = args['location'], course_id = args['course_id'], conversation_id = args['conversation_id']))
-        
+            meeting = MeetingRequest(meeting_date = datetime.strptime(args['meeting_date'], '%Y-%m-%dT%H:%M:%S.%fZ'), location = args['location'], course_id = args['course_id'], conversation_id = args['conversation_id'])
+            if meeting == None:
+                return 401
+            db.session.add(meeting)
+
         else:
             req = MeetingRequest.query.filter_by(id = args['id']).first()
             if req is None:
