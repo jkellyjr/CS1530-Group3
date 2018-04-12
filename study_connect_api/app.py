@@ -435,6 +435,47 @@ class ContactRequestAPI(Resource):
         db.session.commit()
         return 201
 
+'''---------------- Meeting Request API --------'''
+
+class MeetingRequest(db.Model):
+    __tablename__ = 'meeting_request'
+
+    id = db.Column(db.Integer, primary_key = True, unique = True)
+    meeting_date = db.Column(db.DateTime, nullable = False)
+    location = db.Column(db.String(30), nullable = True)
+    approved = db.Column(db.Boolean, default = False)
+
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+    conversation_id = db.Column(db.Integer, db.ForeignKey('conversation.id'))
+
+
+    def setApproved(self, decision):
+        self.approved = decision
+
+
+    def serialize(self):
+        map = {
+            "id": self.id,
+            "approved": self.approved,
+            "meeting_date": self.meeting_date,
+            "location": self.location,
+            "course_id": self.course_id,
+            "conversation_id": self.conversation_id
+        }
+
+        return map
+
+    def __init__(self, meeting_date, location, course_id, conversation_id):
+        self.meeting_date = meeting_date
+        self.location = location
+        self.course_id = course_id
+        self.conversation_id = conversation_id
+
+    def __repr__(self):
+        return '<MeetingRequest {}>'.format(self.id, self.meeting_date, self.location, self.course_id, self.conversation_id, self.approved)
+
+
+
 
 '''---------------------------------- Suggested Groups API -------------------------'''
 suggested_groups_parser = reqparse.RequestParser()
@@ -523,6 +564,7 @@ api.add_resource(CourseAPI, '/api/course/')
 api.add_resource(SearchAPI, '/api/search/')
 api.add_resource(ConversationAPI, '/api/conversation/')
 api.add_resource(ContactRequestAPI, '/api/contact/request/')
+api.add_resource(MeetingRequestAPI, '/api/meeting/request/')
 api.add_resource(MessageAPI, '/api/message/')
 # api.add_resource(ScheduleAPI, '/api/schedule/')
 
