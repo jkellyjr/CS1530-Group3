@@ -3,7 +3,7 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Course, Group, Meeting, User, RequestContact } from '../library/objects/index';
+import { Course, Conversation, Group, Meeting, User, RequestContact, MeetingRequest } from '../library/objects/index';
 
 @Injectable()
 export class UserService {
@@ -185,6 +185,26 @@ export class UserService {
     }, error =>{
       console.log(error.text());
       console.log("Unsuccessful contact request response");
+    })
+  }
+
+  sendMeetingRequest(request:MeetingRequest): void {
+    this.http.post('api/schedule',request).subscribe(
+      body=>{
+        console.log("succesful meeting request")
+    }, error =>{
+      console.log(error.text());
+      console.log("Unsuccessful meeting request");
+    })
+  }
+
+  respondMeetingRequest(id:number, accepted:string): void {
+    this.http.post('api/schedule?id='+id+'&accepted='+accepted, null).subscribe(
+      body=>{
+        console.log("succesful meeting request response")
+    }, error =>{
+      console.log(error.text());
+      console.log("Unsuccessful meeting request response");
     })
   }
 
