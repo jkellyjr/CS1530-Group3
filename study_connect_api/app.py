@@ -364,12 +364,14 @@ get_contact_req_parser = reqparse.RequestParser()
 get_contact_req_parser.add_argument('id')
 
 post_contact_req_parser = reqparse.RequestParser()
+post_contact_req_parser.add_argument('id')
+post_contact_req_parser.add_argument('accepted')
 post_contact_req_parser.add_argument('requestor_id')
 post_contact_req_parser.add_argument('student_id')
 post_contact_req_parser.add_argument('tutor_id')
 post_contact_req_parser.add_argument('group_id')
 post_contact_req_parser.add_argument('message')
-post_contact_req_parser.add_argument('accepted')
+
 
 class ContactRequestAPI(Resource):
 
@@ -387,7 +389,18 @@ class ContactRequestAPI(Resource):
 
     def post(self):
         args = post_contact_req_parser.parse_args()
-        db.session.add(ContactRequest(tutor_id = args['tutor_id'], student_id = args['student_id'], group_id = args['group_id'], requestor_id = args['requestor_id'], message = args['message']))
+        if args['id'] is None:
+            db.session.add(ContactRequest(tutor_id = args['tutor_id'], student_id = args['student_id'], group_id = args['group_id'], requestor_id = args['requestor_id'], message = args['message']))
+        else:
+            req = ContactRequest.query.filter_by(id = args['id']).first()
+            if req is None:
+                return 404
+            print(args['accepted'].lower())
+            if args['accepted'].lower() == "true":
+                req.setApproved(True)
+            else:
+                req.setApproved(False)
+            db.session.add(req)
         db.session.commit()
         return 201
 

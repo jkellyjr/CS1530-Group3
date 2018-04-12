@@ -320,6 +320,10 @@ class ContactRequest(db.Model):
     tutor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable = True)
 
+    def setApproved(self, decision):
+        self.approved = decision
+
+
     def serialize(self):
         map = {
             "id": self.id,
