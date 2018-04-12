@@ -10,7 +10,7 @@ import { Conversation, MeetingRequest } from '../../../library/objects/index';
 })
 export class SchedulerComponent implements OnInit {
   @Input()
-  conversation_id:number;
+  conversation:Conversation;
 
   date:string;
   time:string;
@@ -22,7 +22,7 @@ export class SchedulerComponent implements OnInit {
   }
 
   requestMeeting(): void {
-    let meetingRequest = new MeetingRequest(null, this.conversation_id, this.date+" "+this.time, this.location, null);
+    let meetingRequest = new MeetingRequest(null, false, this.conversation.id, this.date+" "+this.time, this.location, 1, this.conversation.student_id, this.conversation.tutor_name);
 
     this.service.sendMeetingRequest(meetingRequest);
   }
