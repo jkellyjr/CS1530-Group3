@@ -4,13 +4,13 @@
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
         <mat-cell *matCellDef="let conversation">
-          <span *ng-if="conversation.group_id != null">
+          <span *ng-If="conversation.group_id != null">
             {{ conversation.group_name }}
           </span>
-          <span *ng-if="conversation.student_id == User.id">
+          <span *ng-If="conversation.student_id == user.id">
             {{ conversation.tutor_name }}
           </span>
-          <span *ng-if="conversation.tutor_id == User.id">
+          <span *ng-If="conversation.tutor_id == user.id">
               {{ conversation.student_name }}
             </span>
         </mat-cell>

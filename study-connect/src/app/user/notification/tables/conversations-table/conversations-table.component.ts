@@ -4,25 +4,26 @@ import { Group, Message, User, Conversation } from '../../../../library/objects/
 import { elementEventFullName } from '@angular/compiler/src/view_compiler/view_compiler';
 
 @Component({
-  selector: 'messages-table',
+  selector: 'conversations-table',
   templateUrl: './conversations-table.component.html',
   styleUrls: ['./conversations-table.component.css']
 })
 export class ConversationsTableComponent implements OnInit {
   @Input()
-  User: User;
+  user: User;
+
   con_source: Conversation[];
 
   constructor() { }
 
   ngOnInit() {
-    this.User.student_conversations.forEach(c => {
+    this.user.student_conversations.forEach(c => {
       this.con_source.push(c);
     });
-    this.User.tutor_conversations.forEach(c => {
+    this.user.tutor_conversations.forEach(c => {
       this.con_source.push(c);
     });
-    this.User.groups.forEach(g => {
+    this.user.groups.forEach(g => {
       g.conversations.forEach(c => {
         this.con_source.push(c);
       });
