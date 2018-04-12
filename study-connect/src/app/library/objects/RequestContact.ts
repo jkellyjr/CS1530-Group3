@@ -6,6 +6,8 @@ export class RequestContact {
     public group_id: number,
     public requestor_id: number,
     public approved: boolean,
-    public message: string
+    public message: string,
+    public recipient_name: string,
+    public requestor_name: string
   ) { }
 }

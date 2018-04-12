@@ -1,3 +1,32 @@
-<p>
-  requests-table works!
-</p>
+<mat-list>
+  <mat-table #table [dataSource]="requests">
+    <!-- Name Column -->
+    <ng-container matColumnDef="sender">
+      <mat-header-cell *matHeaderCellDef> Sender </mat-header-cell>
+      <mat-cell *matCellDef="let request"> {{request.requestor_name}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="message">
+      <mat-header-cell *matHeaderCellDef> Message </mat-header-cell>
+      <mat-cell *matCellDef="let request"> {{request.message}} </mat-cell>
+    </ng-container>
+
+
+    <ng-container matColumnDef="accept">
+      <mat-header-cell *matHeaderCellDef> Accept </mat-header-cell>
+      <mat-cell *matCellDef="let request">
+        <button mat-button class="acceptButton" (click)="accept(request.id)">Accept</button>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="decline">
+      <mat-header-cell *matHeaderCellDef> Decline </mat-header-cell>
+      <mat-cell *matCellDef="let request">
+        <button mat-button class="declineButton" (click)="decline(request.id)">Decline</button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+</mat-list>

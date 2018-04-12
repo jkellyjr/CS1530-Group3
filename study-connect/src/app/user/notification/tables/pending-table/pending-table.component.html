@@ -2,28 +2,15 @@
   <mat-table #table [dataSource]="pending">
     <!-- Name Column -->
     <ng-container matColumnDef="sender">
-      <mat-header-cell *matHeaderCellDef> Sender </mat-header-cell>
-      <mat-cell *matCellDef="let request"> {{request.requestor_name}} </mat-cell>
+      <mat-header-cell *matHeaderCellDef> User </mat-header-cell>
+      <mat-cell *matCellDef="let request">
+          {{request.recipient_name}}
+      </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="message">
       <mat-header-cell *matHeaderCellDef> Message </mat-header-cell>
       <mat-cell *matCellDef="let request"> {{request.message}} </mat-cell>
-    </ng-container>
-
-
-    <ng-container matColumnDef="accept">
-      <mat-header-cell *matHeaderCellDef> Accept </mat-header-cell>
-      <mat-cell *matCellDef="let request">
-        <button mat-button class="acceptButton" (click)="accept(request.id)">Accept</button>
-      </mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="decline">
-      <mat-header-cell *matHeaderCellDef> Decline </mat-header-cell>
-      <mat-cell *matCellDef="let request">
-        <button mat-button class="declineButton" (click)="decline(request.id)">Decline</button>
-      </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

@@ -17,7 +17,7 @@ export class PendingTableComponent implements OnInit {
 
   pending: RequestContact[];
 
-  displayedColumns = ['sender', 'message', 'accept', 'decline'];
+  displayedColumns = ['user', 'message'];
   constructor(private service:UserService) {
     this.pending = new Array<RequestContact>();
   }
@@ -30,13 +30,4 @@ export class PendingTableComponent implements OnInit {
     }
   }
 
-  accept(id:number): void {
-    console.log("Accept ID"+id);
-    this.service.respondContactRequest(id,'true');
-  }
-
-  decline(id:number): void {
-    console.log("decline ID"+id);
-    this.service.respondContactRequest(id,'false');
-  }
 }
