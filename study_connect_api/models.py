@@ -329,7 +329,7 @@ class ContactRequest(db.Model):
     message = db.Column(db.String(100), nullable = False)
     approved = db.Column(db.Boolean, default = False)
     requestor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
-    
+
     student_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
     tutor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable = True)
@@ -379,7 +379,7 @@ class MeetingRequest(db.Model):
     id = db.Column(db.Integer, primary_key = True, unique = True)
     meeting_date = db.Column(db.DateTime, nullable = False)
     location = db.Column(db.String(30), nullable = True)
-    
+
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
     conversation_id = db.Column(db.Integer, db.ForeignKey('conversation.id'))
 
@@ -458,39 +458,3 @@ class MeetingRequest(db.Model):
 #
 #     def __repr__(self):
 #         return "<Ratings {}>".format(self.reviwer, self.reviewee, self.stars, slef.rate_tutor, self.rate_student, self.comments, self.rating_time)
-
-
-class Meeting(db.Model):
-    __tablename__ = 'meeting'
-
-    id = db.Column(db.Integer, unique = True, primary_key = True)
-    name = db.Column(db.String(50), nullable = False)
-    meeting_time = db.Column(db.DateTime, nullable = False)
-    location = db.Column(db.String(50), nullable = True)
-    group_id = db.Column(db.Integer, db.ForeignKey('group.id'))
-
-    student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    tutor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    def serialize(self):
-        return {
-            'id':self.id,
-            'name':self.name,
-            'meeting_time':dump_datetime(self.meeting_time),
-            'location':self.location
-            # 'group':self.group.serialize(),
-            # 'student':self.student.serialize(),
-            # 'tutor':self.tutor.serialize()
-        }
-
-    def __init__(self, name, meeting_time, location, student, group, tutor):
-        self.name = name
-        self.meeting_time = meeting_time
-        self.location = location
-        self.student_id = student
-        self.group_id = group
-        self.tutor_id = tutor
-
-    def __repr__(self):
-        return "<Meetings %r >" % (self.name)
-

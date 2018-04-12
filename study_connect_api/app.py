@@ -479,90 +479,6 @@ class SuggestedStudentsAPI(Resource):
         return sug_students
 
 
-'''---------------------------------- API Routes -------------------------'''
-class MeetingAPI(Resource):
-    def get(self):
-        meetings = []
-        temp = Meeting.query.filter_by(id = meeting_id).first()
-
-        meetings.append({'id' : temp.id, 'name' : temp.name, 'meeting_time' : temp.meeting_time, 'location' : temp.location, 'student_id' : temp.user.id, 'group_id' : temp.study_group.id, 'tutor_id' : temp.tutor.id})
-
-        return jsonify({'meetings' : meetings})
-
-    def post(self, meeting_id):
-        args = parser.parse_args()
-        data = json.loads(args['gonads'])
-
-        new_meeting = Meeting(data['name'], data['meeting_time'], data['location'], data['student_id'], data['group_id'], data['tutor_id'])
-
-        db.session.add(new_meeting)
-        db.session.commit()
-        return 201
-
-    def delete(self, meeting_id):
-        temp = Meeting.query.filter_by(id = meeting_id).first()
-        db.session.delete(temp)
-        db.session.commit()
-        return 200
-
-get_course_parser = reqparse.RequestParser()
-get_course_parser.add_argument('id')
-
-class CourseAPI(Resource):
-
-    def get(self):
-        args = get_course_parser.parse_args()
-        if args['id'] is None:
-            courses = []
-            temp = Course.query.all()
-            for x in temp:
-                courses.append(x.serialize())
-            return courses
-        temp = Course.query.filter_by(id = args['id']).first()
-
-        if temp is None:
-            return 404
-        return temp.serialize()
-
-
-
-# class ScheduleAPI(Resource):
-#
-#     def get(self):
-#
-#     def post(self):
-
-
-    # def post(self, course_id):
-    #     args = parser.parse_args()
-    #     data = json.loads(args['gonads'])
-
-    #     new_course = Course(data['name'], data['description'], data['subj_code'], data['course_num'])
-
-    #     db.session.add(new_course)
-    #     db.session.commit()
-    #     return 201
-
-    # def delete(self, course_id):
-    #     temp = Meeting.query.filter_by(id = course_id).first()
-    #     db.session.delete(temp)
-    #     db.session.commit()
-    #     return 200
-
-# class rating(Resource):
-#     def get(self, rating_id):
-
-#     def post(self, rating_id):
-
-#     def delete(self, rating_id):
-
-# class message(Resource):
-#     def get(self, message_id):
-
-#     def post(self, message_id):
-
-#     def delete(self, message_id):
-
 
 api.add_resource(UserAPI, '/api/user/')
 api.add_resource(LoginAPI, '/api/login/')
@@ -575,7 +491,7 @@ api.add_resource(CourseAPI, '/api/course/')
 api.add_resource(SearchAPI, '/api/search/')
 api.add_resource(ConversationAPI, '/api/conversation/')
 api.add_resource(ContactRequestAPI, '/api/contact/request/')
-api.add_resource(ScheduleAPI, '/api/schedule/')
+# api.add_resource(ScheduleAPI, '/api/schedule/')
 
 # api.add_resource(rating, '/rating/<rating_id>')
 # api.add_resource(message, '/message/<message_id>')
