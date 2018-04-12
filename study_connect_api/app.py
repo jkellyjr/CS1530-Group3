@@ -86,6 +86,11 @@ def initdb_command():
     messages.append(Message(users[1].id,  datetime.datetime.now(), "Shalom, looks like a prety cool group", convos[1].id))
     messages.append(Message(groups[0].id, datetime.datetime.now(), "Yeah I know were pretty sick", convos[1].id))
 
+    messages.append(Message(groups[0].id, datetime.datetime.now(), "I don't know how to do problem number 3 from quiz 1", convos[1].id))
+
+    messages.append(Message(groups[0].id, datetime.datetime.now(), "Can anyone help me?", convos[1].id))
+
+
     for x in messages:
         db.session.add(x)
 
