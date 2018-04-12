@@ -73,6 +73,10 @@ tutors_and_students = db.Table('tutors_and_students',
     db.Column('student_id', db.Integer, db.ForeignKey('user.id'))
 )
 
+# conversation_groups = db.Table('conversation_groups',
+#     db.Column('group_id', db.Integer, db.ForeignKey('group.id')),
+#     db.Column('conversation_id', db.Integer, db.ForeignKey('conversation.id'))
+# )
 
 
 '''----------------------------------- Models ------------------------------------'''
@@ -121,7 +125,7 @@ class User(db.Model, UserMixin):
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
-    
+
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
@@ -146,8 +150,10 @@ class Group(db.Model):
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
 
     group_courses = db.relationship('Course', secondary = course_groups, backref = db.backref('study_groups', lazy = 'dynamic'))
+
     meetings = db.relationship('Meeting', backref = db.backref('study_group', lazy = True))
-    group_rcpt_messages = db.relationship('Message', primaryjoin='Group.id == Message.group_rcpt_id', backref='group_rcpt', lazy='dynamic')
+
+    # group_rcpt_messages = db.relationship('Message', primaryjoin='Group.id == Message.group_rcpt_id', backref='group_rcpt', lazy='dynamic')
     # rating = db.relationship('Ratings', backref = db.backref('study_group_rating', lazy = True))
     # rated = db.relationship('Ratings', backref = db.backref('study_group_rated', lazy = True))
 
@@ -193,7 +199,7 @@ class Course(db.Model):
             "course_num":self.course_num
             # 'current_students':serialize_many_users(self.current_students),
             # 'past_students':serialize_many_users(self.past_students),
-            # 'study_groups':serialize_many_groups(self.study_groups)
+            #"study_groups":serialize_many(self.study_groups)
         }
 
     def __init__(self, name, description, subj_code, course_num):
@@ -206,51 +212,120 @@ class Course(db.Model):
         return "<CourseInfo %r, %r, %r>" % (self.name,self.subj_code, self.course_num)
 
 
+class ContactRequest(db.Model):
+    id = db.Column(db.Integer, primary_key = True, unique = True)
+    message = db.Column(db.String(100), nullable = False)
+    requestor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    student_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    tutor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
+    group_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
+
+    def serialize(self):
+        map = {
+            "id": self.id,
+            "message": self.message,
+            "requestor_id": self.requestor_id,
+            "student_id": self.student_id
+        }
+
+        if self.tutor_id == None:
+            map["group_id"] = self.group_id
+        else:
+            map["tutor_id"] = self.tutor_id
+
+        return map
+
+    def __init__(self, message, requestor_id, student_id, tutor_id, group_id):
+        self.message = message
+        self.requestor_id = requestor_id
+        self.student_id = student_id
+        self.tutor_id = tutor_id
+        self.group_id = group_id
+
+
 # class Tutor(db.Model):
 #     __tablename__ = 'tutor'
-
+#
 #     id = db.Column(db.Integer, unique = True, primary_key = True)
 #     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
 #     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable = False)
-
+#
 #     meeting = db.relationship('Meeting', backref = db.backref('tutor', lazy = True))
 #     # rating = db.relationship('Ratings', backref = db.backref('tutor_rating', lazy = True))
 #     # rated = db.relationship('Ratings', backref = db.backref('tutor_rated', lazy = True))
-
+#
 #     def __init__(self, course_id, user_id):
 #         self.course_id = course_id
 #         self.user_id = user_id
-
+#
 #     def __repr__(self):
 #         return "<CourseTutor: %r>" % (self.user_id)
 
 
 
+class Conversation(db.Model):
+    id = db.Column(db.Integer, primary_key = True, unique = True)
+    group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable = True)
+    student_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
+    tutor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
+
+    messages = db.relationship('Message', backref = db.backref('Conversation', lazy = True))
+
+    def serialize(self):
+        map = { "id": self.id }
+
+        if self.group_id == None:
+            map["student_id"] = self.student_id
+            map["tutor_id"] = self.tutor_id
+        elif self.student_id == None:
+            map["tutor_id"] = self.tutor_id
+            map["group_id"] = self.group_id
+        else:
+            map["student_id"] = self.student_id
+            map["group_id"] = self.group_id
+
+        map["messages"] = serialize_many(self.messages)
+
+        return map
+
+    def __init__(self, group_id, tutor_id, student_id):
+        self.group_id = group_id
+        self.student_id = student_id
+        self.tutor_id = tutor_id
+
+
 
 class Message(db.Model):
     id = db.Column(db.Integer, unique = True, primary_key = True)
-    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
     single_rcpt_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
     group_rcpt_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable = True)
     sent_time = db.Column(db.DateTime, nullable = False)
     content = db.Column(db.Text, nullable = False)
 
-    def serialize(self):
-        return {
-            'id':self.id,
-            'sender':self.sender.serialize(),
-            'single_rcpt':self.single_rcpt.serialize(),
-            'group_rcpt':self.group_rcpt.serialize(),
-            'send_time':dump_datetime(self.send_time),
-            'content':self.content
-        }
+    conversation_id = db.Column(db.Integer, db.ForeignKey('conversation.id'))
 
-    def __init__(self, sender_id, single_rcpt, group_rcpt, sent_time, content):
+    def serialize(self):
+        map = {
+            "id": self.id,
+            'sent_time':dump_datetime(self.sent_time),
+            "sender_id": self.sender_id
+        }
+        if self.single_rcpt == None:
+            map["group_rcpt_id"] = self.group_rcpt_id
+        else:
+            map["single_rcpt_id"] = self.single_rcpt_id
+        map["content"] = self.content
+
+        return map
+
+    def __init__(self, sender_id, single_rcpt, group_rcpt, sent_time, content, conversation_id):
         self.sender_id = sender_id
         self.single_rcpt_id = single_rcpt
         self.group_rcpt_id = group_rcpt
         self.sent_time = sent_time
         self.content = content
+        self.conversation_id = conversation_id
 
     def __repr__(self):
         return "<Messages {}>".format(self.send_id, self.single_rcpt, self.group_rcpt, self.sent_time, self.content)

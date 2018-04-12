@@ -3,14 +3,14 @@ from flask import Flask
 from flask_restful import reqparse, abort, Api, Resource
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from models import db, User, Group, Meeting, Course
+from models import db, User, Group, Meeting, Course, Conversation, Message, ContactRequest
 import json, datetime
 
 
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://studyconnect:studyconnect@localhost:5000/sc'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost:5000/sc'
 app.config.update(dict(SQLALCHEMY_DATABASE_URI="sqlite:///"+os.path.join(app.root_path, "sc.db")))
 db.init_app(app)
 
@@ -61,12 +61,42 @@ def initdb_command():
     users.append(User('John','Doe','f@gmail.com','1111111111', '123'))
     users[5].past_courses.append(courses[0])
     db.session.add(users[5])
-    
+
     groups[0].group_courses.append(courses[0])
     groups[1].group_courses.append(courses[0])
 
-    
     db.session.commit()
+
+    convos = []
+    convos.append(Conversation(None, users[2].id, users[3].id))
+    convos.append(Conversation(groups[0].id, None, users[3].id))
+
+    for x in convos:
+        db.session.add(x)
+
+    db.session.commit()
+
+    messages = []
+    messages.append(Message(users[2].id, users[3].id, None, datetime.datetime.now(), "What time would be good to meet?", convos[0].id))
+    messages.append(Message(users[3].id, users[2].id, None, datetime.datetime.now(), "Never dumbass LOL", convos[0].id))
+
+    messages.append(Message(users[1].id, None, groups[0].id, datetime.datetime.now(), "Shalom, looks like a prety cool group", convos[1].id))
+    messages.append(Message(groups[0].id, None, users[1].id,datetime.datetime.now(), "Yeah I know were pretty sick", convos[1].id))
+
+    for x in messages:
+        db.session.add(x)
+
+    db.session.commit()
+
+    contact_req = []
+    contact_req.append(ContactRequest("Yo yo yo, add me dawg", users[0].id, users[0].id, None, groups[1].id))
+    contact_req.append(ContactRequest("Hiyah I need a tutor", users[2].id, users[2].id, users[3].id, None))
+
+    for x in contact_req:
+        db.session.add(x)
+    db.session.commit()
+
+
 
 get_user_parser = reqparse.RequestParser()
 get_user_parser.add_argument('id')
@@ -138,7 +168,7 @@ class UserAPI(Resource):
                 for x in args['past_courses']:
                     y = json.loads(x.replace("'",'"'))
                     temp.past_courses.append(Course.query.filter_by(id = y['id']).first())
-            
+
             if args['password'] is not None:
                 temp.set_password(args['password'])
 
@@ -150,14 +180,14 @@ class UserAPI(Resource):
 
     def post(self):
         args = post_user_parser.parse_args()
-        
+
         # Registration
         db.session.add(User(first_name=args['first_name'], last_name=args['last_name'], email=args['email'], phone=args['phone'], password=args['password']))
         db.session.commit()
 
         temp = User.query.filter_by(email = args['email']).first()
         return temp.serialize()
-        
+
 
 login_parser = reqparse.RequestParser()
 login_parser.add_argument('email')
@@ -171,7 +201,7 @@ class LoginAPI(Resource):
 
         if temp is None or not temp.check_password(args['password']):
             return 404
-        
+
         return temp.serialize()
 
 get_group_parser = reqparse.RequestParser()
@@ -291,23 +321,24 @@ class SearchAPI(Resource):
             for g in c.study_groups:
                 if g not in u.groups:
                     results.append(g.serialize())
-        
+
         elif args['search_type'] == 'tutor':
             for s in c.past_students:
                 if s not in u.tutors and s != u:
                     results.append(s.serialize())
-        
+
         elif args['search_type'] == 'student':
             if c not in u.past_courses:
                 return 400
             for s in c.current_students:
                 if s not in u.students and s != u:
                     results.append(s.serialize())
-        
+
         else:
             return 400
 
         return results
+
 
 class MeetingAPI(Resource):
     def get(self):
@@ -370,6 +401,47 @@ class CourseAPI(Resource):
     #     db.session.commit()
     #     return 200
 
+
+get_conversation_parser = reqparse.RequestParser()
+get_conversation_parser.add_argument('id')
+
+class ConversationAPI(Resource):
+
+    def get(self):
+        args = get_conversation_parser.parse_args()
+        if args['id'] is None:
+            convos = []
+            temp = Conversation.query.all()
+            for x in temp:
+                convos.append(x.serialize())
+            return convos
+        temp = Conversation.query.filter_by(id = args['id']).first()
+
+        if temp is None:
+            return 404
+        return temp.serialize()
+
+
+get_contact_req_parser = reqparse.RequestParser()
+get_contact_req_parser.add_argument('id')
+
+class ContactRequestAPI(Resource):
+
+    def get(self):
+        args = get_contact_req_parser.parse_args()
+        if args['id'] is None:
+            reqs = []
+            temp = ContactRequest.query.all()
+            for x in temp:
+                reqs.append(x.serialize())
+            return reqs
+        temp = ContactRequest.query.filter_by(id = args['id']).first()
+
+        if temp is None:
+            return 404
+        return temp.serialize()
+
+
 # class rating(Resource):
 #     def get(self, rating_id):
 
@@ -394,6 +466,8 @@ api.add_resource(SuggestedStudentsAPI, '/api/student/suggested/')
 api.add_resource(MeetingAPI, '/api/meeting/')
 api.add_resource(CourseAPI, '/api/course/')
 api.add_resource(SearchAPI, '/api/search/')
+api.add_resource(ConversationAPI, '/api/conversation/')
+api.add_resource(ContactRequestAPI, '/api/contact-req/')
 # api.add_resource(rating, '/rating/<rating_id>')
 # api.add_resource(message, '/message/<message_id>')
 # api.add_resource(RegisterAPI, '/api/register')
