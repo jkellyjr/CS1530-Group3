@@ -42,6 +42,7 @@ import { MessagesTableComponent } from './notification/tables/messages-table/mes
 import { SearchFormComponent } from './dashboard/search/search-form/search-form.component';
 import { MessengerComponent } from './messenger/messenger.component';
 import { SchedulerComponent } from './messenger/scheduler/scheduler.component';
+import { ResponderComponent } from './messenger/responder/responder.component';
 
 @NgModule({
   imports: [
@@ -84,7 +85,8 @@ import { SchedulerComponent } from './messenger/scheduler/scheduler.component';
     MessagesTableComponent,
     SearchFormComponent,
     MessengerComponent,
-    SchedulerComponent
+    SchedulerComponent,
+    ResponderComponent
   ],
   exports: [
   ],

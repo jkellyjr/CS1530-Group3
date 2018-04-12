@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../user.service';
+import { Group, User } from '../../library/objects/index';
+import { ISubscription } from 'rxjs/Subscription';
+import { AuthService } from '../../auth/index';
 
 @Component({
   selector: 'app-messenger',
@@ -6,10 +10,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./messenger.component.css']
 })
 export class MessengerComponent implements OnInit {
+  user: User;
+  userSubscription:ISubscription;
 
-  constructor() { }
+  constructor(private userService: UserService,
+    private authService: AuthService) { }
 
   ngOnInit() {
+    this.userSubscription = this.authService.user.subscribe(
+      user => {
+        this.user = user;
+        console.log(JSON.stringify(this.user));
+      });
   }
 
   addMessage(m) {
@@ -22,16 +34,13 @@ export class MessengerComponent implements OnInit {
     label.classList.add("messageLabel");
 
     //TODO: Check if user signed in is the message sender
-    if (true) {
+    if (this.user.id == m.sender_id) {
         message.classList.add("mine");
-        //TODO: Get logged in user's name and add it to label
-        //label.textContent = user.first_name + " " + user.last_name + ":";
     }
-    // else {
-    //     message.classList.add("others");
-    //     TODO: Get sender name and add it to label
-    //     label.textContent = m.sender.first_name + " " + m.sender.last_name + ":";
-    // }
+    else {
+        message.classList.add("others");
+    }
+    label.textContent = m.sender_name + ":";
     
     message.appendChild(label);
 
