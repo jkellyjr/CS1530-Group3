@@ -12,7 +12,7 @@ export class ConversationsTableComponent implements OnInit {
   @Input()
   user: User;
 
-  con_source: Conversation[];
+  con_source: Conversation[] = [];
 
   constructor() { }
 
