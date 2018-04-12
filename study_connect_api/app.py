@@ -526,11 +526,11 @@ class CourseAPI(Resource):
 
 
 
-class ScheduleAPI(Resource):
-
-    def get(self):
-
-    def post(self):
+# class ScheduleAPI(Resource):
+#
+#     def get(self):
+#
+#     def post(self):
 
 
     # def post(self, course_id):
