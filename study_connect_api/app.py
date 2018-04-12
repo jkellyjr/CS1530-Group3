@@ -435,6 +435,52 @@ class ContactRequestAPI(Resource):
         db.session.commit()
         return 201
 
+'''---------------- Meeting Request API --------'''
+get_contact_req_parser = reqparse.RequestParser()
+get_contact_req_parser.add_argument('id')
+
+
+post_contact_req_parser = reqparse.RequestParser()
+post_contact_req_parser.add_argument('id')
+post_contact_req_parser.add_argument('accepted')
+post_contact_req_parser.add_argument('meeting_date')
+post_contact_req_parser.add_argument('location')
+post_contact_req_parser.add_argument('course_id')
+post_contact_req_parser.add_argument('conversation_id')
+
+def MeetingRequestAPI(Resource):
+    def get(self):
+        args = get_contact_req_parser.parse_args()
+        if args['id'] is None:
+            return 404
+        
+        temp = MeetingRequest.query.filter_by(conversation_id = args['id']).all()
+        if temp is None:
+            return 404
+        
+        reqs = [req.serialize() for req in temp]
+        
+        return reqs
+
+    def post(self):
+        args = post_contact_req_parser.parse_args()
+        if args['id'] is None:
+            db.session.add(MeetingRequest(meeting_date = datetime.strptime(args['meeting_date'], '%Y-%m-%dT%H:%M:%S.%fZ'), location = args['location'], course_id = args['course_id'], conversation_id = args['conversation_id']))
+        
+        else:
+            req = MeetingRequest.query.filter_by(id = args['id']).first()
+            if req is None:
+                return 404
+            print(args['accepted'].lower())
+            if args['accepted'].lower() == "true":
+                req.setApproved(True)
+            else:
+                req.setApproved(False)
+            db.session.add(req)
+
+        db.session.commit()
+        return 201
+
 
 '''---------------------------------- Suggested Groups API -------------------------'''
 suggested_groups_parser = reqparse.RequestParser()
@@ -523,6 +569,7 @@ api.add_resource(CourseAPI, '/api/course/')
 api.add_resource(SearchAPI, '/api/search/')
 api.add_resource(ConversationAPI, '/api/conversation/')
 api.add_resource(ContactRequestAPI, '/api/contact/request/')
+api.add_resource(MeetingRequestAPI, '/api/meeting/request/')
 api.add_resource(MessageAPI, '/api/message/')
 # api.add_resource(ScheduleAPI, '/api/schedule/')
 
