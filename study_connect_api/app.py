@@ -399,6 +399,38 @@ class MessageAPI(Resource):
         db.session.commit()
         return 201
 
+'''------------------------------- Scheduling API ---------------------------------'''
+
+post_sched_parser = reqparse.RequestParser()
+post_sched_parser.add_argument('id')
+post_sched_parser.add_argument('accepted')
+post_sched_parser.add_argument('meeting_date')
+post_sched_parser.add_argument('location')
+post_sched_parser.add_argument('course_id')
+post_sched_parser.add_argument('conversation_id')
+post_sched_parser.add_argument('student_requestor_id')
+post_sched_parser.add_argument('tutor_requestor_id')
+post_sched_parser.add_argument('group_requestor_id')
+
+class ScheduleAPI(Resource):
+    def post(self):
+        args = post_sched_parser.parse_args()
+        if args['id'] is None:
+             meeting = MeetingRequest(meeting_date = args['meeting_date'], location = args['location'], course_id = args['course_id'], conversation_id = args['conversation_id'], student_requestor_id = args['student_requestor_id'], tutor_requestor_id = args['tutor_requestor_id'], group_requestor_id = args['group_requestor_id'])
+             db.session.add(meeting)
+        else:
+            req = MeetingRequest.query.filter_by(id = args['id']).first()
+            if req is None:
+                return 404
+            
+            if args['accepted'].lower() == "true":
+                scheduled_meeting = Meeting(meeting_time = req.meeting_date, location = req.location, group_id = req.group_requestor_id, student_id = req.student_requestor_id, tutor_id = req.tutor_requestor_id)
+                db.session.add(scheduled_meeting)
+            db.session.delete(req)
+
+        db.session.commit()
+        return 201
+
 
 '''---------------------------------- Contact Request API -------------------------'''
 get_contact_req_parser = reqparse.RequestParser()
@@ -585,7 +617,7 @@ api.add_resource(ConversationAPI, '/api/conversation/')
 api.add_resource(ContactRequestAPI, '/api/contact/request/')
 api.add_resource(MeetingRequestAPI, '/api/meeting/request/')
 api.add_resource(MessageAPI, '/api/message/')
-# api.add_resource(ScheduleAPI, '/api/schedule/')
+api.add_resource(ScheduleAPI, '/api/schedule/')
 
 # api.add_resource(rating, '/rating/<rating_id>')
 # api.add_resource(message, '/message/<message_id>')

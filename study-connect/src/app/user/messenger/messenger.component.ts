@@ -28,6 +28,9 @@ export class MessengerComponent implements OnInit {
         this.user = user;
         console.log(JSON.stringify(this.user));
       });
+      this.conversation.messages.forEach(m => {
+        this.addMessage(m);
+      });
   }
 
   addMessage(m) {
