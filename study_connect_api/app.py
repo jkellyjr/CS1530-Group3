@@ -4,7 +4,7 @@ from flask_restful import reqparse, abort, Api, Resource
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 from flask_cors import CORS
-from models import db, User, Group, Meeting, Course, Conversation, Message, ContactRequest
+from models import db, User, Group, Meeting, Course, Conversation, Message, ContactRequest, MeetingRequest
 import json, datetime
 
 
@@ -37,6 +37,7 @@ def initdb_command():
     groups = []
     groups.append(Group('CS1530 Guys', 'A bunch of dudes studying software engineering', 1))
     groups.append(Group('CS1530 Girls', 'Ladies is pimps too', 1))
+    groups.append(Group('Go Eagles', 'Phily > PIttsburgh', users[3].id))
     for x in groups:
         db.session.add(x)
     db.session.commit()
@@ -95,6 +96,14 @@ def initdb_command():
     contact_req.append(ContactRequest("Hiyah I need a tutor", users[2].id, users[2].id, users[3].id, None))
 
     for x in contact_req:
+        db.session.add(x)
+    db.session.commit()
+
+    meeting_reqs = []
+    meeting_reqs.append(MeetingRequest(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), "Cathy", courses[2].id, convos[1].id, users[2].id, users[0].id, None))
+    meeting_reqs.append(MeetingRequest(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), "Hillman", courses[0].id, convos[0].id, users[1].id, None, groups[2].id))
+
+    for x in meeting_reqs:
         db.session.add(x)
     db.session.commit()
 
@@ -439,7 +448,6 @@ class ContactRequestAPI(Resource):
 get_contact_req_parser = reqparse.RequestParser()
 get_contact_req_parser.add_argument('id')
 
-
 post_contact_req_parser = reqparse.RequestParser()
 post_contact_req_parser.add_argument('id')
 post_contact_req_parser.add_argument('accepted')
@@ -447,6 +455,9 @@ post_contact_req_parser.add_argument('meeting_date')
 post_contact_req_parser.add_argument('location')
 post_contact_req_parser.add_argument('course_id')
 post_contact_req_parser.add_argument('conversation_id')
+post_contact_req_parser.add_argument('student_id')
+post_contact_req_parser.add_argument('tutor_id')
+post_contact_req_parser.add_argument('group_id')
 
 class MeetingRequestAPI(Resource):
 
@@ -458,14 +469,14 @@ class MeetingRequestAPI(Resource):
         if temp is None:
             return 404
 
-        reqs = [req.serialize() for req in temp]
+        reqs = [req.serialize() for req in temp if req.approved == False]
 
         return reqs
 
     def post(self):
         args = post_contact_req_parser.parse_args()
         if args['id'] is None:
-            meeting = MeetingRequest(meeting_date = datetime.strptime(args['meeting_date'], '%Y-%m-%dT%H:%M:%S.%fZ'), location = args['location'], course_id = args['course_id'], conversation_id = args['conversation_id'])
+            meeting = MeetingRequest(meeting_date = args['meeting_date'], location = args['location'], course_id = args['course_id'], conversation_id = args['conversation_id'], student_id = args['student_id'], tutor_id = args['tutor_id'], group_id = args['group_id'])
             if meeting == None:
                 return 401
             db.session.add(meeting)
