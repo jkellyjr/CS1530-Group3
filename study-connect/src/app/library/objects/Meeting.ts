@@ -1,10 +1,10 @@
 export class Meeting {
-  id: number;
-  name: string;
-  meeting_time: Date;
-  location: string;
-
-  constructor(){
-    this.meeting_time = new Date();
+  constructor(
+      public id:number,
+      public approved:boolean,
+      public conversation_id: number,
+      public meeting_date: string,
+      public location: string,
+      public course_id: number){
   }
 }

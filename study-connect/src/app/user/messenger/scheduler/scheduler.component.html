@@ -1,18 +1,27 @@
   <mat-card>
     <form class="" (ngSubmit)="requestMeeting()" #profileForm="ngForm">
     <mat-card-title>Scheduler</mat-card-title>
-    <mat-form-field>
-      <input matInput [matDatepicker]="myDatepicker" placeholder="Date" name="meeting_date">
+    <!-- <mat-form-field>
+      <input matInput [matDatepicker]="myDatepicker" placeholder="Date" name="meeting_date" [(ngModel)]="date">
       <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
       <mat-datepicker #myDatepicker></mat-datepicker>
+    </mat-form-field> -->
+    <mat-form-field>
+      <input matInput type="number" placeholder="MM" name="month" [(ngModel)]="month" min=1 max=12>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="number" placeholder="DD" name="day" [(ngModel)]="day" min=1 max=31>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="number" placeholder="YY" name="year" [(ngModel)]="year" min=2018 max=2040>
     </mat-form-field>
     <br>
     <mat-form-field>
-      <input matInput type="time" placeholder="Time" name="meeting_time">
+      <input matInput type="time" placeholder="Time" name="meeting_time" [(ngModel)]="time">
     </mat-form-field>
     <br>
     <mat-form-field>
-      <input matInput placeholder="Location" type="text" name="location" required>
+      <input matInput placeholder="Location" type="text" name="location" [(ngModel)]="location" required>
     </mat-form-field>
     <mat-card-actions>
         <button mat-raised-button type="submit">
@@ -20,5 +29,11 @@
         </button>
       </mat-card-actions>
   </form>
-  
+
 </mat-card>
+<!-- <span *ngIf="date != null">{{ date.getFullYear() }}/{{date.getMonth()}}/{{date.getDate()}}
+</span>
+{{date}} -->
+{{year}}/{{month}}/{{day}}
+{{time}}
+{{location}}

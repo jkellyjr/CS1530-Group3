@@ -188,7 +188,7 @@ export class UserService {
     })
   }
 
-  sendMeetingRequest(request:MeetingRequest): void {
+  sendMeetingRequest(request:Meeting): void {
     this.http.post('api/schedule/',request).subscribe(
       body=>{
         console.log("succesful meeting request")
@@ -198,8 +198,8 @@ export class UserService {
     })
   }
 
-  respondMeetingRequest(id:number, accepted:string): void {
-    this.http.post('api/schedule/?id='+id+'&accepted='+accepted, null).subscribe(
+  respondMeetingRequest(request:Meeting): void {
+    this.http.post('api/schedule/', request).subscribe(
       body=>{
         console.log("succesful meeting request response")
     }, error =>{
