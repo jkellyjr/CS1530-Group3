@@ -53,4 +53,16 @@ export class MessengerComponent implements OnInit {
     content.appendChild(wrapper);
   } 
 
+  sendNewMessage() {
+
+  }
+
+  acceptRequest() {
+
+  }
+
+  declineRequest() {
+    
+  }
+
 }
