@@ -479,7 +479,6 @@ class SuggestedStudentsAPI(Resource):
         return sug_students
 
 
-# <<<<<<< Updated upstream
 '''---------------------------------- API Routes -------------------------'''
 =======
 class MeetingAPI(Resource):
@@ -529,7 +528,7 @@ class CourseAPI(Resource):
 
 
 class ScheduleAPI(Resource):
-    
+
     def get(self):
 
     def post(self):
@@ -566,7 +565,6 @@ class ScheduleAPI(Resource):
 #     def delete(self, message_id):
 
 
->>>>>>> Stashed changes
 api.add_resource(UserAPI, '/api/user/')
 api.add_resource(LoginAPI, '/api/login/')
 api.add_resource(GroupAPI, '/api/group/')
@@ -575,16 +573,13 @@ api.add_resource(SuggestedTutorsAPI, '/api/tutor/suggested/')
 api.add_resource(SuggestedStudentsAPI, '/api/student/suggested/')
 # api.add_resource(MeetingAPI, '/api/meeting/')
 api.add_resource(CourseAPI, '/api/course/')
-<<<<<<< Updated upstream
 api.add_resource(SearchAPI, '/api/search/')
 api.add_resource(ConversationAPI, '/api/conversation/')
 api.add_resource(ContactRequestAPI, '/api/contact/request/')
-=======
 api.add_resource(ScheduleAPI, '/api/schedule/')
 
 # api.add_resource(rating, '/rating/<rating_id>')
 # api.add_resource(message, '/message/<message_id>')
->>>>>>> Stashed changes
 # api.add_resource(RegisterAPI, '/api/register')
 
 
