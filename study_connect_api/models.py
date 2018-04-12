@@ -181,6 +181,9 @@ class Course(db.Model):
 
     # course_tutor = db.relationship('Tutor', backref = db.backref('course', lazy = True))
 
+    #added for meeting request ***
+    meeting_requests = db.relationship('MeetingRequest', backref = db.backref('Course', lazy = True))
+
     def serialize(self):
         return {
             "id":self.id,
@@ -256,6 +259,10 @@ class Conversation(db.Model):
     tutor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
 
     messages = db.relationship('Message', backref = db.backref('Conversation', lazy = True))
+
+    #added for meeting request***
+    meeting_requests = db.relationship('MeetingRequest', backref = db.backref('Conversation', lazy = True))
+
 
     def serialize(self):
         map = { "id": self.id }
@@ -366,6 +373,37 @@ class ContactRequest(db.Model):
         return '<ContactRequest %r, %r>' % (self.requestor_id, self.message)
 
 
+class MeetingRequest(db.Model):
+    __tablename__ = 'meeting_request'
+
+    id = db.Column(db.Integer, primary_key = True, unique = True)
+    meeting_date = db.Column(db.DateTime, nullable = False)
+    location = db.Column(db.String(30), nullable = True)
+    
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+    conversation_id = db.Column(db.Integer, db.ForeignKey('conversation.id'))
+
+    def serialize(self):
+        map = {
+            "id": self.id,
+            "meeting_date": self.meeting_date,
+            "location": self.location,
+            "course_id": self.course_id,
+            "conversation_id": self.conversation_id
+        }
+
+        return map
+
+    def __init__(self, meeting_date, location, course_id, conversation_id):
+        self.meeting_date = meeting_date
+        self.location = location
+        self.course_id = course_id
+        self.conversation_id = conversation_id
+
+    def __repr__(self):
+        return '<MeetingRequest {}>'.format(self.id, self.meeting_date, self.location, self.course_id, self.conversation_id)
+
+
 
 # class Tutor(db.Model):
 #     __tablename__ = 'tutor'
@@ -420,3 +458,39 @@ class ContactRequest(db.Model):
 #
 #     def __repr__(self):
 #         return "<Ratings {}>".format(self.reviwer, self.reviewee, self.stars, slef.rate_tutor, self.rate_student, self.comments, self.rating_time)
+
+
+class Meeting(db.Model):
+    __tablename__ = 'meeting'
+
+    id = db.Column(db.Integer, unique = True, primary_key = True)
+    name = db.Column(db.String(50), nullable = False)
+    meeting_time = db.Column(db.DateTime, nullable = False)
+    location = db.Column(db.String(50), nullable = True)
+    group_id = db.Column(db.Integer, db.ForeignKey('group.id'))
+
+    student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    tutor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def serialize(self):
+        return {
+            'id':self.id,
+            'name':self.name,
+            'meeting_time':dump_datetime(self.meeting_time),
+            'location':self.location
+            # 'group':self.group.serialize(),
+            # 'student':self.student.serialize(),
+            # 'tutor':self.tutor.serialize()
+        }
+
+    def __init__(self, name, meeting_time, location, student, group, tutor):
+        self.name = name
+        self.meeting_time = meeting_time
+        self.location = location
+        self.student_id = student
+        self.group_id = group
+        self.tutor_id = tutor
+
+    def __repr__(self):
+        return "<Meetings %r >" % (self.name)
+

@@ -5,6 +5,7 @@ export class RequestContact {
     private student_id: number,
     private group_id: number,
     private requestor_id: number,
+    private approved: boolean,
     private message: string
   ) { }
 }
