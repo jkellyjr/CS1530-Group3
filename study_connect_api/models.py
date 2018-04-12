@@ -116,6 +116,8 @@ class User(db.Model, UserMixin):
             "student_conversations": serialize_many(self.student_conversations),
             "tutor_contact_requests": serialize_many(self.tutor_contact_requests),
             "student_contact_requests": serialize_many(self.student_contact_requests),
+            "tutor_meeting_requests": serialize_many(self.tutor_meeting_requests),
+            "student_meeting_requests": serialize_many(self.student_meeting_requests),
             "meetings": serialize_many(combined_meetings)
         }
 
@@ -164,7 +166,7 @@ class Group(db.Model):
             "meetings":serialize_many(self.meetings),
             "conversations": serialize_many(self.conversations),
             "contact_requests": serialize_many(self.contact_requests),
-            "meeting_requests": serialize_many(self.meeting_requests)
+            "meeting_requests": serialize_many(self.meeting_requests),
         }
 
     def __init__(self, name, description, creator_id):
@@ -393,13 +395,13 @@ class MeetingRequest(db.Model):
 
     id = db.Column(db.Integer, primary_key = True, unique = True)
     approved = db.Column(db.Boolean, default = False)
-    meeting_date = db.Column(db.DateTime, nullable = False)
+    meeting_date = db.Column(db.String(100), nullable = False)
     location = db.Column(db.String(30), nullable = True)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
     conversation_id = db.Column(db.Integer, db.ForeignKey('conversation.id'))
 
-    student_requestor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
-    tutor_requestor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    student_requestor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
+    tutor_requestor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
     group_requestor_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable = True)
 
     def setApproved(self, decision):
@@ -409,7 +411,7 @@ class MeetingRequest(db.Model):
         map = {
             "id": self.id,
             "approved": self.approved,
-            "meeting_date": self.meeting_date,
+            "meeting_date": str(self.meeting_date),
             "location": self.location,
             "course_id": self.course_id,
             "conversation_id": self.conversation_id
@@ -428,7 +430,7 @@ class MeetingRequest(db.Model):
         return map
 
     def __init__(self, meeting_date, location, course_id, conversation_id, student_id, tutor_id, group_id):
-        self.meeting_date = meeting_date
+        self.meeting_date = str(meeting_date)
         self.location = location
         self.course_id = course_id
         self.conversation_id = conversation_id
