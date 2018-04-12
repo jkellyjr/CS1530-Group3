@@ -436,45 +436,50 @@ class ContactRequestAPI(Resource):
         return 201
 
 '''---------------- Meeting Request API --------'''
-
-class MeetingRequest(db.Model):
-    __tablename__ = 'meeting_request'
-
-    id = db.Column(db.Integer, primary_key = True, unique = True)
-    meeting_date = db.Column(db.DateTime, nullable = False)
-    location = db.Column(db.String(30), nullable = True)
-    approved = db.Column(db.Boolean, default = False)
-
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
-    conversation_id = db.Column(db.Integer, db.ForeignKey('conversation.id'))
+get_contact_req_parser = reqparse.RequestParser()
+get_contact_req_parser.add_argument('id')
 
 
-    def setApproved(self, decision):
-        self.approved = decision
+post_contact_req_parser = reqparse.RequestParser()
+post_contact_req_parser.add_argument('id')
+post_contact_req_parser.add_argument('accepted')
+post_contact_req_parser.add_argument('meeting_date')
+post_contact_req_parser.add_argument('location')
+post_contact_req_parser.add_argument('course_id')
+post_contact_req_parser.add_argument('conversation_id')
 
+def MeetingRequestAPI(Resource):
+    def get(self):
+        args = get_contact_req_parser.parse_args()
+        if args['id'] is None:
+            return 404
+        
+        temp = MeetingRequest.query.filter_by(conversation_id = args['id']).all()
+        if temp is None:
+            return 404
+        
+        reqs = [req.serialize() for req in temp]
+        
+        return reqs
 
-    def serialize(self):
-        map = {
-            "id": self.id,
-            "approved": self.approved,
-            "meeting_date": self.meeting_date,
-            "location": self.location,
-            "course_id": self.course_id,
-            "conversation_id": self.conversation_id
-        }
+    def post(self):
+        args = post_contact_req_parser.parse_args()
+        if args['id'] is None:
+            db.session.add(MeetingRequest(meeting_date = datetime.strptime(args['meeting_date'], '%Y-%m-%dT%H:%M:%S.%fZ'), location = args['location'], course_id = args['course_id'], conversation_id = args['conversation_id']))
+        
+        else:
+            req = MeetingRequest.query.filter_by(id = args['id']).first()
+            if req is None:
+                return 404
+            print(args['accepted'].lower())
+            if args['accepted'].lower() == "true":
+                req.setApproved(True)
+            else:
+                req.setApproved(False)
+            db.session.add(req)
 
-        return map
-
-    def __init__(self, meeting_date, location, course_id, conversation_id):
-        self.meeting_date = meeting_date
-        self.location = location
-        self.course_id = course_id
-        self.conversation_id = conversation_id
-
-    def __repr__(self):
-        return '<MeetingRequest {}>'.format(self.id, self.meeting_date, self.location, self.course_id, self.conversation_id, self.approved)
-
-
+        db.session.commit()
+        return 201
 
 
 '''---------------------------------- Suggested Groups API -------------------------'''
