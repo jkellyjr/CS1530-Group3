@@ -427,7 +427,7 @@ class ScheduleAPI(Resource):
             req = MeetingRequest.query.filter_by(id = args['id']).first()
             if req is None:
                 return 404
-            
+
             if args['accepted'].lower() == "true":
                 scheduled_meeting = Meeting(meeting_time = req.meeting_date, location = req.location, group_id = req.group_requestor_id, student_id = req.student_requestor_id, tutor_id = req.tutor_requestor_id)
                 db.session.add(scheduled_meeting)
@@ -468,7 +468,10 @@ class ContactRequestAPI(Resource):
     def post(self):
         args = post_contact_req_parser.parse_args()
         if args['id'] is None:
-            db.session.add(ContactRequest(tutor_id = args['tutor_id'], student_id = args['student_id'], group_id = args['group_id'], requestor_id = args['requestor_id'], message = args['message']))
+            req = ContactRequest(message = args["message"], requestor_id = args["requestor_id"], student_id = args['student_id'], tutor_id = args['tutor_id'],  group_id = args['group_id'])
+            if req == None:
+                return 401
+            db.session.add(req)
         else:
             req = ContactRequest.query.filter_by(id = args['id']).first()
             if req is None:
@@ -482,24 +485,24 @@ class ContactRequestAPI(Resource):
         return 201
 
 '''---------------- Meeting Request API --------'''
-get_contact_req_parser = reqparse.RequestParser()
-get_contact_req_parser.add_argument('id')
+get_meeting_req_parser = reqparse.RequestParser()
+get_meeting_req_parser.add_argument('id')
 
-post_contact_req_parser = reqparse.RequestParser()
-post_contact_req_parser.add_argument('id')
-post_contact_req_parser.add_argument('accepted')
-post_contact_req_parser.add_argument('meeting_date')
-post_contact_req_parser.add_argument('location')
-post_contact_req_parser.add_argument('course_id')
-post_contact_req_parser.add_argument('conversation_id')
-post_contact_req_parser.add_argument('student_id')
-post_contact_req_parser.add_argument('tutor_id')
-post_contact_req_parser.add_argument('group_id')
+post_meeting_req_parser = reqparse.RequestParser()
+post_meeting_req_parser.add_argument('id')
+post_meeting_req_parser.add_argument('accepted')
+post_meeting_req_parser.add_argument('meeting_date')
+post_meeting_req_parser.add_argument('location')
+post_meeting_req_parser.add_argument('course_id')
+post_meeting_req_parser.add_argument('conversation_id')
+post_meeting_req_parser.add_argument('student_id')
+post_meeting_req_parser.add_argument('tutor_id')
+post_meeting_req_parser.add_argument('group_id')
 
 class MeetingRequestAPI(Resource):
 
     def get(self):
-        args = get_contact_req_parser.parse_args()
+        args = get_meeting_req_parser.parse_args()
         if args['id'] is None:
             return 404
         temp = MeetingRequest.query.filter_by(conversation_id = args['id']).all()
@@ -511,7 +514,7 @@ class MeetingRequestAPI(Resource):
         return reqs
 
     def post(self):
-        args = post_contact_req_parser.parse_args()
+        args = post_meeting_req_parser.parse_args()
         if args['id'] is None:
             meeting = MeetingRequest(meeting_date = args['meeting_date'], location = args['location'], course_id = args['course_id'], conversation_id = args['conversation_id'], student_id = args['student_id'], tutor_id = args['tutor_id'], group_id = args['group_id'])
             if meeting == None:
