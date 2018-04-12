@@ -480,7 +480,6 @@ class SuggestedStudentsAPI(Resource):
 
 
 '''---------------------------------- API Routes -------------------------'''
-=======
 class MeetingAPI(Resource):
     def get(self):
         meetings = []
