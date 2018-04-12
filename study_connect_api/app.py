@@ -2,6 +2,7 @@ import os, sys
 from flask import Flask
 from flask_restful import reqparse, abort, Api, Resource
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import or_
 from flask_cors import CORS
 from models import db, User, Group, Meeting, Course, Conversation, Message, ContactRequest
 import json, datetime
@@ -14,6 +15,7 @@ api = Api(app)
 app.config.update(dict(SQLALCHEMY_DATABASE_URI="sqlite:///"+os.path.join(app.root_path, "sc.db")))
 db.init_app(app)
 
+'''---------------------------------- DB Configuration -------------------------'''
 @app.cli.command('initdb')
 def initdb_command():
     """Reinitializes the database"""
@@ -97,7 +99,7 @@ def initdb_command():
     db.session.commit()
 
 
-
+'''---------------------------------- User API -------------------------'''
 get_user_parser = reqparse.RequestParser()
 get_user_parser.add_argument('id')
 
@@ -125,11 +127,8 @@ class UserAPI(Resource):
     def get(self):
         args = get_user_parser.parse_args()
         if args['id'] is None:
-            users = []
             temp = User.query.all()
-            for u in temp:
-                users.append(u.serialize())
-            return users
+            return [user.serialize() for user in temp]
         temp = User.query.filter_by(id = args['id']).first()
 
         if temp is None:
@@ -189,6 +188,7 @@ class UserAPI(Resource):
         return temp.serialize()
 
 
+'''---------------------------------- Login API -------------------------'''
 login_parser = reqparse.RequestParser()
 login_parser.add_argument('email')
 login_parser.add_argument('password')
@@ -204,6 +204,8 @@ class LoginAPI(Resource):
 
         return temp.serialize()
 
+
+'''---------------------------------- Group API -------------------------'''
 get_group_parser = reqparse.RequestParser()
 get_group_parser.add_argument('id')
 
@@ -215,11 +217,8 @@ class GroupAPI(Resource):
     def get(self):
         args = get_group_parser.parse_args()
         if args['id'] is None:
-            groups = []
             temp = Group.query.all()
-            for x in temp:
-                groups.append(x.serialize())
-            return groups
+            return [group.serialize() for group in temp]
         temp = Group.query.filter_by(id = args['id']).first()
 
         if temp is None:
@@ -235,75 +234,8 @@ class GroupAPI(Resource):
         db.session.commit()
         return 201
 
-suggested_groups_parser = reqparse.RequestParser()
-suggested_groups_parser.add_argument('user_id')
 
-class SuggestedGroupsAPI(Resource):
-    def get(self):
-        args = suggested_groups_parser.parse_args()
-        if args['user_id'] is None:
-            return 400
-        u = User.query.filter_by(id = args['user_id']).first()
-        if u is None:
-            return 404
-        groups = Group.query.all()
-        sug_groups = []
-        for x in groups:
-            sug = False
-            if x not in u.groups:
-                for y in u.current_courses:
-                    if y in x.group_courses:
-                        sug = True
-            if sug:
-                sug_groups.append(x.serialize())
-        return sug_groups
-
-suggested_tutors_parser = reqparse.RequestParser()
-suggested_tutors_parser.add_argument('user_id')
-
-class SuggestedTutorsAPI(Resource):
-    def get(self):
-        args = suggested_tutors_parser.parse_args()
-        if args['user_id'] is None:
-            return 400
-        u = User.query.filter_by(id = args['user_id']).first()
-        if u is None:
-            return 404
-        users = User.query.all()
-        sug_tutors = []
-        for x in users:
-            sug = False
-            if x not in u.tutors:
-                for y in u.current_courses:
-                    if y in x.past_courses:
-                        sug = True
-            if sug:
-                sug_tutors.append(x.serialize())
-        return sug_tutors
-
-suggested_students_parser = reqparse.RequestParser()
-suggested_students_parser.add_argument('user_id')
-
-class SuggestedStudentsAPI(Resource):
-    def get(self):
-        args = suggested_students_parser.parse_args()
-        if args['user_id'] is None:
-            return 400
-        u = User.query.filter_by(id = args['user_id']).first()
-        if u is None:
-            return 404
-        users = User.query.all()
-        sug_students = []
-        for x in users:
-            sug = False
-            if x not in u.students:
-                for y in u.past_courses:
-                    if y in x.current_courses:
-                        sug = True
-            if sug:
-                sug_students.append(x.serialize())
-        return sug_students
-
+'''---------------------------------- Search API -------------------------'''
 search_parser = reqparse.RequestParser()
 search_parser.add_argument('user_id') #Id of user performing the search
 search_parser.add_argument('search_type') #"group", "tutor", or "student"
@@ -340,31 +272,35 @@ class SearchAPI(Resource):
         return results
 
 
-class MeetingAPI(Resource):
-    def get(self):
-        meetings = []
-        temp = Meeting.query.filter_by(id = meeting_id).first()
+'''---------------------------------- Meeting API -------------------------'''
+# class MeetingAPI(Resource):
+#     def get(self):
+#         meetings = []
+#         temp = Meeting.query.filter_by(id = meeting_id).first()
+#
+#         meetings.append({'id' : temp.id, 'name' : temp.name, 'meeting_time' : temp.meeting_time, 'location' : temp.location, 'student_id' : temp.user.id, 'group_id' : temp.study_group.id, 'tutor_id' : temp.tutor.id})
+#
+#         return jsonify({'meetings' : meetings})
+#
+#     def post(self, meeting_id):
+#         args = parser.parse_args()
+#         data = json.loads(args['gonads'])
+#
+#         new_meeting = Meeting(data['name'], data['meeting_time'], data['location'], data['student_id'], data['group_id'], data['tutor_id'])
+#
+#         db.session.add(new_meeting)
+#         db.session.commit()
+#         return 201
+#
+#     def delete(self, meeting_id):
+#         temp = Meeting.query.filter_by(id = meeting_id).first()
+#         db.session.delete(temp)
+#         db.session.commit()
+#         return 200
 
-        meetings.append({'id' : temp.id, 'name' : temp.name, 'meeting_time' : temp.meeting_time, 'location' : temp.location, 'student_id' : temp.user.id, 'group_id' : temp.study_group.id, 'tutor_id' : temp.tutor.id})
 
-        return jsonify({'meetings' : meetings})
 
-    def post(self, meeting_id):
-        args = parser.parse_args()
-        data = json.loads(args['gonads'])
-
-        new_meeting = Meeting(data['name'], data['meeting_time'], data['location'], data['student_id'], data['group_id'], data['tutor_id'])
-
-        db.session.add(new_meeting)
-        db.session.commit()
-        return 201
-
-    def delete(self, meeting_id):
-        temp = Meeting.query.filter_by(id = meeting_id).first()
-        db.session.delete(temp)
-        db.session.commit()
-        return 200
-
+'''---------------------------------- Course API -------------------------'''
 get_course_parser = reqparse.RequestParser()
 get_course_parser.add_argument('id')
 
@@ -402,6 +338,7 @@ class CourseAPI(Resource):
     #     return 200
 
 
+'''---------------------------------- Conversation API -------------------------'''
 get_conversation_parser = reqparse.RequestParser()
 get_conversation_parser.add_argument('id')
 
@@ -422,55 +359,128 @@ class ConversationAPI(Resource):
         return temp.serialize()
 
 
+'''---------------------------------- Contact Request API -------------------------'''
 get_contact_req_parser = reqparse.RequestParser()
 get_contact_req_parser.add_argument('id')
+
+post_contact_req_parser = reqparse.RequestParser()
+post_contact_req_parser.add_argument('requestor_id')
+post_contact_req_parser.add_argument('student_id')
+post_contact_req_parser.add_argument('tutor_id')
+post_contact_req_parser.add_argument('group_id')
+post_contact_req_parser.add_argument('message')
+post_contact_req_parser.add_argument('accepted')
 
 class ContactRequestAPI(Resource):
 
     def get(self):
         args = get_contact_req_parser.parse_args()
         if args['id'] is None:
-            reqs = []
-            temp = ContactRequest.query.all()
-            for x in temp:
-                reqs.append(x.serialize())
-            return reqs
-        temp = ContactRequest.query.filter_by(id = args['id']).first()
-
-        if temp is None:
             return 404
-        return temp.serialize()
+        temp = ContactRequest.query.filter_by(student_id = args['id']).all()
+        temp2 = ContactRequest.query.filter_by(tutor_id= args['id']).all()
+        if temp is None or temp2 is None:
+            return 404
+        reqs = [req.serialize() for req in temp]
+        reqs2 = [req.serialize() for req in temp2]
+        return reqs + reqs2
+
+    def post(self):
+        args = post_contact_req_parser.parse_args()
+        db.session.add(ContactRequest(tutor_id = args['tutor_id'], student_id = args['student_id'], group_id = args['group_id'], requestor_id = args['requestor_id'], message = args['message']))
+        db.session.commit()
+        return 201
+
+'''---------------------------------- Suggested Groups API -------------------------'''
+suggested_groups_parser = reqparse.RequestParser()
+suggested_groups_parser.add_argument('user_id')
+
+class SuggestedGroupsAPI(Resource):
+    def get(self):
+        args = suggested_groups_parser.parse_args()
+        if args['user_id'] is None:
+            return 400
+        u = User.query.filter_by(id = args['user_id']).first()
+        if u is None:
+            return 404
+        groups = Group.query.all()
+        sug_groups = []
+        for x in groups:
+            sug = False
+            if x not in u.groups:
+                for y in u.current_courses:
+                    if y in x.group_courses:
+                        sug = True
+            if sug:
+                sug_groups.append(x.serialize())
+        return sug_groups
 
 
-# class rating(Resource):
-#     def get(self, rating_id):
+'''---------------------------------- Suggested Tutor API -------------------------'''
+suggested_tutors_parser = reqparse.RequestParser()
+suggested_tutors_parser.add_argument('user_id')
 
-#     def post(self, rating_id):
+class SuggestedTutorsAPI(Resource):
+    def get(self):
+        args = suggested_tutors_parser.parse_args()
+        if args['user_id'] is None:
+            return 400
+        u = User.query.filter_by(id = args['user_id']).first()
+        if u is None:
+            return 404
+        users = User.query.all()
+        sug_tutors = []
+        for x in users:
+            sug = False
+            if x not in u.tutors:
+                for y in u.current_courses:
+                    if y in x.past_courses:
+                        sug = True
+            if sug:
+                sug_tutors.append(x.serialize())
+        return sug_tutors
 
-#     def delete(self, rating_id):
 
-# class message(Resource):
-#     def get(self, message_id):
+'''---------------------------------- Suggested Student API -------------------------'''
+suggested_students_parser = reqparse.RequestParser()
+suggested_students_parser.add_argument('user_id')
 
-#     def post(self, message_id):
+class SuggestedStudentsAPI(Resource):
+    def get(self):
+        args = suggested_students_parser.parse_args()
+        if args['user_id'] is None:
+            return 400
+        u = User.query.filter_by(id = args['user_id']).first()
+        if u is None:
+            return 404
+        users = User.query.all()
+        sug_students = []
+        for x in users:
+            sug = False
+            if x not in u.students:
+                for y in u.past_courses:
+                    if y in x.current_courses:
+                        sug = True
+            if sug:
+                sug_students.append(x.serialize())
+        return sug_students
 
-#     def delete(self, message_id):
 
-
+'''---------------------------------- API Routes -------------------------'''
 api.add_resource(UserAPI, '/api/user/')
 api.add_resource(LoginAPI, '/api/login/')
 api.add_resource(GroupAPI, '/api/group/')
 api.add_resource(SuggestedGroupsAPI, '/api/group/suggested/')
 api.add_resource(SuggestedTutorsAPI, '/api/tutor/suggested/')
 api.add_resource(SuggestedStudentsAPI, '/api/student/suggested/')
-api.add_resource(MeetingAPI, '/api/meeting/')
+# api.add_resource(MeetingAPI, '/api/meeting/')
 api.add_resource(CourseAPI, '/api/course/')
 api.add_resource(SearchAPI, '/api/search/')
 api.add_resource(ConversationAPI, '/api/conversation/')
-api.add_resource(ContactRequestAPI, '/api/contact-req/')
-# api.add_resource(rating, '/rating/<rating_id>')
-# api.add_resource(message, '/message/<message_id>')
+api.add_resource(ContactRequestAPI, '/api/contact/request/')
 # api.add_resource(RegisterAPI, '/api/register')
+
+
 
 app.secret_key = "hail2pitt"
 

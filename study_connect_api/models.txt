@@ -11,12 +11,13 @@ groups: Group[]
 current_courses: Course[]
 past_courses: Course[]
 meetings: Meeting[]
+tutor_conversations = Conversation[]
+student_conversations = Conversation[]
 
 Not Sending in JSON
 -----------------------------------
 groups_created: Group[]
-sent_messages: Message[]
-single_rcpt_messages: Message[]
+
 -----------------------------------
 
 Group
@@ -26,11 +27,11 @@ name: String
 description: String
 group_courses: Course[]
 meetings: Meeting[]
+conversations = Conversation[]
 
 Not Sending in JSON
 -----------------------------------
-group_members: User[]
-group_rcpt_messages: Message[]
+
 -----------------------------------
 
 Course
@@ -70,4 +71,3 @@ single_rcpt: User
 group_rcpt: Group
 sent_time: DateTime
 content: String
-
