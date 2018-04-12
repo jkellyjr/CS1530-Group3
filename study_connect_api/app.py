@@ -79,11 +79,11 @@ def initdb_command():
     db.session.commit()
 
     messages = []
-    messages.append(Message(users[2].id, users[3].id, None, datetime.datetime.now(), "What time would be good to meet?", convos[0].id))
-    messages.append(Message(users[3].id, users[2].id, None, datetime.datetime.now(), "Never dumbass LOL", convos[0].id))
+    messages.append(Message(users[2].id,  datetime.datetime.now(), "What time would be good to meet?", convos[0].id))
+    messages.append(Message(users[3].id, datetime.datetime.now(), "Never dumbass LOL", convos[0].id))
 
-    messages.append(Message(users[1].id, None, groups[0].id, datetime.datetime.now(), "Shalom, looks like a prety cool group", convos[1].id))
-    messages.append(Message(groups[0].id, None, users[1].id,datetime.datetime.now(), "Yeah I know were pretty sick", convos[1].id))
+    messages.append(Message(users[1].id,  datetime.datetime.now(), "Shalom, looks like a prety cool group", convos[1].id))
+    messages.append(Message(groups[0].id, datetime.datetime.now(), "Yeah I know were pretty sick", convos[1].id))
 
     for x in messages:
         db.session.add(x)
@@ -342,6 +342,11 @@ class CourseAPI(Resource):
 get_conversation_parser = reqparse.RequestParser()
 get_conversation_parser.add_argument('id')
 
+post_conversation_parser = reqparse.RequestParser()
+post_conversation_parser.add_argument('group_id')
+post_conversation_parser.add_argument('tutor_id')
+post_conversation_parser.add_argument('student_id')
+
 class ConversationAPI(Resource):
 
     def get(self):
@@ -357,6 +362,33 @@ class ConversationAPI(Resource):
         if temp is None:
             return 404
         return temp.serialize()
+
+    def post(self):
+        args = post_conversation_parser.parse_args()
+        convo = Conversation(group_id = args["group_id"], tutor_id = args["tutor_id"], student_id = args["student_id"])
+        if convo == None:
+            return 401
+        db.session.add(convo)
+        db.session.commit()
+        return 201
+
+
+'''---------------------------------- Message API -------------------------'''
+post_message_parser = reqparse.RequestParser()
+post_message_parser.add_argument('conversation_id')
+post_message_parser.add_argument('content')
+post_message_parser.add_argument('sender_id')
+
+class MessageAPI(Resource):
+
+    def post(self):
+        args = post_message_parser.parse_args()
+        mes = Message(sender_id = args['sender_id'], sent_time = datetime.datetime.now(), content = args['content'], conversation_id = args['conversation_id'])
+        if mes is None:
+            return 401
+        db.session.add(mes)
+        db.session.commit()
+        return 201
 
 
 '''---------------------------------- Contact Request API -------------------------'''
@@ -491,6 +523,7 @@ api.add_resource(CourseAPI, '/api/course/')
 api.add_resource(SearchAPI, '/api/search/')
 api.add_resource(ConversationAPI, '/api/conversation/')
 api.add_resource(ContactRequestAPI, '/api/contact/request/')
+api.add_resource(MessageAPI, '/api/message/')
 # api.add_resource(ScheduleAPI, '/api/schedule/')
 
 # api.add_resource(rating, '/rating/<rating_id>')

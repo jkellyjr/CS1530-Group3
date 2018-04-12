@@ -144,6 +144,7 @@ class Group(db.Model):
     group_courses = db.relationship('Course', secondary = course_groups, backref = db.backref('study_groups', lazy = 'dynamic'))
     meetings = db.relationship('Meeting', backref = db.backref('study_group', lazy = True))
     conversations = db.relationship('Conversation', backref = db.backref('Group', lazy = True))
+
     contact_requests = db.relationship('ContactRequest', backref = db.backref('Group', lazy = True))
 
     # rating = db.relationship('Ratings', backref = db.backref('study_group_rating', lazy = True))
@@ -226,15 +227,15 @@ class Meeting(db.Model):
             'location':self.location
         }
 
-        # if self.group_id == None:
-        #     map["student_id"] = self.student_id
-        #     map["tutor_id"] = self.tutor_id
-        # elif self.student_id == None:
-        #     map["tutor_id"] = self.tutor_id
-        #     map["group_id"] = self.group_id
-        # else:
-        #     map["student_id"] = self.student_id
-        #     map["group_id"] = self.group_id
+        if self.group_id == None:
+            map["student_id"] = self.student_id
+            map["tutor_id"] = self.tutor_id
+        elif self.student_id == None:
+            map["tutor_id"] = self.tutor_id
+            map["group_id"] = self.group_id
+        else:
+            map["student_id"] = self.student_id
+            map["group_id"] = self.group_id
 
         return map
 
@@ -310,10 +311,8 @@ class Message(db.Model):
             "content": self.content
         }
 
-    def __init__(self, sender_id, single_rcpt, group_rcpt, sent_time, content, conversation_id):
+    def __init__(self, sender_id,sent_time, content, conversation_id):
         self.sender_id = sender_id
-        self.single_rcpt_id = single_rcpt
-        self.group_rcpt_id = group_rcpt
         self.sent_time = sent_time
         self.content = content
         self.conversation_id = conversation_id
@@ -350,15 +349,19 @@ class ContactRequest(db.Model):
 
         if self.requestor_id == self.student_id:
             map["requestor_name"] = self.student.first_name + " " + self.student.last_name
+            if self.tutor_id == None:
+                map["group_id"] = self.group_id
+            else:
+                map["tutor_id"] = self.tutor_id
+                map["requested_name"] = self.tutor.first_name + " " + self.tutor.last_name
         elif self.requestor_id == self.tutor_id:
+            map["tutor_id"] = self.tutor_id
             map["requestor_name"] = self.tutor.first_name + " " + self.tutor.last_name
+            map["requested_name"] = self.student.first_name + " " + self.student.last_name
         else:
+            map["group_id"] = self.group_id
             map["requestor_name"] = self.group.first_name + " " + self.group.last_name
 
-        if self.tutor_id == None:
-            map["group_id"] = self.group_id
-        else:
-            map["tutor_id"] = self.tutor_id
 
         return map
 
