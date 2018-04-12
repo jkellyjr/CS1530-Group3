@@ -10,7 +10,7 @@
       <pending-table [temp]="user.tutor_contact_requests" [tempTwo]="user.student_contact_requests" [userId]="user.id"></pending-table>
     </mat-tab>
     <mat-tab label="Conversations">
-      <!-- <messages-table [messages]="messages" [messages]="messages"></pending-table> -->
+      <conversation-table [User]="user"></conversation-table>
     </mat-tab>
   </mat-tab-group>
 </div>
