@@ -3,7 +3,7 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Course, Group, Meeting, User } from '../library/objects/index';
+import { Course, Group, Meeting, User, RequestContact } from '../library/objects/index';
 
 @Injectable()
 export class UserService {
@@ -166,6 +166,26 @@ export class UserService {
           console.log(error.text());
         })
         return this.studentSearchObservable;
+  }
+
+  sendContactRequest(request:RequestContact): void {
+    this.http.post('api/contact/request',request).subscribe(
+      body=>{
+        console.log("succesful contact request")
+    }, error =>{
+      console.log(error.text());
+      console.log("Unsuccessful contact request");
+    })
+  }
+
+  respondContactRequest(id:number, accepted:string): void {
+    this.http.post('api/contact/request?id='+id+'&accepted='+accepted, null).subscribe(
+      body=>{
+        console.log("succesful contact request response")
+    }, error =>{
+      console.log(error.text());
+      console.log("Unsuccessful contact request response");
+    })
   }
 
   get tutors(): Observable<User[]> {
