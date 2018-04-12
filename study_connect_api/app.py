@@ -395,7 +395,6 @@ class ContactRequestAPI(Resource):
             req = ContactRequest.query.filter_by(id = args['id']).first()
             if req is None:
                 return 404
-            print(args['accepted'].lower())
             if args['accepted'].lower() == "true":
                 req.setApproved(True)
             else:
@@ -403,6 +402,7 @@ class ContactRequestAPI(Resource):
             db.session.add(req)
         db.session.commit()
         return 201
+
 
 '''---------------------------------- Suggested Groups API -------------------------'''
 suggested_groups_parser = reqparse.RequestParser()
