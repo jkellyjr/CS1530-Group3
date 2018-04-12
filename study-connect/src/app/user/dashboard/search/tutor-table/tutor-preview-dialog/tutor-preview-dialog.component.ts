@@ -24,6 +24,7 @@ export class TutorPreviewDialogComponent implements OnInit {
 
   onContactClick(): void {
     let request = new RequestContact(null, this.tutor.id, this.user.id, null, this.user.id, false, this.message);
+    this.service.sendContactRequest(request);
     this.dialogRef.close();
   }
 
