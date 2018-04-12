@@ -362,11 +362,33 @@ class MeetingRequest(db.Model):
     __tablename__ = 'meeting_request'
 
     id = db.Column(db.Integer, primary_key = True, unique = True)
-    date = db.Column(db.DateTime, nullable = False)
+    meeting_date = db.Column(db.DateTime, nullable = False)
     location = db.Column(db.String(30), nullable = True)
     
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
     conversation_id = db.Column(db.Integer, db.ForeignKey('conversation.id'))
+
+    def serialize(self):
+        map = {
+            "id": self.id,
+            "meeting_date": self.meeting_date,
+            "location": self.location,
+            "course_id": self.course_id,
+            "conversation_id": self.conversation_id
+        }
+
+        return map
+
+    def __init__(self, meeting_date, location, course_id, conversation_id):
+        self.meeting_date = meeting_date
+        self.location = location
+        self.course_id = course_id
+        self.conversation_id = conversation_id
+
+    def __repr__(self):
+        return '<MeetingRequest {}>'.format(self.id, self.meeting_date, self.location, self.course_id, self.conversation_id)
+
+
 
 # class Tutor(db.Model):
 #     __tablename__ = 'tutor'
@@ -421,8 +443,6 @@ class MeetingRequest(db.Model):
 #
 #     def __repr__(self):
 #         return "<Ratings {}>".format(self.reviwer, self.reviewee, self.stars, slef.rate_tutor, self.rate_student, self.comments, self.rating_time)
-<<<<<<< Updated upstream
-=======
 
 
 class Meeting(db.Model):
@@ -459,15 +479,3 @@ class Meeting(db.Model):
     def __repr__(self):
         return "<Meetings %r >" % (self.name)
 
-
-
-
-class MeetingRequest(db.Model):
-    __tablename__ = 'meeting_request'
-
-    id = db.Column(db.Integer, unique = True, primary_key = True)
-    conversation_id(db.Foreignkey
-
-
-
->>>>>>> Stashed changes
