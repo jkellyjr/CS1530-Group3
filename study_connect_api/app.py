@@ -479,7 +479,7 @@ class SuggestedStudentsAPI(Resource):
         return sug_students
 
 
-<<<<<<< Updated upstream
+# <<<<<<< Updated upstream
 '''---------------------------------- API Routes -------------------------'''
 =======
 class MeetingAPI(Resource):
