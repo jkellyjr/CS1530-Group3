@@ -12,7 +12,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { SearchComponent } from './dashboard/search/search.component';
 import { ProfilePreviewComponent } from './profile-preview/profile-preview.component';
 
-
+import {MessengerService} from './messenger/messenger.service';
 import {MatInputModule} from '@angular/material/input';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatTabsModule} from '@angular/material/tabs';
@@ -92,7 +92,8 @@ import { ResponderComponent } from './messenger/responder/responder.component';
   ],
   providers: [
     NotificationService,
-    UserService
+    UserService,
+    MessengerService
   ],
   entryComponents: [
     GroupPreviewDialog,
