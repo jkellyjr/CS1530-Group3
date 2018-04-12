@@ -27,11 +27,11 @@ export class MessengerComponent implements OnInit {
         //TODO: Get logged in user's name and add it to label
         //label.textContent = user.first_name + " " + user.last_name + ":";
     }
-    else {
-        message.classList.add("others");
-        //TODO: Get sender name and add it to label
-        //label.textContent = m.sender.first_name + " " + m.sender.last_name + ":";
-    }
+    // else {
+    //     message.classList.add("others");
+    //     TODO: Get sender name and add it to label
+    //     label.textContent = m.sender.first_name + " " + m.sender.last_name + ":";
+    // }
     
     message.appendChild(label);
 

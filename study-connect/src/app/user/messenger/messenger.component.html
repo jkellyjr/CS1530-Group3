@@ -1,8 +1,16 @@
-<div id="chatWrapper">
-  <div id="chatContent"></div>
-  <form id="newMessageWrapper">
-      New Message:
-      <br>
-      <input type="text" id="newMessage"> <button type="submit" id="sendButton" onclick="sendNewMessage()">Send</button>
-  </form>
+<div id="buttonWrapper">
+    <button mat-raised-button routerLink="user/notification">
+      Back to Notifications
+    </button>
+</div>
+<div id="messengerWrapper">
+  <div id="chatWrapper">
+    <div id="chatContent"></div>
+    <form id="newMessageWrapper">
+        New Message:
+        <br>
+        <input type="text" id="newMessage"> <button type="submit" id="sendButton" onclick="sendNewMessage()">Send</button>
+    </form>
+  </div>
+  <app-scheduler></app-scheduler>
 </div>

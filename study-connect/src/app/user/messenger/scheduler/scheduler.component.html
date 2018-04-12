@@ -1,5 +1,6 @@
-<form class="" (ngSubmit)="requestMeeting()" #profileForm="ngForm">
+
   <mat-card>
+    <form class="" (ngSubmit)="requestMeeting()" #profileForm="ngForm">
     <mat-card-title>Scheduler</mat-card-title>
     <mat-form-field>
       <input matInput [matDatepicker]="myDatepicker" placeholder="Date" name="meeting_date">
@@ -14,5 +15,33 @@
     <mat-form-field>
       <input matInput placeholder="Location" type="text" name="location" required>
     </mat-form-field>
-  </mat-card>
-</form>
+  </form>
+  <mat-card-actions>
+    <button mat-raised-button type="submit">
+      Request Meeting
+    </button>
+  </mat-card-actions>
+</mat-card>
+
+<mat-card>
+  <form class="" (ngSubmit)="respondToRequest()" #profileForm="ngForm">
+    <mat-card-title>Meeting Request</mat-card-title>
+    <mat-form-field>
+        <input matInput [matDatepicker]="myDatepicker" placeholder="Date" name="meeting_date" disabled="true">
+        <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+        <mat-datepicker #myDatepicker></mat-datepicker>
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <input matInput type="time" placeholder="Time" name="meeting_time" disabled="true">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <input matInput placeholder="Location" type="text" name="location" disabled="true">
+      </mat-form-field>
+    </form>
+    <mat-card-actions>
+      
+    </mat-card-actions>
+</mat-card>
+

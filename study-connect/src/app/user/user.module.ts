@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatNativeDateModule } from '@angular/material';
 
 import { UserComponent } from './user.component';
 import { UserRoutingModule } from './user-routing.module';
@@ -22,6 +23,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
 import {MatTableModule} from '@angular/material/table';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 import { GroupPreviewDialog } from './dashboard/search/group-table/group-preview-dialog/group-preview-dialog.component';
 import { CourseFormComponent } from './profile/course-form/course-form.component';
 import { UserFormComponent } from './profile/user-form/user-form.component';
@@ -55,7 +57,9 @@ import { SchedulerComponent } from './messenger/scheduler/scheduler.component';
     MatIconModule,
     MatListModule,
     MatTableModule,
-    MatDialogModule
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   declarations: [
     UserComponent,
