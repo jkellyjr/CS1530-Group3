@@ -38,7 +38,7 @@ import { NotificationService } from './notification/notification.service';
 import { MeetingsTableComponent } from './notification/tables/meetings-table/meetings-table.component';
 import { RequestsTableComponent } from './notification/tables/requests-table/requests-table.component';
 import { PendingTableComponent } from './notification/tables/pending-table/pending-table.component';
-import { MessagesTableComponent } from './notification/tables/messages-table/messages-table.component';
+import { ConversationsTableComponent } from './notification/tables/conversations-table/conversations-table.component';
 import { SearchFormComponent } from './dashboard/search/search-form/search-form.component';
 import { MessengerComponent } from './messenger/messenger.component';
 import { SchedulerComponent } from './messenger/scheduler/scheduler.component';
@@ -82,7 +82,7 @@ import { ResponderComponent } from './messenger/responder/responder.component';
     MeetingsTableComponent,
     RequestsTableComponent,
     PendingTableComponent,
-    MessagesTableComponent,
+    ConversationsTableComponent,
     SearchFormComponent,
     MessengerComponent,
     SchedulerComponent,
