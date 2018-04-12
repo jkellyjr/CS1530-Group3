@@ -88,6 +88,9 @@ class User(db.Model, UserMixin):
     tutor_contact_requests = db.relationship('ContactRequest', primaryjoin='User.id == ContactRequest.tutor_id', backref='tutor', lazy='dynamic')
     student_contact_requests = db.relationship('ContactRequest', primaryjoin='User.id == ContactRequest.student_id', backref='student', lazy='dynamic')
 
+    tutor_meeting_requests = db.relationship('MeetingRequest', primaryjoin='User.id == MeetingRequest.tutor_requestor_id', backref='tutor', lazy='dynamic')
+    student_meeting_requests = db.relationship('MeetingRequest', primaryjoin='User.id == MeetingRequest.student_requestor_id', backref='student', lazy='dynamic')
+
     tutor_meetings = db.relationship('Meeting', primaryjoin='User.id == Meeting.tutor_id', backref='tutor', lazy='dynamic')
     student_meetings = db.relationship('Meeting', primaryjoin='User.id == Meeting.student_id', backref='student', lazy='dynamic')
 
@@ -112,8 +115,8 @@ class User(db.Model, UserMixin):
             "tutor_conversations": serialize_many(self.tutor_conversations),
             "student_conversations": serialize_many(self.student_conversations),
             "tutor_contact_requests": serialize_many(self.tutor_contact_requests),
-            "student_contact_requests": serialize_many(self.student_contact_requests)
-            #"meetings": serialize_many(combined_meetings)
+            "student_contact_requests": serialize_many(self.student_contact_requests),
+            "meetings": serialize_many(combined_meetings)
         }
 
     def set_password(self, password):
@@ -143,9 +146,10 @@ class Group(db.Model):
 
     group_courses = db.relationship('Course', secondary = course_groups, backref = db.backref('study_groups', lazy = 'dynamic'))
     meetings = db.relationship('Meeting', backref = db.backref('study_group', lazy = True))
-    conversations = db.relationship('Conversation', backref = db.backref('Group', lazy = True))
+    conversations = db.relationship('Conversation', back_populates='group')
 
     contact_requests = db.relationship('ContactRequest', backref = db.backref('Group', lazy = True))
+    meeting_requests = db.relationship('MeetingRequest', backref = db.backref('Group', lazy = True))
 
     # rating = db.relationship('Ratings', backref = db.backref('study_group_rating', lazy = True))
     # rated = db.relationship('Ratings', backref = db.backref('study_group_rated', lazy = True))
@@ -159,7 +163,8 @@ class Group(db.Model):
             # 'group_members':serialize_many_users(self.group_members),
             "meetings":serialize_many(self.meetings),
             "conversations": serialize_many(self.conversations),
-            "contact_requests": serialize_many(self.contact_requests)
+            "contact_requests": serialize_many(self.contact_requests),
+            "meeting_requests": serialize_many(self.meeting_requests)
         }
 
     def __init__(self, name, description, creator_id):
@@ -264,19 +269,26 @@ class Conversation(db.Model):
     #added for meeting request***
     meeting_requests = db.relationship('MeetingRequest', backref = db.backref('Conversation', lazy = True))
 
+    group = db.relationship('Group', back_populates='conversations')
 
     def serialize(self):
         map = { "id": self.id }
 
         if self.group_id == None:
             map["student_id"] = self.student_id
+            map["student_name"] = self.student.first_name + " " + self.student.last_name
             map["tutor_id"] = self.tutor_id
+            map["tutor_name"] = self.tutor.first_name + " " + self.tutor.last_name
         elif self.student_id == None:
             map["tutor_id"] = self.tutor_id
+            map["tutor_name"] = self.tutor.first_name + " " + self.tutor.last_name
             map["group_id"] = self.group_id
+            map["group_name"] = self.group.name
         else:
             map["student_id"] = self.student_id
+            map["student_name"] = self.student.first_name + " " + self.student.last_name
             map["group_id"] = self.group_id
+            map["group_name"] = self.group.name
 
         map["messages"] = serialize_many(self.messages)
 
@@ -380,28 +392,49 @@ class MeetingRequest(db.Model):
     __tablename__ = 'meeting_request'
 
     id = db.Column(db.Integer, primary_key = True, unique = True)
+    approved = db.Column(db.Boolean, default = False)
     meeting_date = db.Column(db.DateTime, nullable = False)
     location = db.Column(db.String(30), nullable = True)
-
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
     conversation_id = db.Column(db.Integer, db.ForeignKey('conversation.id'))
+
+    student_requestor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    tutor_requestor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    group_requestor_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable = True)
+
+    def setApproved(self, decision):
+        self.approved = decision
 
     def serialize(self):
         map = {
             "id": self.id,
+            "approved": self.approved,
             "meeting_date": self.meeting_date,
             "location": self.location,
             "course_id": self.course_id,
             "conversation_id": self.conversation_id
         }
 
+        if self.student_requestor_id == None and self.tutor_requestor_id == None:
+            map["group_requestor_id"] = self.group_requestor_id
+            map["requestor_name"] = self.group.first_name + " " + self.group.last_name
+        elif self.student_requestor_id == None and self.group_requestor_id == None:
+            map["tutor_requestor_id"] = self.tutor_requestor_id
+            map["requestor_name"] = self.tutor.first_name + " " + self.tutor.last_name
+        else:
+            map["student_requestor_id"] = self.student_requestor_id
+            map["requested_name"] = self.student.first_name + " " + self.student.last_name
+
         return map
 
-    def __init__(self, meeting_date, location, course_id, conversation_id):
+    def __init__(self, meeting_date, location, course_id, conversation_id, student_id, tutor_id, group_id):
         self.meeting_date = meeting_date
         self.location = location
         self.course_id = course_id
         self.conversation_id = conversation_id
+        self.student_requestor_id = student_id
+        self.tutor_requestor_id = tutor_id
+        self.group_requestor_id = group_id
 
     def __repr__(self):
         return '<MeetingRequest {}>'.format(self.id, self.meeting_date, self.location, self.course_id, self.conversation_id)
