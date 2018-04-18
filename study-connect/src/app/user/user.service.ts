@@ -30,6 +30,9 @@ export class UserService {
   studentSearchSubject: BehaviorSubject<User[]>;
   studentSearchObservable: Observable<User[]>;
 
+  conversationSubject: BehaviorSubject<Conversation>;
+  conversationObservable: Observable<Conversation>;
+
   constructor(private http: Http) {
 
     this.tutorsSubject = new BehaviorSubject([]);
@@ -52,6 +55,23 @@ export class UserService {
 
     this.studentSearchSubject = new BehaviorSubject([]);
     this.studentSearchObservable = this.studentSearchSubject.asObservable();
+
+    this.conversationSubject = new BehaviorSubject(null);
+    this.conversationObservable = this.conversationSubject.asObservable();
+
+  }
+
+  getConversation(id:number): Observable<Conversation> {
+    this.http.get(this.restUrl+'conversation/?id='+id)
+      .subscribe(
+        body => {
+          this.conversationSubject.next(body.json() as Conversation);
+        },
+        error => {
+          console.log(error.text());
+        }
+      )
+    return this.conversationObservable;
   }
 
   getSuggestedTutors(id:number): Observable<User[]> {
@@ -207,6 +227,8 @@ export class UserService {
       console.log("Unsuccessful meeting request response");
     })
   }
+
+
 
   get tutors(): Observable<User[]> {
     return this.tutorsObservable;
