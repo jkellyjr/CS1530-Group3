@@ -4,7 +4,7 @@ from flask_restful import reqparse, abort, Api, Resource
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
 from flask_cors import CORS
-from models import db, User, Group, Meeting, Course, Conversation, Message, ContactRequest, MeetingRequest
+from models import db, User, Group, Meeting, Course, Conversation, Message, ContactRequest
 import json, datetime
 
 
@@ -71,8 +71,11 @@ def initdb_command():
     db.session.commit()
 
     convos = []
+    # group_id, tutor_id, student_id
     convos.append(Conversation(None, users[2].id, users[3].id))
     convos.append(Conversation(groups[0].id, None, users[3].id))
+    convos.append(Conversation(groups[1].id, None, users[1].id))
+    convos.append(Conversation(None, users[1].id, users[0].id))
 
     for x in convos:
         db.session.add(x)
@@ -87,13 +90,20 @@ def initdb_command():
     messages.append(Message(groups[0].id, datetime.datetime.now(), "Yeah I know were pretty sick", convos[1].id))
 
     messages.append(Message(groups[0].id, datetime.datetime.now(), "I don't know how to do problem number 3 from quiz 1", convos[1].id))
-
     messages.append(Message(groups[0].id, datetime.datetime.now(), "Can anyone help me?", convos[1].id))
-
 
     for x in messages:
         db.session.add(x)
+    db.session.commit()
 
+    meeting_reqs = []
+    meeting_reqs.append(Meeting(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")), "Cathy", courses[2].id, convos[1].id, users[3].id, None))
+    meeting_reqs.append(Meeting(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")), "Benny", courses[2].id, convos[1].id, None, groups[0].id))
+    meeting_reqs.append(Meeting(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")), "Hillman", courses[0].id, convos[0].id, users[1].id, None))
+    meeting_reqs.append(Meeting(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")), "Market", courses[1].id, convos[2].id, users[1].id, None))
+
+    for x in meeting_reqs:
+        db.session.add(x)
     db.session.commit()
 
     contact_req = []
@@ -104,13 +114,7 @@ def initdb_command():
         db.session.add(x)
     db.session.commit()
 
-    meeting_reqs = []
-    meeting_reqs.append(MeetingRequest(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), "Cathy", courses[2].id, convos[1].id, users[2].id, users[0].id, None))
-    meeting_reqs.append(MeetingRequest(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), "Hillman", courses[0].id, convos[0].id, users[1].id, None, groups[2].id))
 
-    for x in meeting_reqs:
-        db.session.add(x)
-    db.session.commit()
 
 
 '''---------------------------------- User API -------------------------'''
@@ -144,7 +148,6 @@ class UserAPI(Resource):
             temp = User.query.all()
             return [user.serialize() for user in temp]
         temp = User.query.filter_by(id = args['id']).first()
-
         if temp is None:
             return 404
         return temp.serialize()
@@ -224,7 +227,9 @@ get_group_parser = reqparse.RequestParser()
 get_group_parser.add_argument('id')
 
 post_group_parser = reqparse.RequestParser()
-post_group_parser.add_argument('name' )
+post_group_parser.add_argument('name')
+post_group_parser.add_argument('description')
+post_group_parser.add_argument('creator_id')
 
 class GroupAPI(Resource):
 
@@ -239,21 +244,21 @@ class GroupAPI(Resource):
             return 404
         return temp.serialize()
 
-    def post(self, group_id):
+    def post(self):
         args = post_group_parser.parse_args()
-        data = json.loads(args['gonads'])
-
-        new_group = Group(data['name'], data['description'], data['creater'])
-        db.session.add(new_group)
+        group = Group(name = args['name'], description = args['description'], creator_id = args['creator_id'])
+        if group == None:
+            return 401
+        db.session.add(group)
         db.session.commit()
         return 201
 
 
 '''---------------------------------- Search API -------------------------'''
 search_parser = reqparse.RequestParser()
-search_parser.add_argument('user_id') #Id of user performing the search
-search_parser.add_argument('search_type') #"group", "tutor", or "student"
-search_parser.add_argument('course_id') #Id of course you're searching for a group/tutor/student for
+search_parser.add_argument('user_id')
+search_parser.add_argument('search_type')
+search_parser.add_argument('course_id')
 
 class SearchAPI(Resource):
     def get(self):
@@ -317,6 +322,9 @@ class SearchAPI(Resource):
 '''---------------------------------- Course API -------------------------'''
 get_course_parser = reqparse.RequestParser()
 get_course_parser.add_argument('id')
+
+post_course_parser = reqparse.RequestParser()
+post_course_parser.add_argument('name')
 
 class CourseAPI(Resource):
 
@@ -405,37 +413,131 @@ class MessageAPI(Resource):
         return 201
 
 '''------------------------------- Scheduling API ---------------------------------'''
+get_sched_parser = reqparse.RequestParser()
+get_sched_parser.add_argument('conversation_id')
+get_sched_parser.add_argument('user_id')
+get_sched_parser.add_argument('group_id')
+get_sched_parser.add_argument('accepted')
+
+put_sched_parser = reqparse.RequestParser()
+put_sched_parser.add_argument('id')
+put_sched_parser.add_argument('accepted')
+put_sched_parser.add_argument('meeting_time')
+put_sched_parser.add_argument('location')
+put_sched_parser.add_argument('course_id')
+put_sched_parser.add_argument('conversaton_id')
+put_sched_parser.add_argument('requestor_id')
+put_sched_parser.add_argument('group_requestor_id')
+put_sched_parser.add_argument('tutor_id')
+put_sched_parser.add_argument('student_id')
+put_sched_parser.add_argument('group_id')
 
 post_sched_parser = reqparse.RequestParser()
-post_sched_parser.add_argument('id')
-post_sched_parser.add_argument('accepted')
-post_sched_parser.add_argument('meeting_date')
+post_sched_parser.add_argument('conversation_id')
+post_sched_parser.add_argument('meeting_time')
 post_sched_parser.add_argument('location')
 post_sched_parser.add_argument('course_id')
-post_sched_parser.add_argument('conversation_id')
-post_sched_parser.add_argument('student_requestor_id')
-post_sched_parser.add_argument('tutor_requestor_id')
+post_sched_parser.add_argument('requestor_id')
 post_sched_parser.add_argument('group_requestor_id')
 
 class ScheduleAPI(Resource):
-    def post(self):
-        args = post_sched_parser.parse_args()
-        if args['id'] is None:
-             meeting = MeetingRequest(meeting_date = args['meeting_date'], location = args['location'], course_id = args['course_id'], conversation_id = args['conversation_id'], student_requestor_id = args['student_requestor_id'], tutor_requestor_id = args['tutor_requestor_id'], group_requestor_id = args['group_requestor_id'])
-             db.session.add(meeting)
+
+    def get(self):
+        args = get_sched_parser.parse_args()
+
+        if args['accepted'] is None:
+            return 400
         else:
-            req = MeetingRequest.query.filter_by(id = args['id']).first()
-            if req is None:
+            accepted = True
+            if args['accepted'].lower() == 'false':
+                accepted = False
+
+        if args['conversation_id'] is not None:
+            temp = Meeting.query.filter_by(conversation_id = args['conversation_id'], accepted = accepted).all()
+            if temp is None:
+                return 404
+            return [meeting.serialize() for meeting in temp]
+
+        elif args['group_id'] is not None:
+            temp = Meeting.query.filter_by(group_id = args['group_id'], accepted = accepted).all()
+            if temp is None:
+                return 404
+            return [meeting.serialize() for meeting in temp]
+
+        elif args['user_id'] is not None:
+            tmp = Meeting.query.filter_by(student_id = args['user_id'], accepted = accepted).all()
+            tmp2 = Meeting.query.filter_by(tutor_id = args['user_id'], accepted = accepted).all()
+
+            if tmp is None or tmp2 is None:
                 return 404
 
-            if args['accepted'].lower() == "true":
-                scheduled_meeting = Meeting(meeting_time = req.meeting_date, location = req.location, group_id = req.group_requestor_id, student_id = req.student_requestor_id, tutor_id = req.tutor_requestor_id)
-                db.session.add(scheduled_meeting)
-            db.session.delete(req)
+            print("tmp: " + str(tmp))
+            student = [meeting.serialize() for meeting in tmp]
+            tutor = [meeting.serialize() for meeting in tmp2]
 
+            return student + tutor
+
+        else:
+            return 401
+
+    def put(self):
+        args = put_sched_parser.parse_args()
+
+        if args['id'] is not None:
+            meeting = Meeting.query.filter_by(id = args['id']).first()
+            if meeting is None:
+                return 404
+
+            accepted = False
+            if args['accepted'].lower() == "true":
+                accepted = True
+
+            meeting.accepted = accepted
+            meeting.meeting_time = args['meeting_time']
+            meeting.location = args['location']
+            meeting.course_id = args['course_id']
+            meeting.conversaton_id = args['conversaton_id']
+            meeting.requestor_id = args['requestor_id']
+            meeting.group_requestor_id = args['group_requestor_id']
+            meeting.tutor_id = args['tutor_id']
+            meeting.student_id = args['student_id']
+            meeting.group_id = args['group_id']
+
+            db.session.add(meeting)
+            db.session.commit()
+            return 205
+
+    def post(self):
+        args = post_sched_parser.parse_args()
+
+        meeting = Meeting(meeting_time = args['meeting_time'], location = args['location'], course_id = args['course_id'], conversation_id = args['conversation_id'], requestor_id = args['requestor_id'], group_requestor_id = args['group_requestor_id'])
+        if meeting == None:
+            return 401
+
+        convo = Conversation.query.filter_by(id = args['conversation_id']).first()
+        if convo == None:
+            return 401
+
+        if convo.group_id == None:
+            if convo.student_id == int(args["requestor_id"]):
+                meeting.tutor_id = convo.tutor_id
+            else:
+                meeting.student_id = convo.student_id
+        elif convo.student_id == None:
+            if convo.tutor_id == int(args["requestor_id"]):
+                meeting.group_id = convo.group_id
+            else:
+                meeting.tutor_id = convo.tutor_id
+        else:
+            if convo.student_id == int(args["requestor_id"]):
+                meeting.group_id = convo.group_id
+            else:
+                meeting.student_id = convo.student_id
+
+
+        db.session.add(meeting)
         db.session.commit()
         return 201
-
 
 '''---------------------------------- Contact Request API -------------------------'''
 get_contact_req_parser = reqparse.RequestParser()
@@ -484,7 +586,8 @@ class ContactRequestAPI(Resource):
         db.session.commit()
         return 201
 
-'''---------------- Meeting Request API --------'''
+
+'''---------------------------------- Meeting Request API -------------------------'''
 get_meeting_req_parser = reqparse.RequestParser()
 get_meeting_req_parser.add_argument('id')
 
@@ -618,7 +721,6 @@ api.add_resource(GroupAPI, '/api/group/')
 api.add_resource(SuggestedGroupsAPI, '/api/group/suggested/')
 api.add_resource(SuggestedTutorsAPI, '/api/tutor/suggested/')
 api.add_resource(SuggestedStudentsAPI, '/api/student/suggested/')
-# api.add_resource(MeetingAPI, '/api/meeting/')
 api.add_resource(CourseAPI, '/api/course/')
 api.add_resource(SearchAPI, '/api/search/')
 api.add_resource(ConversationAPI, '/api/conversation/')
