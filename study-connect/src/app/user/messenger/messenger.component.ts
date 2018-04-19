@@ -32,14 +32,12 @@ export class MessengerComponent implements OnInit {
     this.userSubscription = this.authService.user.subscribe(
       user => {
         this.user = user;
-        console.log(JSON.stringify(this.user));
       }
     );
     
     this.conversationSubscription = this.messengerService.conversationUpdate.subscribe(
       conversationUpdate => {
         if (conversationUpdate != null) {
-          console.log(this.lastMessageCount);
           this.updatedConversation = conversationUpdate;
           var newMessageCount = this.updatedConversation.messages.length;
           if (newMessageCount > this.lastMessageCount) {
@@ -51,7 +49,6 @@ export class MessengerComponent implements OnInit {
         }
       }
     );
-    console.log(this.messengerService);
     setInterval(this.pollConvo.bind(this), 5000);
   }
 
