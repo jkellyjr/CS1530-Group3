@@ -12,15 +12,30 @@ export class MessengerService {
   conversationSubject: BehaviorSubject<Conversation>;
   conversationObservable: Observable<Conversation>;
 
+  pollingInterval: number;
+
   constructor(private http: Http) {
     this.currentConversation = null;
 
     this.conversationSubject = new BehaviorSubject(null);
     this.conversationObservable = this.conversationSubject.asObservable();
+
+    try {
+      clearInterval(this.pollingInterval);
+    } catch (error) {
+      
+    }
   }
 
   setCurrentConversation(c:Conversation): void{
+    try {
+      clearInterval(this.pollingInterval);
+    } catch (error) {
+      
+    }
     this.currentConversation = c;
+    this.pollingInterval = setInterval(this.pollConvo.bind(this), 2000);
+    
   }
 
   getCurrentConversation(): Conversation {
@@ -28,6 +43,11 @@ export class MessengerService {
   }
 
   resetCurrentConversation(): void {
+    try {
+      clearInterval(this.pollingInterval);
+    } catch (error) {
+      
+    }
     this.currentConversation = null;
   }
 
@@ -35,7 +55,6 @@ export class MessengerService {
     this.http.get('api/conversation/?id='+this.currentConversation.id).subscribe(
       body => {
         this.conversationSubject.next(body.json() as Conversation);
-        console.log(body.json());
       },
       error => {
         console.log(error.text());
@@ -54,6 +73,10 @@ export class MessengerService {
         console.log("Unsuccessful message send");
       }
     )
+  }
+
+  pollConvo() {
+    this.getConversation();
   }
 
   get conversationUpdate(): Observable<Conversation> {

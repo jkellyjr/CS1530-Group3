@@ -5,6 +5,7 @@ import { ISubscription } from 'rxjs/Subscription';
 import { AuthService } from '../../auth/index';
 import { UserService } from '../user.service';
 import { Group, User } from '../../library/objects/index';
+import { MessengerService} from '../messenger/messenger.service';
 
 @Component({
   selector: 'dashboard-component',
@@ -25,7 +26,8 @@ export class DashboardComponent implements OnInit {
   studentsSubscription:ISubscription;
 
   constructor(private userService: UserService,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private messengerService: MessengerService) { }
 
   ngOnInit() {
     this.userSubscription = this.authService.user.subscribe(
@@ -44,6 +46,7 @@ export class DashboardComponent implements OnInit {
     this.studentsSubscription = this.userService.searchStudentResult.subscribe(students => {
       this.students = students;
     });
+    this.messengerService.resetCurrentConversation();
   }
   logout(): void {
     this.authService.logout();
