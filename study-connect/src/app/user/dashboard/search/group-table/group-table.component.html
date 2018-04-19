@@ -1,0 +1,21 @@
+<mat-list>
+  <mat-table #table [dataSource]="groups">
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <mat-cell *matCellDef="let group"> {{group.name}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="description">
+      <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
+      <mat-cell *matCellDef="let group"> {{group.description}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="join">
+        <mat-header-cell *matHeaderCellDef> Request to Join </mat-header-cell>
+        <mat-cell *matCellDef="let group">
+          <button mat-button class="joinButton" (click)="openDialog(group)">Join</button>
+        </mat-cell>
+      </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+</mat-list>

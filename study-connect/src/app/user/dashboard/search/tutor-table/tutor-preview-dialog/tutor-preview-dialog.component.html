@@ -1,0 +1,25 @@
+<mat-card>
+  <mat-card-title>
+    {{tutor.first_name}} {{tutor.last_name}}
+  </mat-card-title>
+
+  <mat-card-content>
+    {{tutor.bio}}
+    <mat-list-item>Previous courses:
+      <mat-chip-list>
+        <mat-chip *ngFor="let p of tutor.past_courses">{{p.name}}</mat-chip>
+      </mat-chip-list>
+    </mat-list-item>
+    <form class="example-form">
+      <mat-form-field class="">
+        <textarea matInput name="message" placeholder="Add a message:" [(ngModel)]="message" required></textarea>
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button (click)="onContactClick()" mat-button >Contact</button>
+    <button (click)="onNoClick()" mat-button >Cancel</button>
+  </mat-card-actions>
+
+ </mat-card>

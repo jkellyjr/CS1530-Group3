@@ -1,0 +1,73 @@
+User
+==================================
+id: Integer
+first_name: String
+last_name: String
+email: String
+phone: String
+password: String
+bio: String
+groups: Group[]
+current_courses: Course[]
+past_courses: Course[]
+meetings: Meeting[]
+tutor_conversations = Conversation[]
+student_conversations = Conversation[]
+
+Not Sending in JSON
+-----------------------------------
+groups_created: Group[]
+
+-----------------------------------
+
+Group
+==================================
+id: Integer
+name: String
+description: String
+group_courses: Course[]
+meetings: Meeting[]
+conversations = Conversation[]
+
+Not Sending in JSON
+-----------------------------------
+
+-----------------------------------
+
+Course
+==================================
+id: Integer
+name: String
+description: String
+subj_code: String
+course_num: Integer
+
+Not Sending in JSON
+-----------------------------------
+current_students: User[]
+past_students: User[]
+study_groups: Group[]
+-----------------------------------
+
+Meeting
+==================================
+id: Integer
+name: String
+meeting_time: DateTime
+location: String
+
+Not Sending in JSON
+-----------------------------------
+group: Group
+student: User
+tutor: User
+-----------------------------------
+
+Message
+==================================
+id: Integer
+sender: User
+single_rcpt: User
+group_rcpt: Group
+sent_time: DateTime
+content: String

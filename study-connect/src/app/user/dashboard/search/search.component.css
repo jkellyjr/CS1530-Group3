@@ -1,0 +1,12 @@
+#searchWrapper {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    border: 4px solid #25313f;
+    padding: 10px;
+    border-radius: 8px;
+}
+.joinButton {
+    color: white;
+    background-color: green;
+}

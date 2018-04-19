@@ -1,0 +1,16 @@
+<div id="searchWrapper">
+  <mat-tab-group>
+    <mat-tab label="Meetings">
+      <meetings-table [user]="user"></meetings-table>
+    </mat-tab>
+    <mat-tab label="Requests" >
+      <requests-table [tempOne]="user.tutor_contact_requests" [tempTwo]="user.student_contact_requests" [userId]="user.id"></requests-table>
+    </mat-tab>
+    <mat-tab label="Pending">
+      <pending-table [tempOne]="user.tutor_contact_requests" [tempTwo]="user.student_contact_requests" [userId]="user.id"></pending-table>
+    </mat-tab>
+    <mat-tab label="Conversations">
+      <conversations-table [user]="user"></conversations-table>
+    </mat-tab>
+  </mat-tab-group>
+</div>

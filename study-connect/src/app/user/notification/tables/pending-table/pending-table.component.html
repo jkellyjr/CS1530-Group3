@@ -1,0 +1,19 @@
+<mat-list>
+  <mat-table #table [dataSource]="pending">
+    <!-- Name Column -->
+    <ng-container matColumnDef="sender">
+      <mat-header-cell *matHeaderCellDef> User </mat-header-cell>
+      <mat-cell *matCellDef="let request">
+          {{request.recipient_name}}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="message">
+      <mat-header-cell *matHeaderCellDef> Message </mat-header-cell>
+      <mat-cell *matCellDef="let request"> {{request.message}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+</mat-list>
