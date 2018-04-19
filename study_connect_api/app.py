@@ -619,6 +619,7 @@ class ScheduleAPI(Resource):
         if convo == None:
             return 401
 
+
         if convo.group_id == None:
             if convo.student_id == int(args["requestor_id"]):
                 meeting.tutor_id = convo.tutor_id
@@ -710,6 +711,22 @@ class ContactRequestAPI(Resource):
             accepted = False
             if args['accepted'].lower() == "true":
                 accepted = True
+                if args["group_id"] is not None:
+                    group = Group.query.filter_by(id = args["group_id"]).first()
+                    user = User.query.filter_by(id = args["requestor_id"]).first()
+
+                    if group is None or user is None or convo is None:
+                            return 404
+                    group.members.append(user)
+                    convo.participants.append(user)
+
+                elif args["tutor_id"] is not None:
+                    temp_convo = Conversation(None, args["student_id"], args["tutor_id"])
+                    if tmp_convo is None:
+                        return 404
+                    db.session.add(tmp_convo)
+                    db.session.commit()
+            
 
             req.accepted = accepted
             req.message = args['message']
