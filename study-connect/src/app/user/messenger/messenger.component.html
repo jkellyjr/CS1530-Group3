@@ -1,12 +1,19 @@
-<div id="buttonWrapper">
-    <button mat-raised-button routerLink="user/notification">
-      Back to Notifications
-    </button>
-</div>
+
 <div id="messengerWrapper">
   <app-responder [conversation]="conversation" [user]="user"></app-responder>
   <div id="chatWrapper">
-    <div id="chatContent"></div>
+    <div id="chatContent">
+      <div *ngFor="let message of updatedConversation.messages" class="messageWrapper">
+        <div *ngIf="message.sender_id == user.id" class="message mine">
+          <div class="messageLabel">{{message.sender_name}}</div>
+          {{message.content}}
+        </div>
+        <div *ngIf="message.sender_id != user.id" class="message others">
+          <div class="messageLabel">{{message.sender_name}}</div>
+          {{message.content}}
+        </div>
+      </div>
+    </div>
     <form id="newMessageWrapper" (ngSubmit)="sendNewMessage()" #profileForm="ngForm">
         New Message:
         <br>

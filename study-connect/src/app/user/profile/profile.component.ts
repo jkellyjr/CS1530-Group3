@@ -4,6 +4,7 @@ import { AuthService } from '../../auth/auth.service';
 import { ISubscription } from 'rxjs/Subscription';
 import { Course, Group, Meeting, User } from '../../library/objects/index';
 import { Router } from '@angular/router';
+import { MessengerService} from '../messenger/messenger.service';
 
 @Component({
   selector: 'app-profile',
@@ -17,6 +18,7 @@ export class ProfileComponent implements OnInit {
   tempCurrent: Course[];
   tempPast: Course[];
   constructor(private service:UserService,
+              private messengerService: MessengerService,
               private authService:AuthService, private router:Router) {
                 this.tempCurrent = new Array<Course>();
                 this.tempPast = new Array<Course>();
@@ -33,6 +35,7 @@ export class ProfileComponent implements OnInit {
           this.tempPast.push(user.past_courses[j]);
         }
       });
+      this.messengerService.resetCurrentConversation();
   }
 
   updateUser(): void{
