@@ -4,6 +4,7 @@ import { Group, User, Conversation } from '../../library/objects/index';
 import { ISubscription } from 'rxjs/Subscription';
 import { AuthService } from '../../auth/index';
 import { MessengerService} from './messenger.service';
+import { last } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-messenger',
@@ -16,22 +17,46 @@ export class MessengerComponent implements OnInit {
 
   conversation:Conversation;
 
+  updatedConversation:Conversation;
+  conversationSubscription:ISubscription;
+  lastMessageCount:number;
+
   constructor(private userService: UserService,
     private authService: AuthService,
     private messengerService: MessengerService) {
-
+      this.conversation = this.messengerService.getCurrentConversation();
+      this.lastMessageCount = 0;
     }
 
   ngOnInit() {
     this.userSubscription = this.authService.user.subscribe(
       user => {
         this.user = user;
-        // console.log(JSON.stringify(this.user));
-      });
-      this.conversation = this.messengerService.getCurrentConversation();
-      this.conversation.messages.forEach(m => {
-        this.addMessage(m);
-      });
+        console.log(JSON.stringify(this.user));
+      }
+    );
+    
+    this.conversationSubscription = this.messengerService.conversationUpdate.subscribe(
+      conversationUpdate => {
+        if (conversationUpdate != null) {
+          console.log(this.lastMessageCount);
+          this.updatedConversation = conversationUpdate;
+          var newMessageCount = this.updatedConversation.messages.length;
+          if (newMessageCount > this.lastMessageCount) {
+            for(var i = this.lastMessageCount; i < newMessageCount; i++) {
+              this.addMessage(this.updatedConversation.messages[i]);
+            }
+          }
+          this.lastMessageCount = newMessageCount;
+        }
+      }
+    );
+    console.log(this.messengerService);
+    setInterval(this.pollConvo.bind(this), 5000);
+  }
+
+  pollConvo() {
+    var temp = this.messengerService.getConversation();
   }
 
   addMessage(m) {
