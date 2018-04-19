@@ -11,8 +11,8 @@ import json, datetime
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost:5000/sc'
-app.config.update(dict(SQLALCHEMY_DATABASE_URI="sqlite:///"+os.path.join(app.root_path, "sc.db")))
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost:5000/sc'
+#app.config.update(dict(SQLALCHEMY_DATABASE_URI="sqlite:///"+os.path.join(app.root_path, "sc.db")))
 db.init_app(app)
 
 '''---------------------------------- DB Configuration -------------------------'''
@@ -160,7 +160,6 @@ class UserAPI(Resource):
             if temp is None:
                 return 404
 
-            # Update User
             temp.first_name = args['first_name']
             temp.last_name = args['last_name']
             temp.email = args['email']
@@ -197,7 +196,6 @@ class UserAPI(Resource):
     def post(self):
         args = post_user_parser.parse_args()
 
-        # Registration
         db.session.add(User(first_name=args['first_name'], last_name=args['last_name'], email=args['email'], phone=args['phone'], password=args['password']))
         db.session.commit()
 
@@ -213,7 +211,6 @@ login_parser.add_argument('password')
 class LoginAPI(Resource):
     def post(self):
         args = login_parser.parse_args();
-        print(args)
         temp = User.query.filter_by(email = args['email']).first()
 
         if temp is None or not temp.check_password(args['password']):
@@ -235,9 +232,11 @@ class GroupAPI(Resource):
 
     def get(self):
         args = get_group_parser.parse_args()
+
         if args['id'] is None:
             temp = Group.query.all()
             return [group.serialize() for group in temp]
+
         temp = Group.query.filter_by(id = args['id']).first()
 
         if temp is None:
@@ -289,33 +288,6 @@ class SearchAPI(Resource):
             return 400
 
         return results
-
-
-'''---------------------------------- Meeting API -------------------------'''
-# class MeetingAPI(Resource):
-#     def get(self):
-#         meetings = []
-#         temp = Meeting.query.filter_by(id = meeting_id).first()
-#
-#         meetings.append({'id' : temp.id, 'name' : temp.name, 'meeting_time' : temp.meeting_time, 'location' : temp.location, 'student_id' : temp.user.id, 'group_id' : temp.study_group.id, 'tutor_id' : temp.tutor.id})
-#
-#         return jsonify({'meetings' : meetings})
-#
-#     def post(self, meeting_id):
-#         args = parser.parse_args()
-#         data = json.loads(args['gonads'])
-#
-#         new_meeting = Meeting(data['name'], data['meeting_time'], data['location'], data['student_id'], data['group_id'], data['tutor_id'])
-#
-#         db.session.add(new_meeting)
-#         db.session.commit()
-#         return 201
-#
-#     def delete(self, meeting_id):
-#         temp = Meeting.query.filter_by(id = meeting_id).first()
-#         db.session.delete(temp)
-#         db.session.commit()
-#         return 200
 
 
 
@@ -411,6 +383,7 @@ class MessageAPI(Resource):
         db.session.add(mes)
         db.session.commit()
         return 201
+
 
 '''------------------------------- Scheduling API ---------------------------------'''
 get_sched_parser = reqparse.RequestParser()
@@ -539,102 +512,99 @@ class ScheduleAPI(Resource):
         db.session.commit()
         return 201
 
+
 '''---------------------------------- Contact Request API -------------------------'''
 get_contact_req_parser = reqparse.RequestParser()
-get_contact_req_parser.add_argument('id')
+get_contact_req_parser.add_argument('group_id')
+get_contact_req_parser.add_argument('user_id')
+get_contact_req_parser.add_argument('accepted')
+
+put_contact_req_parser = reqparse.RequestParser()
+put_contact_req_parser.add_argument('id')
+put_contact_req_parser.add_argument('accepted')
+put_contact_req_parser.add_argument('message')
+put_contact_req_parser.add_argument('requestor_id')
+put_contact_req_parser.add_argument('student_id')
+put_contact_req_parser.add_argument('tutor_id')
+put_contact_req_parser.add_argument('group_id')
 
 post_contact_req_parser = reqparse.RequestParser()
-post_contact_req_parser.add_argument('id')
-post_contact_req_parser.add_argument('accepted')
 post_contact_req_parser.add_argument('requestor_id')
 post_contact_req_parser.add_argument('student_id')
 post_contact_req_parser.add_argument('tutor_id')
 post_contact_req_parser.add_argument('group_id')
-post_contact_req_parser.add_argument('message')
+
 
 
 class ContactRequestAPI(Resource):
 
     def get(self):
         args = get_contact_req_parser.parse_args()
-        if args['id'] is None:
-            return 404
-        temp = ContactRequest.query.filter_by(student_id = args['id']).all()
-        temp2 = ContactRequest.query.filter_by(tutor_id= args['id']).all()
-        if temp is None or temp2 is None:
-            return 404
-        reqs = [req.serialize() for req in temp if req.approved == False]
-        reqs2 = [req.serialize() for req in temp2 if req.approved == False]
-        return reqs + reqs2
+
+        if args['accepted'] is None:
+            return 400
+        else:
+            accepted = True
+            if args['accepted'].lower() == 'false':
+                accepted = False
+
+        if args['user_id'] is not None:
+            temp = ContactRequest.query.filter_by(student_id = args['user_id'], accepted = accepted).all()
+            temp2 = ContactRequest.query.filter_by(tutor_id= args['user_id'], accepted = accepted).all()
+
+            if temp is None or temp2 is None:
+                return 404
+
+            reqs = [req.serialize() for req in temp]
+            reqs2 = [req.serialize() for req in temp2]
+            return reqs + reqs2
+
+        elif args['group_id'] is not None:
+            temp = ContactRequest.query.filter_by(group_id = args['group_id'], accepted = accepted).all()
+
+            if temp is None:
+                return 404
+
+            return [group.serialize() for group in temp]
+
+        else:
+            return 401
+
+
+    def put(self):
+        args = put_contact_req_parser.parse_args()
+
+        if args['id'] is not None:
+            req = ContactRequest.query.filter_by(id = args['id']).first()
+
+            if req is None:
+                return 401
+
+            accepted = False
+            if args['accepted'].lower() == "true":
+                accepted = True
+
+            req.accepted = accepted
+            req.message = args['message']
+            req.requestor_id = args['requestor_id']
+            req.student_id = args['student_id']
+            req.tutor_id = args['tutor_id']
+            req.group_id = args['group_id']
+
+            db.session.add(req)
+            db.session.commit()
+            return 205
+
 
     def post(self):
         args = post_contact_req_parser.parse_args()
-        if args['id'] is None:
-            req = ContactRequest(message = args["message"], requestor_id = args["requestor_id"], student_id = args['student_id'], tutor_id = args['tutor_id'],  group_id = args['group_id'])
-            if req == None:
-                return 401
-            db.session.add(req)
-        else:
-            req = ContactRequest.query.filter_by(id = args['id']).first()
-            if req is None:
-                return 404
-            if args['accepted'].lower() == "true":
-                req.setApproved(True)
-            else:
-                req.setApproved(False)
-            db.session.add(req)
-        db.session.commit()
-        return 201
 
+        req = ContactRequest(message = args["message"], requestor_id = args["requestor_id"], student_id = args['student_id'], tutor_id = args['tutor_id'],  group_id = args['group_id'])
 
-'''---------------------------------- Meeting Request API -------------------------'''
-get_meeting_req_parser = reqparse.RequestParser()
-get_meeting_req_parser.add_argument('id')
+        if req == None:
+            return 401
 
-post_meeting_req_parser = reqparse.RequestParser()
-post_meeting_req_parser.add_argument('id')
-post_meeting_req_parser.add_argument('accepted')
-post_meeting_req_parser.add_argument('meeting_date')
-post_meeting_req_parser.add_argument('location')
-post_meeting_req_parser.add_argument('course_id')
-post_meeting_req_parser.add_argument('conversation_id')
-post_meeting_req_parser.add_argument('student_id')
-post_meeting_req_parser.add_argument('tutor_id')
-post_meeting_req_parser.add_argument('group_id')
-
-class MeetingRequestAPI(Resource):
-
-    def get(self):
-        args = get_meeting_req_parser.parse_args()
-        if args['id'] is None:
-            return 404
-        temp = MeetingRequest.query.filter_by(conversation_id = args['id']).all()
-        if temp is None:
-            return 404
-
-        reqs = [req.serialize() for req in temp if req.approved == False]
-
-        return reqs
-
-    def post(self):
-        args = post_meeting_req_parser.parse_args()
-        if args['id'] is None:
-            meeting = MeetingRequest(meeting_date = args['meeting_date'], location = args['location'], course_id = args['course_id'], conversation_id = args['conversation_id'], student_id = args['student_id'], tutor_id = args['tutor_id'], group_id = args['group_id'])
-            if meeting == None:
-                return 401
-            db.session.add(meeting)
-
-        else:
-            req = MeetingRequest.query.filter_by(id = args['id']).first()
-            if req is None:
-                return 404
-            print(args['accepted'].lower())
-            if args['accepted'].lower() == "true":
-                req.setApproved(True)
-            else:
-                req.setApproved(False)
-            db.session.add(req)
-
+        db.session.add(req)
         db.session.commit()
         return 201
 
@@ -714,24 +684,19 @@ class SuggestedStudentsAPI(Resource):
         return sug_students
 
 
-
+'''---------------------------------- Endpoints -------------------------'''
 api.add_resource(UserAPI, '/api/user/')
 api.add_resource(LoginAPI, '/api/login/')
 api.add_resource(GroupAPI, '/api/group/')
+api.add_resource(CourseAPI, '/api/course/')
+api.add_resource(ConversationAPI, '/api/conversation/')
+api.add_resource(MessageAPI, '/api/message/')
+api.add_resource(ContactRequestAPI, '/api/request/contact/')
+api.add_resource(ScheduleAPI, '/api/schedule/')
 api.add_resource(SuggestedGroupsAPI, '/api/group/suggested/')
 api.add_resource(SuggestedTutorsAPI, '/api/tutor/suggested/')
 api.add_resource(SuggestedStudentsAPI, '/api/student/suggested/')
-api.add_resource(CourseAPI, '/api/course/')
 api.add_resource(SearchAPI, '/api/search/')
-api.add_resource(ConversationAPI, '/api/conversation/')
-api.add_resource(ContactRequestAPI, '/api/contact/request/')
-api.add_resource(MeetingRequestAPI, '/api/meeting/request/')
-api.add_resource(MessageAPI, '/api/message/')
-api.add_resource(ScheduleAPI, '/api/schedule/')
-
-# api.add_resource(rating, '/rating/<rating_id>')
-# api.add_resource(message, '/message/<message_id>')
-# api.add_resource(RegisterAPI, '/api/register')
 
 
 
