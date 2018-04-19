@@ -24,67 +24,133 @@ def initdb_command():
     db.session.commit()
 
     users = []
-    users.append(User('Bob', 'Smith', 'a@gmail.com', '1111111111', '123'))
-    users.append(User('Carol', 'Stevens', 'b@gmail.com', '1111111111', '123'))
-    users.append(User('Anna','Martin','c@gmail.com','1111111111', '123'))
-    users.append(User('Daniel','Rutgers','d@gmail.com','1111111111', '123'))
-    users.append(User('Frank','Lorris','e@gmail.com','1111111111', '123'))
-
+    users.append(User('Bob', 'Smith', 'a@gmail.com', '1111111111', '123'))  #1
+    users.append(User('Carol', 'Stevens', 'b@gmail.com', '1111111111', '123')) #2
+    users.append(User('Anna','Martin','c@gmail.com','1111111111', '123'))   #3
+    users.append(User('Daniel','Rutgers','d@gmail.com','1111111111', '123'))    #4
+    users.append(User('Frank','Lorris','e@gmail.com','1111111111', '123'))  #5
+    users.append(User('John', 'McNault', 'j@yahoo.com', '1111111111', '123'))    #6
+    users.append(User('Peter', 'Johnson', 'p@yahoo.com', '1111111111', '123'))  #7
+    users.append(User('Laura', 'Smith', 'ls@yahoo.com', '1111111111', '123'))   #8
+    users.append(User('Jennifer', 'Raj', 'jr@yahoo.com', '1111111111', '123'))  #9
+    users.append(User('Quan', 'Billson', 'qb@yahoo.com', '1111111111', '123'))  #10
+    users.append(User('Jamil', 'Reckta', 'jrek@yahoo.com', '1111111111', '123'))    #11
+    users.append(User('Victor', 'Rapedip', 'vr@yahoo.com', '1111111111', '123'))    #12
+    users.append(User('Mark', 'Zuck', 'mz@yahoo.com', '1111111111', '123')) #13
+    users.append(User('Laura', 'shpeng', 'ls@yahoo.com', '1111111111', '123'))     #14
     for x in users:
         db.session.add(x)
     db.session.commit()
 
+
     groups = []
-    groups.append(Group('CS1530 Guys', 'A bunch of dudes studying software engineering', 1))
-    groups.append(Group('CS1530 Girls', 'Ladies is pimps too', 1))
-    groups.append(Group('Go Eagles', 'Phily > PIttsburgh', users[3].id))
+    groups.append(Group('CS1530 Guys', 'A bunch of dudes studying software engineering', 1))    #group 1
+    groups.append(Group('CS1530 Girls', 'Ladies is pimps too', 1))          #group 2
+    groups.append(Group('Go Eagles', 'Phily > PIttsburgh', users[3].id))    #group 3
     for x in groups:
         db.session.add(x)
     db.session.commit()
+
 
     users[0].groups.append(groups[0])
     users[3].groups.append(groups[0])
     users[4].groups.append(groups[0])
     users[1].groups.append(groups[1])
     users[2].groups.append(groups[1])
+    users[5].groups.append(groups[0])
+    users[6].groups.append(groups[1])
+    users[7].groups.append(groups[1])
+    users[8].groups.append(groups[0])
+    users[9].groups.append(groups[2])
+    users[10].groups.append(groups[2])
+    users[11].groups.append(groups[2])
+    users[12].groups.append(groups[2])
+    users[13].groups.append(groups[1])
     db.session.commit()
 
     courses = []
-    courses.append(Course('Software Engineering', 'Formal methods of software engineering', 'CS', 1530))
-    courses.append(Course('Database Management Systems', 'Database Management Systems', 'CS', 1555))
-    courses.append(Course('Web Applications', 'Web Applications', 'CS', 1520))
-    courses.append(Course('Operating Systems', 'Operating Systems', 'CS', 1550))
-    courses.append(Course('Interface Design Methodology', 'Interface design for mobile applications', 'CS', 1635))
+    courses.append(Course('Software Engineering', 'Formal methods of software engineering', 'CS', 1530))    #0
+    courses.append(Course('Database Management Systems', 'Database Management Systems', 'CS', 1555))    #1
+    courses.append(Course('Web Applications', 'Web Applications', 'CS', 1520))  #2
+    courses.append(Course('Operating Systems', 'Operating Systems', 'CS', 1550))    #3
+    courses.append(Course('Interface Design Methodology', 'Interface design for mobile applications', 'CS', 1635))  #4
+    courses.append(Course('High performance computing', 'Introduction to high performance computing', 'CS', 1645))  #5
+    courses.append(Course('Intro to Data Science', 'Intro to Data Science', 'CS', 1656))    #6
+    courses.append(Course('Intmdt Prog Using Java', 'Intermediate programming with java', 'CS', 401))    #7
+    courses.append(Course('Data Structures', 'Intro to data structures', 'CS', 445))    #8
+    courses.append(Course('Intro to System Software', 'Introduction to system software', 'CS', 449))    #9
+
     for x in courses:
         db.session.add(x)
 
-    for x in users:
-        x.current_courses.append(courses[0])
+    db.session.commit()
+
+    for i, x in enumerate(users):
+        if i < 5:
+            x.current_courses.append(courses[0])
+            x.current_courses.append(courses[1])
+            x.current_courses.append(courses[2])
+            x.current_courses.append(courses[3])
+            x.current_courses.append(courses[4])
+        else:
+            x.current_courses.append(courses[5])
+            x.current_courses.append(courses[6])
+            x.current_courses.append(courses[7])
+            x.current_courses.append(courses[8])
+            x.current_courses.append(courses[9])
+
 
     users.append(User('John','Doe','f@gmail.com','1111111111', '123'))
-    users[5].past_courses.append(courses[0])
-    db.session.add(users[5])
+
+    for i, x in enumerate(users):
+        if i < 7:
+            x.past_courses.append(courses[5])
+            x.past_courses.append(courses[6])
+            x.past_courses.append(courses[7])
+            x.past_courses.append(courses[8])
+            x.past_courses.append(courses[9])
+        else:
+            x.past_courses.append(courses[0])
+            x.past_courses.append(courses[1])
+            x.past_courses.append(courses[2])
+            x.past_courses.append(courses[3])
+            x.past_courses.append(courses[4])
+
+    db.session.commit()
+
 
     groups[0].group_courses.append(courses[0])
     groups[1].group_courses.append(courses[0])
+    groups[2].group_courses.append(courses[3])
 
     db.session.commit()
 
     convos = []
     # group_id, tutor_id, student_id
-    convos.append(Conversation(None, users[2].id, users[3].id))
-    convos.append(Conversation(groups[0].id, None, users[3].id))
-    convos.append(Conversation(groups[1].id, None, users[1].id))
-    convos.append(Conversation(None, users[1].id, users[0].id))
+    convos.append(Conversation(None, users[2].id, users[3].id)) #1
+    convos.append(Conversation(groups[0].id, None, users[3].id))    #2
+    convos.append(Conversation(groups[1].id, None, users[1].id))    #3
+    convos.append(Conversation(None, users[1].id, users[0].id))     #4
+    convos.append(Conversation(groups[2].id, None, users[4].id))         #5
+
+
+    convos.append(Conversation(None, users[6].id, users[7].id))         #6
+    convos.append(Conversation(None, users[9].id, users[8].id))         #7
+    convos.append(Conversation(None, users[10].id, users[12].id))         #8
 
     for x in convos:
         db.session.add(x)
 
     db.session.commit()
 
+
+
     messages = []
     messages.append(Message(users[2].id,  datetime.datetime.now(), "What time would be good to meet?", convos[0].id))
     messages.append(Message(users[3].id, datetime.datetime.now(), "Never dumbass LOL", convos[0].id))
+    messages.append(Message(users[2].id,  datetime.datetime.now(), "Why can't you help me?", convos[0].id))
+    messages.append(Message(users[3].id, datetime.datetime.now(), "Was just joking, send me a meeting request", convos[0].id))
+
 
     messages.append(Message(users[1].id,  datetime.datetime.now(), "Shalom, looks like a prety cool group", convos[1].id))
     messages.append(Message(groups[0].id, datetime.datetime.now(), "Yeah I know were pretty sick", convos[1].id))
@@ -92,9 +158,37 @@ def initdb_command():
     messages.append(Message(groups[0].id, datetime.datetime.now(), "I don't know how to do problem number 3 from quiz 1", convos[1].id))
     messages.append(Message(groups[0].id, datetime.datetime.now(), "Can anyone help me?", convos[1].id))
 
+
+    messages.append(Message(users[1].id, datetime.datetime.now(), "What is this group for?", convos[2].id))
+    messages.append(Message(users[1].id, datetime.datetime.now(), "Read the BIO!", convos[2].id))
+
+    messages.append(Message(users[1].id, datetime.datetime.now(), "What grade did you get in data structures?", convos[3].id))
+    messages.append(Message(users[0].id, datetime.datetime.now(), "An A-", convos[3].id))
+    messages.append(Message(users[1].id, datetime.datetime.now(), "Great! Let's schedule a tutoring session", convos[3].id))
+
+    messages.append(Message(users[4].id,  datetime.datetime.now(), "If anyone needs assistance with their homework 3, shoot me a message", convos[4].id))   #5
+    messages.append(Message(groups[2].id, datetime.datetime.now(), "I think we all do, can we set up a group tutoring session", convos[4].id))
+
+
+    messages.append(Message(users[6].id, datetime.datetime.now(), "Struggling alot in 445, I saw you recently took that class. Can we set up a tutoring sesson?", convos[5].id))
+    messages.append(Message(users[7].id, datetime.datetime.now(), "Yes absolutely", convos[5].id))
+    messages.append(Message(users[6].id, datetime.datetime.now(), "Great! Let's schedule a tutoring session", convos[5].id))
+
+
+    messages.append(Message(users[9].id, datetime.datetime.now(), "Struggling alot in 1501, I saw you recently took that class. Can we set up a tutoring sesson?", convos[6].id))
+    messages.append(Message(users[8].id, datetime.datetime.now(), "Yes absolutely", convos[6].id))
+    messages.append(Message(users[9].id, datetime.datetime.now(), "Great! Let's schedule a tutoring session", convos[6].id))
+
+
+    messages.append(Message(users[10].id, datetime.datetime.now(), "Struggling alot in system architecture, I saw you recently took that class. Can we set up a tutoring sesson?", convos[7].id))
+    messages.append(Message(users[12].id, datetime.datetime.now(), "Yes absolutely", convos[7].id))
+    messages.append(Message(users[10].id, datetime.datetime.now(), "Great! Let's schedule a tutoring session", convos[7].id))
+
     for x in messages:
         db.session.add(x)
     db.session.commit()
+
+
 
     meeting_reqs = []
     meeting_reqs.append(Meeting(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")), "Cathy", courses[2].id, convos[1].id, users[3].id, None))
@@ -105,6 +199,7 @@ def initdb_command():
     for x in meeting_reqs:
         db.session.add(x)
     db.session.commit()
+
 
     contact_req = []
     contact_req.append(ContactRequest("Yo yo yo, add me dawg", users[0].id, users[0].id, None, groups[1].id))
@@ -330,6 +425,9 @@ get_course_parser.add_argument('id')
 
 post_course_parser = reqparse.RequestParser()
 post_course_parser.add_argument('name')
+post_course_parser.add_argument('description')
+post_course_parser.add_argument('subj_code')
+post_course_parser.add_argument('course_num')
 
 class CourseAPI(Resource):
 
@@ -348,21 +446,18 @@ class CourseAPI(Resource):
         return temp.serialize()
 
 
-    # def post(self, course_id):
-    #     args = parser.parse_args()
-    #     data = json.loads(args['gonads'])
+    def post(self):
+        args = post_course_parser.parse_args()
 
-    #     new_course = Course(data['name'], data['description'], data['subj_code'], data['course_num'])
+        course_added = Course(name = args['name'], description = args['description'], subj_code = args['subj_code'], course_num = args['course_num'])
 
-    #     db.session.add(new_course)
-    #     db.session.commit()
-    #     return 201
+        if course_added is None:
+            return 401
 
-    # def delete(self, course_id):
-    #     temp = Meeting.query.filter_by(id = course_id).first()
-    #     db.session.delete(temp)
-    #     db.session.commit()
-    #     return 200
+        db.session.add(course_added)
+        db.session.commit()
+
+        return 201
 
 
 '''---------------------------------- Conversation API -------------------------'''
