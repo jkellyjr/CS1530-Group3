@@ -23,13 +23,13 @@ export class ResponderComponent implements OnInit {
   }
 
   getConversation():void {
-    this.service.getConversation(this.conversation.id).subscribe(
-      body => {
-        this.conversation = body;
-        console.log("got a response");
-        console.log(JSON.stringify(this.conversation));
-      }, error =>{
-        console.log("Poop");
-      });
+    // this.service.getConversation(this.conversation.id).subscribe(
+    //   body => {
+    //     this.conversation = body;
+    //     console.log("got a response");
+    //     console.log(JSON.stringify(this.conversation));
+    //   }, error =>{
+    //     console.log("Poop");
+    //   });
   }
 }
