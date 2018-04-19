@@ -11,8 +11,8 @@ import json, datetime
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost:5000/sc'
-#app.config.update(dict(SQLALCHEMY_DATABASE_URI="sqlite:///"+os.path.join(app.root_path, "sc.db")))
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost:5000/sc'
+app.config.update(dict(SQLALCHEMY_DATABASE_URI="sqlite:///"+os.path.join(app.root_path, "sc.db")))
 db.init_app(app)
 
 '''---------------------------------- DB Configuration -------------------------'''

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
-import { Group, User, Conversation } from '../../library/objects/index';
+import { Group, User, Conversation, Message } from '../../library/objects/index';
 import { ISubscription } from 'rxjs/Subscription';
 import { AuthService } from '../../auth/index';
 import { MessengerService} from './messenger.service';
@@ -20,6 +20,8 @@ export class MessengerComponent implements OnInit {
   updatedConversation:Conversation;
   conversationSubscription:ISubscription;
   lastMessageCount:number;
+
+  newMessage:String;
 
   constructor(private userService: UserService,
     private authService: AuthService,
@@ -86,7 +88,9 @@ export class MessengerComponent implements OnInit {
   }
 
   sendNewMessage() {
-
+    var msg = new Message(this.user.id, this.conversation.id, this.newMessage);
+    this.messengerService.sendMessage(msg);
+    this.newMessage = "";
   }
 
 }

@@ -7,10 +7,10 @@
   <app-responder [conversation]="conversation" [user]="user"></app-responder>
   <div id="chatWrapper">
     <div id="chatContent"></div>
-    <form id="newMessageWrapper">
+    <form id="newMessageWrapper" (ngSubmit)="sendNewMessage()" #profileForm="ngForm">
         New Message:
         <br>
-        <input type="text" id="newMessage"> <button type="submit" id="sendButton" onclick="sendNewMessage()">Send</button>
+        <input type="text" id="newMessage" name="message_input" [(ngModel)]="newMessage"> <button type="submit" id="sendButton">Send</button>
     </form>
   </div>
   <app-scheduler [conversation]="conversation" [user]="user"></app-scheduler>
