@@ -11,8 +11,8 @@ import json, datetime
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost:5000/sc'
-app.config.update(dict(SQLALCHEMY_DATABASE_URI="sqlite:///"+os.path.join(app.root_path, "sc.db")))
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost:5000/sc'
+#app.config.update(dict(SQLALCHEMY_DATABASE_URI="sqlite:///"+os.path.join(app.root_path, "sc.db")))
 db.init_app(app)
 
 '''---------------------------------- DB Configuration -------------------------'''
@@ -223,10 +223,17 @@ class LoginAPI(Resource):
 get_group_parser = reqparse.RequestParser()
 get_group_parser.add_argument('id')
 
+put_group_parser = reqparse.RequestParser()
+put_group_parser.add_argument('id')
+put_group_parser.add_argument('name')
+put_group_parser.add_argument('description')
+put_group_parser.add_argument('admin_id')
+put_group_parser.add_argument('new_mem_id')
+
 post_group_parser = reqparse.RequestParser()
 post_group_parser.add_argument('name')
 post_group_parser.add_argument('description')
-post_group_parser.add_argument('creator_id')
+post_group_parser.add_argument('admin_id')
 
 class GroupAPI(Resource):
 
@@ -243,9 +250,35 @@ class GroupAPI(Resource):
             return 404
         return temp.serialize()
 
+
+    def put(self):
+        args = put_group_parser.parse_args()
+
+        if args['id'] is None:
+            return 401
+
+        group = Group.query.filter_by(id = args['id']).first()
+
+        if group is None:
+            return 404
+
+        group.name = args['name']
+        group.description = args['description']
+        group.admin_id = args['admin_id']
+
+        if args['new_mem_id'] is not None:
+                new_peep = User.query.filter_by(id = args['new_mem_id']).first()
+                if new_peep is None:
+                    return 404
+                group.members.append(new_peep)
+
+        db.session.commit()
+        return 205
+
+
     def post(self):
         args = post_group_parser.parse_args()
-        group = Group(name = args['name'], description = args['description'], creator_id = args['creator_id'])
+        group = Group(name = args['name'], description = args['description'], admin_id = args['admin_id'])
         if group == None:
             return 401
         db.session.add(group)
@@ -533,8 +566,6 @@ post_contact_req_parser.add_argument('requestor_id')
 post_contact_req_parser.add_argument('student_id')
 post_contact_req_parser.add_argument('tutor_id')
 post_contact_req_parser.add_argument('group_id')
-
-
 
 class ContactRequestAPI(Resource):
 
