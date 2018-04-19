@@ -1,7 +1,7 @@
 import { Component, OnInit,Input } from '@angular/core';
 
 import { UserService } from '../../user.service';
-import { Conversation, Meeting } from '../../../library/objects/index';
+import { Conversation, Meeting, User } from '../../../library/objects/index';
 
 @Component({
   selector: 'app-scheduler',
@@ -11,6 +11,9 @@ import { Conversation, Meeting } from '../../../library/objects/index';
 export class SchedulerComponent implements OnInit {
   @Input()
   conversation:Conversation;
+
+  @Input()
+  user:User;
 
   date:Date;
   time:Date;
@@ -26,8 +29,13 @@ export class SchedulerComponent implements OnInit {
   }
 
   requestMeeting(): void {
-    let meetingRequest = new Meeting(null, false, this.conversation.id, +this.year+"/"+this.month+"/"+this.day+" "+this.time, this.location, 1);
-
+    let role = "";
+    if(this.conversation.tutor_id == this.user.id){
+      role = "tutor";
+    }else {
+      role = "student";
+    }
+    let meetingRequest = new Meeting(null, false, this.month+"/"+this.day+"/"+this.year+" "+this.time, this.location, 1,this.conversation.id, this.user.id, role ,this.user.first_name+" "+this.user.last_name);
     this.service.sendMeetingRequest(meetingRequest);
   }
 

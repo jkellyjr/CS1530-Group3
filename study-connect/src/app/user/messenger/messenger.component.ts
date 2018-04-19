@@ -19,15 +19,16 @@ export class MessengerComponent implements OnInit {
   constructor(private userService: UserService,
     private authService: AuthService,
     private messengerService: MessengerService) {
-      this.conversation = this.messengerService.getCurrentConversation();
+
     }
 
   ngOnInit() {
     this.userSubscription = this.authService.user.subscribe(
       user => {
         this.user = user;
-        console.log(JSON.stringify(this.user));
+        // console.log(JSON.stringify(this.user));
       });
+      this.conversation = this.messengerService.getCurrentConversation();
       this.conversation.messages.forEach(m => {
         this.addMessage(m);
       });

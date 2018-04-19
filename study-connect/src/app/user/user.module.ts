@@ -12,6 +12,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { SearchComponent } from './dashboard/search/search.component';
 import { ProfilePreviewComponent } from './profile-preview/profile-preview.component';
 
+import {MatGridListModule} from '@angular/material/grid-list';
 import {MessengerService} from './messenger/messenger.service';
 import {MatInputModule} from '@angular/material/input';
 import {MatChipsModule} from '@angular/material/chips';
@@ -60,7 +61,8 @@ import { ResponderComponent } from './messenger/responder/responder.component';
     MatTableModule,
     MatDialogModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatGridListModule
   ],
   declarations: [
     UserComponent,

@@ -4,7 +4,7 @@
     </button>
 </div>
 <div id="messengerWrapper">
-  <app-responder></app-responder>
+  <app-responder [conversation]="conversation" [user]="user"></app-responder>
   <div id="chatWrapper">
     <div id="chatContent"></div>
     <form id="newMessageWrapper">
@@ -13,5 +13,5 @@
         <input type="text" id="newMessage"> <button type="submit" id="sendButton" onclick="sendNewMessage()">Send</button>
     </form>
   </div>
-  <app-scheduler [conversation]="conversation"></app-scheduler>
+  <app-scheduler [conversation]="conversation" [user]="user"></app-scheduler>
 </div>
