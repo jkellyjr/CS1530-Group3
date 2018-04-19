@@ -36,7 +36,7 @@ export class AuthService {
       .subscribe(
         body => {
           this.userSubject.next(body.json() as User);
-          console.log(JSON.stringify((body.json() as User)));
+          // console.log(JSON.stringify((body.json() as User)));
           this.redirectUrl = "user/";
           this.isLoggedIn = true;
           this.loggedSubject.next(true);
@@ -54,7 +54,7 @@ export class AuthService {
       .subscribe(
         body =>{
           this.userSubject.next(body.json() as User);
-          console.log(JSON.stringify((body.json() as User)));
+          // console.log(JSON.stringify((body.json() as User)));
           this.redirectUrl = "user/profile";
           this.isLoggedIn = true;          this.loggedSubject.next(true);
           return Observable.of(true);

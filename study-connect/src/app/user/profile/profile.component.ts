@@ -14,34 +14,43 @@ export class ProfileComponent implements OnInit {
   user: User;
   userSubscription:ISubscription;
 
-  oldPass: string;
-  newPass: string;
-  duplicatePass: string;
-
+  tempCurrent: Course[];
+  tempPast: Course[];
   constructor(private service:UserService,
-              private authService:AuthService, private router:Router) { }
+              private authService:AuthService, private router:Router) {
+                this.tempCurrent = new Array<Course>();
+                this.tempPast = new Array<Course>();
+              }
 
   ngOnInit() {
     this.userSubscription = this.authService.user.subscribe(
       user => {
         this.user = user;
+        for(let i=0;i<user.current_courses.length;i++){
+          this.tempCurrent.push(user.current_courses[i]);
+        }
+        for(let j=0;j<user.past_courses.length;j++){
+          this.tempPast.push(user.past_courses[j]);
+        }
       });
   }
 
   updateUser(): void{
-
-    if(this.oldPass != "" && this.oldPass == this.user.password){ //user entered a password so verify
-        if(this.newPass != "" && this.newPass == this.duplicatePass){
-          this.user.password = this.newPass;
-
-          this.user = this.service.updateUser(this.user);
-        } else {
-          console.log("New password and re-type must match");
-        }
-    } else {
-      console.log("Old password is incorrect")
-    }
+    this.user.current_courses = this.tempCurrent;
+    this.user.past_courses = this.tempPast;
+    this.user = this.service.updateUser(this.user);
     this.router.navigate(["/user"]);
+  }
 
+  moveToPast(course:Course):void {
+    let index = this.tempCurrent.indexOf(course);
+    this.tempPast.push(this.tempCurrent[index]);
+    this.tempCurrent.splice(index,1);
+  }
+
+  moveToCurrent(course:Course):void {
+    let index = this.tempPast.indexOf(course);
+    this.tempCurrent.push(this.tempPast[index]);
+    this.tempPast.splice(index,1);
   }
 }

@@ -23,7 +23,7 @@ export class NotificationComponent implements OnInit {
       user => {
         this.user = user;
         // this.notificationService.getMeetings(user.id);
-        console.log(JSON.stringify(this.user));
+        // console.log(JSON.stringify(this.user));
       });
 
   }

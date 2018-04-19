@@ -11,16 +11,6 @@ import { Course,Group, User } from '../../../library/objects/index';
 export class UserFormComponent implements OnInit {
   @Input()
   user:User;
-
-  @Input()
-  oldPass: string;
-
-  @Input()
-  newPass: string;
-
-  @Input()
-  duplicatePass: string;
-
   constructor() {
 
   }

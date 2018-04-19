@@ -24,7 +24,7 @@ export class GroupTableComponent implements OnInit {
     console.log("In group table component");
     console.log("lenght: "+this.groups.length);
     for(let i=0;i<this.groups.length;i++){
-      console.log(JSON.stringify(this.groups[i]));
+      // console.log(JSON.stringify(this.groups[i]));
     }
   }
 

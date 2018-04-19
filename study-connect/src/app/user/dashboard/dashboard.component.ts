@@ -31,7 +31,7 @@ export class DashboardComponent implements OnInit {
     this.userSubscription = this.authService.user.subscribe(
       user => {
         this.user = user;
-        console.log(JSON.stringify(this.user));
+        // console.log(JSON.stringify(this.user));
       });
     this.groupsSubscription = this.userService.searchGroupResult.subscribe(groups => {
       this.groups = groups;
