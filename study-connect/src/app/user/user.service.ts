@@ -190,7 +190,7 @@ export class UserService {
   }
 
   respondMeetingRequest(request:Meeting): void {
-    this.http.post('api/schedule/', request).subscribe(
+    this.http.put('api/schedule/', request).subscribe(
       body=>{
         console.log("succesful meeting request response")
     }, error =>{
