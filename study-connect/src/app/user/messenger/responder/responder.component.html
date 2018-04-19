@@ -1,27 +1,20 @@
-<mat-card>
-  <form class="" (ngSubmit)="respondToRequest()" #profileForm="ngForm">
+<mat-card *ngFor="let meeting of conversation.meetings">
+  <form class="" #profileForm="ngForm">
     <mat-card-title>Meeting Request</mat-card-title>
     <mat-form-field>
-        <input matInput [matDatepicker]="reqDatePicker" placeholder="Date" name="meeting_date" disabled="true">
-        <mat-datepicker-toggle matSuffix [for]="reqDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #reqDatePicker></mat-datepicker>
+        <input matInput type="text" placeholder="Date" name="meeting_date" disabled="true" [value]="meeting.meeting_time">
       </mat-form-field>
       <br>
       <mat-form-field>
-        <input matInput type="time" placeholder="Time" name="meeting_time" disabled="true">
-      </mat-form-field>
-      <br>
-      <mat-form-field>
-        <input matInput placeholder="Location" type="text" name="location" disabled="true">
+        <input matInput placeholder="Location" type="text" name="location" disabled="true" [value]="meeting.location">
       </mat-form-field>
     </form>
     <mat-card-actions>
-      <button mat-raised-button id="acceptButton" onclick="acceptRequest">
+      <button mat-raised-button id="acceptButton" (click)="acceptMeeting(meeting)">
         Accept
       </button>
-      <button mat-raised-button id="declineButton" onclick="declineRequest">
+      <button mat-raised-button id="declineButton" (click)="declineMeeting(meeting)">
         Decline
       </button>
     </mat-card-actions>
-    <button type="button" name="button" (click)="getConversation()">Testing</button>
 </mat-card>

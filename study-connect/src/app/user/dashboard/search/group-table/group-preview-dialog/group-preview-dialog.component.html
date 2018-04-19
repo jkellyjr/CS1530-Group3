@@ -5,6 +5,11 @@
 
   <mat-card-content>
     {{group.description}}
+    <form class="example-form">
+      <mat-form-field class="">
+        <textarea matInput name="message" placeholder="Add a message:" [(ngModel)]="message" required></textarea>
+      </mat-form-field>
+    </form>
   </mat-card-content>
 
   <mat-card-actions>

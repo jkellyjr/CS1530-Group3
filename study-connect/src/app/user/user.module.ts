@@ -35,7 +35,6 @@ import { StudentPreviewDialogComponent } from './dashboard/search/student-table/
 import { TutorPreviewDialogComponent } from './dashboard/search/tutor-table/tutor-preview-dialog/tutor-preview-dialog.component';
 import { NotificationComponent } from './notification/notification.component';
 import { TablesComponent } from './notification/tables/tables.component';
-import { NotificationService } from './notification/notification.service';
 import { MeetingsTableComponent } from './notification/tables/meetings-table/meetings-table.component';
 import { RequestsTableComponent } from './notification/tables/requests-table/requests-table.component';
 import { PendingTableComponent } from './notification/tables/pending-table/pending-table.component';
@@ -93,7 +92,6 @@ import { ResponderComponent } from './messenger/responder/responder.component';
   exports: [
   ],
   providers: [
-    NotificationService,
     UserService,
     MessengerService
   ],

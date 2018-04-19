@@ -6,15 +6,16 @@
         <div id="topBarTitle">StudyConnect</div>
     </div>
     <div id="rightStuff" *ngIf="logged">
-        <button mat-icon-button>
-            <mat-icon id="messagingButton" routerLink="user/messenger">message</mat-icon>
-        </button>
-        <button mat-icon-button>
-            <mat-icon id="notificationButton" routerLink="user/notification">notifications</mat-icon>
-        </button>
-        <button mat-icon-button>
-            <mat-icon id="accountButton" routerLink="user/profile">account_circle</mat-icon>
-        </button>
+      <button mat-icon-button (click)="openDialog()">
+          <mat-icon id="groupAddButton">group_add</mat-icon>
+      </button>
+      <span>     </span>
+      <button mat-icon-button>
+          <mat-icon id="notificationButton" routerLink="user/notification">notifications</mat-icon>
+      </button>
+      <button mat-icon-button>
+          <mat-icon id="accountButton" routerLink="user/profile">account_circle</mat-icon>
+      </button>
     </div>
 
 </mat-toolbar>

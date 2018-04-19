@@ -15,21 +15,17 @@ export class ResponderComponent implements OnInit {
   @Input()
   user:User;
 
-  meeting: Meeting;
-
   constructor(private service:UserService) { }
 
   ngOnInit() {
   }
 
-  getConversation():void {
-    // this.service.getConversation(this.conversation.id).subscribe(
-    //   body => {
-    //     this.conversation = body;
-    //     console.log("got a response");
-    //     console.log(JSON.stringify(this.conversation));
-    //   }, error =>{
-    //     console.log("Poop");
-    //   });
+  acceptMeeting(meeting:Meeting) {
+    meeting.accepted = true;
+    this.service.respondMeetingRequest(meeting);
+  }
+
+  declineMeeting(meeting:Meeting) {
+    this.service.respondMeetingRequest(meeting);
   }
 }

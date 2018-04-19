@@ -1,4 +1,5 @@
-import { Message } from './index';
+import { Message,Meeting } from './index';
+
 export class Conversation {
   id: number;
   student_id: number;
@@ -8,8 +9,9 @@ export class Conversation {
   group_id: number;
   group_name: string;
   messages: Message[];
-
+  meetings: Meeting[];
   constructor(){
-    this.messages = [];
+    this.messages = new Array<Message>();
+    this.meetings = new Array<Meeting>();
   }
 }

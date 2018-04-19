@@ -1,7 +1,7 @@
 <div id="searchWrapper">
   <mat-tab-group>
     <mat-tab label="Meetings">
-      <!-- <meetings-table [meetings]="meetings" [user]="user"></meetings-table> -->
+      <meetings-table [user]="user"></meetings-table>
     </mat-tab>
     <mat-tab label="Requests" >
       <requests-table [tempOne]="user.tutor_contact_requests" [tempTwo]="user.student_contact_requests" [userId]="user.id"></requests-table>
