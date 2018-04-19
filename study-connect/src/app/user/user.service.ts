@@ -3,7 +3,7 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Course, Conversation, Group, Meeting, User, RequestContact, MeetingRequest } from '../library/objects/index';
+import { Course, Conversation, Group, Meeting, User, RequestContact, MeetingRequest, Message } from '../library/objects/index';
 
 @Injectable()
 export class UserService {
@@ -30,6 +30,9 @@ export class UserService {
   studentSearchSubject: BehaviorSubject<User[]>;
   studentSearchObservable: Observable<User[]>;
 
+  conversationSubject: BehaviorSubject<Conversation>;
+  conversationObservable: Observable<Conversation>;
+
   constructor(private http: Http) {
 
     this.tutorsSubject = new BehaviorSubject([]);
@@ -52,6 +55,23 @@ export class UserService {
 
     this.studentSearchSubject = new BehaviorSubject([]);
     this.studentSearchObservable = this.studentSearchSubject.asObservable();
+
+    this.conversationSubject = new BehaviorSubject(null);
+    this.conversationObservable = this.conversationSubject.asObservable();
+
+  }
+
+  getConversation(id:number): Observable<Conversation> {
+    this.http.get(this.restUrl+'conversation/?id='+id)
+      .subscribe(
+        body => {
+          this.conversationSubject.next(body.json() as Conversation);
+        },
+        error => {
+          console.log(error.text());
+        }
+      )
+    return this.conversationObservable;
   }
 
   getSuggestedTutors(id:number): Observable<User[]> {
@@ -207,6 +227,20 @@ export class UserService {
       console.log("Unsuccessful meeting request response");
     })
   }
+
+  sendMessage(message:Message): void {
+    this.http.post(this.restUrl+'message/', message).subscribe(
+      body=>{
+        console.log("successful message posted");
+      },
+      error =>{
+        console.log(error.text());
+        console.log("Unsuccessful message send");
+      }
+    )
+  }
+
+
 
   get tutors(): Observable<User[]> {
     return this.tutorsObservable;

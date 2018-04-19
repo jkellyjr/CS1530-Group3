@@ -3,16 +3,14 @@ import { User } from './User';
 
 export class Message {
   id: number;
-  sender: User;
-  single_rcpt: User;
-  group_rcpt: Group;
-  sent_time: Date;
-  content: string;
+  sender_id: number;
+  conversation_id:number;
+  content: String;
 
-  constructor(){
-    this.sender = new User();
-    this.single_rcpt = new User();
-    this.group_rcpt = new Group();
-    this.sent_time = new Date();
+  constructor(sender_id:number, conversation_id:number, content:String){
+    this.id = null;
+    this.sender_id = sender_id;
+    this.conversation_id = conversation_id;
+    this.content = content;
   }
 }
