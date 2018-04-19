@@ -11,8 +11,8 @@ import json, datetime
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost:5000/sc'
-#app.config.update(dict(SQLALCHEMY_DATABASE_URI="sqlite:///"+os.path.join(app.root_path, "sc.db")))
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost:5000/sc'
+app.config.update(dict(SQLALCHEMY_DATABASE_URI="sqlite:///"+os.path.join(app.root_path, "sc.db")))
 db.init_app(app)
 
 '''---------------------------------- DB Configuration -------------------------'''
@@ -562,6 +562,7 @@ put_contact_req_parser.add_argument('tutor_id')
 put_contact_req_parser.add_argument('group_id')
 
 post_contact_req_parser = reqparse.RequestParser()
+post_contact_req_parser.add_argument('message')
 post_contact_req_parser.add_argument('requestor_id')
 post_contact_req_parser.add_argument('student_id')
 post_contact_req_parser.add_argument('tutor_id')

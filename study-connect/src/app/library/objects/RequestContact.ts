@@ -1,12 +1,13 @@
 export class RequestContact {
   constructor(
     public id:number,
-    public tutor_id: number,
-    public student_id: number,
-    public requestor_id: number,
-    public approved: boolean,
+    public accepted: boolean,
     public message: string,
-    public requested_name: string,
-    public requestor_name: string
+    public requestor_id: number,
+    public requestor_role: string,
+    public requestor_name: string,
+    public requested_role: string,
+    public requested_id: number,
+    public requested_name: string
   ) { }
 }

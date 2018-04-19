@@ -16,16 +16,12 @@ export class GroupTableComponent implements OnInit {
   user:User;
 
   displayedColumns = ['name', 'description', 'join'];
-  // dataSource = new MatTableDataSource<Group>(this.groups);
+
   constructor(public dialog: MatDialog) {
   }
 
   ngOnInit() {
-    console.log("In group table component");
-    console.log("lenght: "+this.groups.length);
-    for(let i=0;i<this.groups.length;i++){
-      // console.log(JSON.stringify(this.groups[i]));
-    }
+
   }
 
   openDialog(group:Group, user:User): void {

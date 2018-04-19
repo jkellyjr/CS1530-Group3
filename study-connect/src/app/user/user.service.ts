@@ -3,7 +3,7 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Course, Conversation, Group, Meeting, User, RequestContact, MeetingRequest, Message } from '../library/objects/index';
+import { Course, Conversation, Group, Meeting, User, RequestContact, MeetingRequest, Message, Request } from '../library/objects/index';
 
 @Injectable()
 export class UserService {
@@ -119,16 +119,6 @@ export class UserService {
           return new User();
   }
 
-  joinGroup(user:User, groupId:number){
-    this.http.post(this.restUrl+'group/join/?group_id='+groupId,user)
-      .subscribe(
-        body => {
-
-        }, error => {
-
-        })
-  }
-
   searchGroups(user_id:number, course_id:number): Observable<Group[]> {
     this.groupSearchSubject.next([]);
 
@@ -169,8 +159,8 @@ export class UserService {
         return this.studentSearchObservable;
   }
 
-  sendContactRequest(request:RequestContact): void {
-    this.http.post('api/contact/request/',request).subscribe(
+  sendContactRequest(request:Request): void {
+    this.http.post('api/request/contact/',request).subscribe(
       body=>{
         console.log("succesful contact request")
     }, error =>{
@@ -180,7 +170,7 @@ export class UserService {
   }
 
   respondContactRequest(id:number, accepted:string): void {
-    this.http.post('api/contact/request/?id='+id+'&accepted='+accepted, null).subscribe(
+    this.http.post('api/request/contact/?id='+id+'&accepted='+accepted, null).subscribe(
       body=>{
         console.log("succesful contact request response")
     }, error =>{
