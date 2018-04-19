@@ -125,7 +125,7 @@ class Group(db.Model):
     id = db.Column(db.Integer, unique = True, primary_key = True)
     name = db.Column(db.String(30), nullable = False)
     description = db.Column(db.String(80), nullable = True)
-    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    admin_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
 
     group_courses = db.relationship('Course', secondary = course_groups, backref = db.backref('study_groups', lazy = 'dynamic'))
     meetings = db.relationship('Meeting', backref = db.backref('Group', lazy = True))
@@ -147,10 +147,10 @@ class Group(db.Model):
             "contact_requests": serialize_many(self.contact_requests)
         }
 
-    def __init__(self, name, description, creator_id):
+    def __init__(self, name, description, admin_id):
         self.name = name
         self.description = description
-        self.creator_id = creator_id
+        self.admin_id = admin_id
 
     def __repr__(self):
         return "<Groups %r, %r, %r>" % (self.name, self.description, self.creator)
