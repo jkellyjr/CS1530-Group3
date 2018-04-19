@@ -1,9 +1,9 @@
 <mat-list>
-  <mat-table #table [dataSource]="user.meetings">
+  <mat-table #table [dataSource]="meetings">
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-      <mat-cell *matCellDef="let meeting"> {{meeting.name}} </mat-cell>
+      <mat-cell *matCellDef="let meeting"> {{meeting.requestor_name}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="time">
       <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>

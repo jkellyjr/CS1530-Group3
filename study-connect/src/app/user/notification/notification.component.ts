@@ -3,7 +3,6 @@ import { ISubscription } from 'rxjs/Subscription';
 
 import { AuthService } from '../../auth/index';
 import { Meeting, User } from '../../library/objects/index';
-import { NotificationService } from './notification.service';
 
 @Component({
   selector: 'notification-component',
@@ -15,8 +14,7 @@ export class NotificationComponent implements OnInit {
   user: User;
   userSubscription:ISubscription;
 
-  constructor(private authService: AuthService,
-              private notificationService: NotificationService) { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
     this.userSubscription = this.authService.user.subscribe(

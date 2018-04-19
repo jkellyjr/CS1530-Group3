@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { Meeting, User } from '../../../../library/objects/index';
+import { Conversation, Meeting, User } from '../../../../library/objects/index';
 
 @Component({
   selector: 'meetings-table',
@@ -11,9 +11,36 @@ export class MeetingsTableComponent implements OnInit {
   @Input()
   user:User;
 
-  constructor() { }
+  meetings: any[];
+  constructor() {
+    this.meetings = new Array<Meeting>();
+   }
 
+  displayedColumns = ['name', 'time', 'location']
   ngOnInit() {
+    this.user.student_conversations.forEach(c => {
+      c.meetings.forEach(m => {
+        if(m.accepted){
+          this.meetings.push(m);
+        }
+      });
+    });
+    this.user.tutor_conversations.forEach(c => {
+      c.meetings.forEach(m => {
+        if(m.accepted){
+          this.meetings.push(m);
+        }
+      });
+    });
+    this.user.groups.forEach(g => {
+      g.conversations.forEach(c => {
+        c.meetings.forEach(m => {
+          if(m.accepted){
+            this.meetings.push(m);
+          }
+        });
+      });
+    });
   }
 
 }
