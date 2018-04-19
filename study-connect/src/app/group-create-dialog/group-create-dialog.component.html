@@ -1,0 +1,22 @@
+<mat-card>
+  <mat-card-title>
+    Create a Group
+  </mat-card-title>
+
+  <mat-card-content>
+    <form>
+      <mat-form-field class="">
+        <input matInput name="name" placeholder="Group Name:" [(ngModel)]="groupName" required />
+      </mat-form-field>
+      <mat-form-field class="">
+        <textarea matInput name="desc" placeholder="Description:" [(ngModel)]="desc" required></textarea>
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button (click)="createGroup()" mat-button >Create</button>
+    <button (click)="onNoClick()" mat-button >Cancel</button>
+  </mat-card-actions>
+
+ </mat-card>

@@ -3,7 +3,7 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Course, Conversation, Group, Meeting, User, RequestContact, MeetingRequest, Message, Request } from '../library/objects/index';
+import { Course, Conversation, Group, GroupCreate, Meeting, User, RequestContact, MeetingRequest, Message, Request } from '../library/objects/index';
 
 @Injectable()
 export class UserService {
@@ -199,7 +199,15 @@ export class UserService {
     })
   }
 
-
+  createGroup(group:GroupCreate): void {
+    this.http.post('api/group/', group).subscribe(
+      body=>{
+        console.log("Group creation successful");
+      }, error => {
+        console.log(error.text());
+        console.log("Group creation Unsuccessful");
+      })
+  }
 
   get tutors(): Observable<User[]> {
     return this.tutorsObservable;
